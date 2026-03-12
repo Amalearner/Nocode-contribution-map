@@ -799,6 +799,112 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 }
 .popup-category-label:first-child { margin-top: 0; }
 
+/* ── CONTRIBUTION PROFILE DASHBOARD ── */
+.profile-identity-card {
+  display: flex; align-items: center; gap: 1.5rem;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.75rem 2rem;
+  flex-wrap: wrap;
+}
+.profile-avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent1), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem;
+  color: var(--bg); flex-shrink: 0;
+}
+.profile-name {
+  font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800;
+  margin-bottom: 0.2rem;
+}
+.profile-role { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.65rem; }
+.profile-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.profile-tag {
+  font-size: 0.67rem; padding: 0.2rem 0.6rem; border-radius: 2rem;
+  background: rgba(124,255,196,0.08); border: 1px solid rgba(124,255,196,0.25);
+  color: var(--accent1); font-weight: 600;
+}
+.profile-score-ring {
+  margin-left: auto; flex-shrink: 0;
+  position: relative; width: 80px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.profile-ring-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+  color: var(--accent1);
+}
+.profile-ring-sub {
+  font-size: 0.6rem; color: var(--muted); text-align: center;
+  line-height: 1.3; margin-top: 0.3rem; text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Strength bars */
+.profile-bar-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.65rem 1rem; background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px;
+  transition: border-color 0.2s;
+}
+.profile-bar-row:hover { border-color: rgba(255,255,255,0.08); }
+.profile-bar-icon { font-size: 1.2rem; flex-shrink: 0; width: 28px; text-align: center; }
+.profile-bar-label { font-size: 0.78rem; font-weight: 600; min-width: 140px; flex-shrink: 0; }
+.profile-bar-track {
+  flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.profile-bar-fill {
+  height: 100%; border-radius: 3px;
+  transition: width 1.2s cubic-bezier(0.34,1.2,0.64,1);
+  width: 0%;
+}
+.profile-bar-pct {
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
+  min-width: 38px; text-align: right; flex-shrink: 0;
+}
+.profile-bar-count {
+  font-size: 0.7rem; color: var(--muted); min-width: 55px; text-align: right; flex-shrink: 0;
+}
+
+/* Skill badges */
+.profile-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.4rem 0.85rem 0.4rem 0.65rem; border-radius: 2rem;
+  border: 1px solid; font-size: 0.73rem; font-weight: 600;
+  cursor: default; transition: transform 0.18s, filter 0.18s;
+  animation: fadeUp 0.3s ease both;
+}
+.profile-badge:hover { transform: translateY(-2px); filter: brightness(1.2); }
+.profile-badge-icon { font-size: 0.9rem; }
+
+/* ── JOURNEY & ASSESSMENT PROGRESS ENHANCEMENTS ── */
+.panel-progress-bar {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.85rem 1.25rem; background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: 2rem;
+}
+.panel-progress-bar-track {
+  flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden;
+}
+.panel-progress-bar-fill {
+  height: 100%; border-radius: 3px;
+  transition: width 0.5s ease; width: 0%;
+}
+.panel-progress-label { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.panel-progress-pct { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; white-space: nowrap; }
+
+/* Save draft toast */
+.save-toast {
+  position: fixed; bottom: 5rem; right: 2rem;
+  background: var(--card); border: 1px solid var(--accent1);
+  border-radius: 10px; padding: 0.75rem 1.25rem;
+  font-size: 0.8rem; color: var(--accent1); font-weight: 600;
+  z-index: 500; transform: translateY(10px); opacity: 0;
+  transition: all 0.3s ease; pointer-events: none;
+}
+.save-toast.show { opacity: 1; transform: translateY(0); }
+
 /* Generated 90-day plan styles */
 .gen-plan-section { margin-bottom: 1.5rem; }
 .gen-plan-month {
@@ -866,6 +972,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
   <button class="tab"         onclick="showPanel('rec',this)">Recognition</button>
   <button class="tab"         onclick="showPanel('assess',this)">Self-Assessment</button>
   <button class="tab"         onclick="showPanel('roadmap',this)" style="color:var(--teal);">🗺 My Roadmap</button>
+  <button class="tab"         onclick="showPanel('profile',this)" style="color:var(--accent5);">✦ My Profile</button>
 </nav>
 
 <!-- ════════════════════════════════════
@@ -1088,6 +1195,16 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
   <p class="sec-desc">A welcoming contributor journey doesn't happen by accident. Work through each stage below — click the option chips that reflect your project's current or planned approach — then click <strong>Generate Blueprint</strong> to generate your full detailed journey plan.</p>
 
+  <!-- Journey progress bar -->
+  <div class="panel-progress-bar">
+    <span class="panel-progress-label">Journey stages configured</span>
+    <div class="panel-progress-bar-track">
+      <div class="panel-progress-bar-fill" id="journey-prog-fill" style="background:var(--accent1);"></div>
+    </div>
+    <span class="panel-progress-pct" id="journey-prog-pct" style="color:var(--accent1);">0 / 6</span>
+    <button class="btn btn-outline" style="font-size:0.7rem;padding:0.35rem 0.9rem;" onclick="saveDraft('journey')">💾 Save Draft</button>
+  </div>
+
   <div class="stages-track" id="org-stages-track">
 
       <!-- STAGE 1: DISCOVERY -->
@@ -1263,7 +1380,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <p id="blueprint-subtitle">Your structured plan — ready to implement, share, and present.</p>
       </div>
       <div class="blueprint-actions">
-        <button class="btn btn-primary" onclick="downloadJourneyPDF()">Download PDF</button>
+        <button class="btn btn-primary" onclick="downloadJourneyPDF()">Download</button>
         <button class="btn btn-outline" onclick="openMarkdownModal()">Export Markdown</button>
         <button class="btn btn-outline" onclick="openShareModal('journey')">🔗 Share</button>
       </div>
@@ -1467,6 +1584,16 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
   <div class="assess-mode-toggle">
     <button class="mode-btn active" onclick="setMode('contributor',this)">For Contributors</button>
     <button class="mode-btn"        onclick="setMode('project',this)">For Projects</button>
+  </div>
+
+  <!-- Assessment progress bar -->
+  <div class="panel-progress-bar" style="margin-bottom:1.5rem;">
+    <span class="panel-progress-label">Questions answered</span>
+    <div class="panel-progress-bar-track">
+      <div class="panel-progress-bar-fill" id="assess-prog-fill" style="background:var(--accent3);"></div>
+    </div>
+    <span class="panel-progress-pct" id="assess-prog-pct" style="color:var(--accent3);">0 / 10</span>
+    <button class="btn btn-outline" style="font-size:0.7rem;padding:0.35rem 0.9rem;" onclick="saveDraft('assess')">💾 Save Draft</button>
   </div>
 
   <!-- CONTRIBUTOR ASSESSMENT -->
@@ -1716,7 +1843,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       </div>
       <div class="score-recommend" id="c-recommend"></div>
       <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
-        <button class="btn btn-primary" onclick="downloadContributorAssessmentPDF()">Download My Results (PDF)</button>
+        <button class="btn btn-primary" onclick="downloadContributorAssessmentPDF()">Download My Results</button>
         <button class="btn btn-outline" onclick="openShareModal('c-assess')">🔗 Share Results</button>
         <button class="btn btn-outline" onclick="resetContributorAssessment()">Reset</button>
       </div>
@@ -1971,7 +2098,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       </div>
       <div class="score-recommend" id="p-recommend"></div>
       <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
-        <button class="btn btn-primary" onclick="downloadProjectAssessmentPDF()">Download Results (PDF)</button>
+        <button class="btn btn-primary" onclick="downloadProjectAssessmentPDF()">Download Results</button>
         <button class="btn btn-outline" onclick="openShareModal('p-assess')">🔗 Share Results</button>
         <button class="btn btn-outline" onclick="resetProjectAssessment()">Reset</button>
       </div>
@@ -2299,14 +2426,79 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
     </div>
     <div id="roadmap-sections" style="padding:0 2rem 2rem;"></div>
     <div style="padding:1.5rem 2rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="downloadRoadmapPDF()" style="background:var(--teal);color:var(--bg);">Download My Roadmap (PDF)</button>
-      <button class="btn btn-outline" onclick="openShareModal('roadmap')">🔗 Share My Roadmap</button>
+      <button class="btn btn-primary" onclick="downloadRoadmapPDF()" style="background:var(--teal);color:var(--bg);">↓ Download My Roadmap</button>
     </div>
   </div>
 </section>
 
 
-<!-- MAP PREVIEW MODAL -->
+<!-- ════════════════════════════════════
+     PANEL 6 — MY CONTRIBUTION PROFILE
+════════════════════════════════════ -->
+<section id="panel-profile" class="panel">
+  <div class="sec-label">Personal Dashboard</div>
+  <h2 class="sec-title">✦ My Contribution Profile</h2>
+  <p class="sec-desc">A live snapshot of your open source identity — built from everything you've selected across the Contributor Map, Roadmap, and Self-Assessment. Select skills on the Contributor Map tab to see your profile fill in.</p>
+
+  <div id="profile-empty-state" style="display:none;text-align:center;padding:4rem 2rem;color:var(--muted);">
+    <div style="font-size:3rem;margin-bottom:1rem;">🗺️</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);">Your profile is empty</div>
+    <div style="font-size:0.85rem;line-height:1.7;max-width:420px;margin:0 auto 1.5rem;">Go to the <strong style="color:var(--accent1)">Contributor Map</strong> tab and click skill tags to build your personal contribution profile. It will appear here as a dashboard with badges, percentages, and a strength breakdown.</div>
+    <button class="btn btn-primary" onclick="showPanel('map',document.querySelectorAll('.tab')[0])">Go to Contributor Map →</button>
+  </div>
+
+  <div id="profile-dashboard">
+    <!-- Identity header -->
+    <div class="profile-identity-card" id="profile-identity">
+      <div class="profile-avatar" id="profile-avatar-initials">?</div>
+      <div>
+        <div class="profile-name" id="profile-display-name">Your Name</div>
+        <div class="profile-role" id="profile-display-role">Complete your roadmap to personalise this</div>
+        <div class="profile-tags" id="profile-top-tags"></div>
+      </div>
+      <div class="profile-score-ring">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <circle cx="40" cy="40" r="32" fill="none" stroke="var(--border)" stroke-width="6"/>
+          <circle cx="40" cy="40" r="32" fill="none" stroke="var(--accent1)" stroke-width="6"
+            stroke-dasharray="201" stroke-dashoffset="201"
+            stroke-linecap="round" transform="rotate(-90 40 40)"
+            id="profile-ring-fill" style="transition:stroke-dashoffset 1s ease;"/>
+        </svg>
+        <div class="profile-ring-label" id="profile-ring-pct">0%</div>
+        <div class="profile-ring-sub">profile<br>complete</div>
+      </div>
+    </div>
+
+    <!-- Category breakdown bars -->
+    <div style="margin-top:2rem;">
+      <div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:1.25rem;color:var(--text);">Contribution Strength Breakdown</div>
+      <div id="profile-bars" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+    </div>
+
+    <!-- Skill badges grid -->
+    <div style="margin-top:2.5rem;">
+      <div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:1.25rem;color:var(--text);">Your Skill Badges</div>
+      <div id="profile-badges" style="display:flex;flex-wrap:wrap;gap:0.6rem;"></div>
+    </div>
+
+    <!-- Headline statement -->
+    <div id="profile-headline" style="display:none;margin-top:2.5rem;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent5);border-radius:12px;">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent5);margin-bottom:0.5rem;">Your Contribution Identity</div>
+      <div id="profile-headline-text" style="font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;line-height:1.5;"></div>
+      <div id="profile-headline-sub" style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem;line-height:1.65;"></div>
+    </div>
+
+    <!-- Roadmap link nudge -->
+    <div id="profile-roadmap-nudge" style="margin-top:2rem;display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:rgba(77,217,224,0.05);border:1px solid rgba(77,217,224,0.2);border-radius:10px;">
+      <span style="font-size:1.4rem;">🗺️</span>
+      <div style="flex:1;font-size:0.82rem;color:var(--muted);line-height:1.6;"><strong style="color:var(--teal);">Turn your profile into a roadmap.</strong> Fill in the My Roadmap tab to generate a personalised 90-day contribution plan based on these skills.</div>
+      <button class="btn btn-outline" style="border-color:rgba(77,217,224,0.3);color:var(--teal);white-space:nowrap;" onclick="showPanel('roadmap',document.querySelectorAll('.tab')[4])">Build Roadmap →</button>
+    </div>
+  </div>
+</section>
+<!-- SAVE DRAFT TOAST -->
+<div class="save-toast" id="save-toast">✓ Draft saved</div>
+
 <div class="modal-overlay" id="map-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeMapModal()">✕</button>
@@ -2314,7 +2506,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
     <p class="modal-subtitle" id="modal-count-text">Here are the contribution skills you've selected. This is your personal open source map — share it, build on it, and own it.</p>
     <div class="map-preview-grid" id="modal-grid"></div>
     <div class="modal-actions">
-      <button class="btn btn-primary" onclick="downloadMapPDF()">Download My Map (PDF)</button>
+      <button class="btn btn-primary" onclick="downloadMapPDF()">Download My Map</button>
       <button class="btn btn-outline" onclick="openShareModal('map')">🔗 Share My Map</button>
       <button class="btn btn-outline" onclick="closeMapModal()">Close</button>
     </div>
@@ -2331,7 +2523,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
   <div class="sb-actions">
     <button class="btn btn-outline" onclick="clearAll()" style="color:var(--accent2);border-color:rgba(255,107,107,0.35);">✕ Clear All</button>
     <button class="btn btn-outline" onclick="openMapModal()">Preview Map</button>
-    <button class="btn btn-primary" onclick="downloadMapPDF()">Download PDF</button>
+    <button class="btn btn-primary" onclick="downloadMapPDF()">Download</button>
   </div>
 </div>
 
@@ -4199,53 +4391,98 @@ function clearRoadmap() {
 function generate90DayPlan(data) {
   const { experience, skills, interests, time, pace, when, confidence, impact, goal6m, goal12m, blockers, targetSkills } = data;
 
-  // Determine intensity from time
-  const isLight = time.includes('1') || time.includes('Less');
-  const isDeep  = time.includes('10+') || time.includes('6–10');
-  const isFast  = pace.includes('Fast') || pace.includes('Deadline');
+  const isLight    = time.includes('1') || time.includes('Less');
+  const isDeep     = time.includes('10+') || time.includes('6–10');
+  const isMedium   = time.includes('3–5') || time.includes('1–2');
+  const isFast     = pace.includes('Fast') || pace.includes('Deadline');
+  const isSteady   = pace.includes('Slow') || pace.includes('steady');
   const isBeginner = experience.includes('begin') || experience.includes('Curious') || experience.includes('never');
+  const isGrowing  = experience.includes('Growing') || experience.includes('occasional');
+  const isActive   = experience.includes('Active') || experience.includes('regularly');
 
-  // Derive primary contribution area
-  const area = interests || skills || 'open source contribution';
-  const firstSkill = skills.split(/,|;/)[0]?.trim() || 'your skills';
-  const firstInterest = interests.split(/,|;/)[0]?.replace(/[✍️🔬🤝💻🎨🌍♿📣🧪🎓📋🎤🖼️]/g,'').trim() || interests.trim() || 'your chosen area';
+  const firstSkill   = skills.split(/,|;/)[0]?.trim() || 'your skills';
+  const allSkills    = skills.split(/,|;/).map(s=>s.trim()).filter(Boolean).slice(0,3).join(', ');
+  const firstInterest = (interests.split(/,|;/)[0] || '').replace(/[✍️🔬🤝💻🎨🌍♿📣🧪🎓📋🎤🖼️]/g,'').trim() || 'open source';
+  const topTarget    = targetSkills?.split(/,|;/)[0]?.trim() || '';
+  const impact1      = impact ? impact.split(/[.!]/)[0].trim() : '';
+  const blockerNote  = blockers ? `\n\n💡 Your stated blocker — "${blockers.split(/[.,]/)[0].trim()}" — is something to address head-on this month. Name it, research it, and ask one person in the community how they overcame the same thing.` : '';
 
-  // Blocker note
-  const blockerNote = blockers ? ` One key thing to address early: "${blockers.split(/[.,]/)[0].trim()}"` : '';
+  // ── MONTH 1 ────────────────────────────────────────────
+  const m1Learn = isBeginner ? [
+    `**Orientation week (Days 1–7):** Understand how open source actually works — not just the theory. Complete the first-contributions tutorial at github.com/firstcontributions. Learn the fork → branch → commit → pull request workflow hands-on, even if your contributions won't involve code.`,
+    `**Project discovery (Days 8–14):** Browse 5–8 projects in ${firstInterest}. Look specifically for ones that have a CONTRIBUTING.md, non-code issue labels ("good first issue", "documentation", "help wanted"), and an active community channel. Shortlist your top 2.`,
+    `**Deep-dive reading (Days 15–21):** Pick your top project and read everything: CONTRIBUTING.md, recent merged PRs, open issues, the README, and at least 10 community discussion threads. You want to understand the tone, the norms, and where the real gaps are.`,
+    `**Skill gap check (Days 22–30):** Compare what the project needs most against your skills (${allSkills || firstSkill}). Write a 3-sentence "why I'm the right person to help here" statement. This is for you — it's the confidence anchor you'll return to when self-doubt hits.`,
+  ].join('\n\n') : isGrowing ? [
+    `**Re-entry and momentum (Days 1–10):** Return to your existing project(s) and catch up on what's changed — open issues, merged PRs, community discussions. Identify 2–3 tasks that directly match ${firstSkill}. Re-introduce yourself in the community channel if you've been away for a while.`,
+    `**Skill sharpening (Days 11–21):** Focus on one specific skill from your development list${topTarget ? ` — particularly ${topTarget}` : ''}. Read docs, watch a relevant talk, and practice deliberately. The goal is to arrive at your next contribution with noticeably better craft than the last one.`,
+    `**Community positioning (Days 22–30):** Respond to at least 3 questions or discussions in the community. Make yourself known as someone who shows up consistently — not just to submit contributions, but to support others.`,
+  ].join('\n\n') : [
+    `**Strategic focus (Days 1–10):** Review your target role and identify the single most important skill gap between where you are and where you want to be${topTarget ? ': ' + topTarget : ''}. Design a deliberate learning sprint around it.`,
+    `**Deep contribution (Days 11–25):** Make one high-quality contribution that demonstrates ${firstSkill} at its best. Prioritise depth over speed. A well-crafted, well-documented contribution that gets merged cleanly is worth more than three rushed ones.`,
+    `**Network building (Days 26–30):** Identify 2–3 core contributors or maintainers in your space. Comment meaningfully on their work. The path to named roles almost always runs through relationships, not just pull requests.`,
+  ].join('\n\n');
 
-  // Build plan
-  const m1Learn = isBeginner
-    ? `Orientation — understand how open source projects work. Complete the first-contributions tutorial (github.com/firstcontributions). Learn the fork → branch → PR workflow, even if your contributions won't be code. Explore 3–5 projects in your area of ${firstInterest} and read their CONTRIBUTING.md files carefully.`
-    : `Deepen your understanding of the specific project(s) on your radar. Read their open issues, recent merged PRs, community discussions, and governance documents. Identify the communication norms and what kind of contributions are most needed right now.`;
+  const m1Contrib = isBeginner ? [
+    `**Your first contribution target:** Find a project with an open "good first issue (docs)", "help wanted", or non-code label in ${firstInterest}. Make one focused contribution — a documentation improvement, a README clarification, a translation of one page, a bug report with clear reproduction steps, or a community Q&A answer.`,
+    `**Definition of done:** The contribution is submitted, you've responded to any review feedback within 48 hours, and you've introduced yourself in the community's main channel. Success is a merged or positively-reviewed contribution — not necessarily a perfect one.`,
+    `**What not to do:** Don't try to make a big splash. Don't start multiple contributions at once. Don't disappear after submitting — the review conversation is where real learning happens.${blockerNote}`,
+  ].join('\n\n') : [
+    `**Contribution goal:** Make one contribution this month using ${firstSkill} that is clearly valuable to the project — not just easy or quick. Look for issues labelled "help wanted" or "needs ${firstInterest}". If none exist, create a proposal in the community channel first.`,
+    `**Quality bar:** Before submitting, read 3 recently merged contributions in the same area and match their standard. Include a clear description of what you did and why. Tag relevant maintainers only if the contribution is ready for review.`,
+    `**Community goal:** Beyond the contribution itself — respond to at least two other contributors this month. Be a person, not just a PR author.${blockerNote}`,
+  ].join('\n\n');
 
-  const m1Contrib = `Find one project with a clearly labeled "good first issue" or non-code task in ${firstInterest}. Make your first contribution — ${isBeginner ? 'a documentation improvement, a translation, a bug report, or a community post' : 'a well-scoped task that uses ' + firstSkill}. The goal is completion and a merged/accepted outcome, not perfection.${blockerNote}`;
+  // ── MONTH 2 ────────────────────────────────────────────
+  const m2Learn = isBeginner ? [
+    `**Understanding the project deeply (Days 31–40):** By now you've made one contribution. Use that context to go deeper. Read the project's governance documents, roadmap, and any public discussions about its future. You want to understand not just what the project does, but where it's going and who's steering it.`,
+    `**Learning from review (Days 41–50):** Go back to the feedback on your Month 1 contribution. What did reviewers care about? What did they not care about? What did they assume you already knew? These patterns are the project's hidden style guide. Absorb them.`,
+    `**Skill development (Days 51–60):** Invest time in ${topTarget || 'the specific skill your target contribution level requires'}. The goal isn't to master it — it's to move from "I'm learning this" to "I can apply this". One focused learning session per week in this area is enough.`,
+  ].join('\n\n') : [
+    `**Going deeper on craft (Days 31–45):** In Month 1 you contributed. In Month 2 you contribute *and* improve. Deliberately raise the quality bar on every aspect of your work — not just the output, but the process. Clear commit messages, well-documented changes, proactive communication.`,
+    `**Learning from others (Days 46–60):** Review someone else's contribution in your area and give thoughtful, constructive feedback. This is one of the fastest ways to learn — you'll catch things in their work that you'd have missed in your own. It also signals that you're here for the project, not just for your own profile.`,
+  ].join('\n\n');
 
-  const m2Learn = isBeginner
-    ? `Learn the conventions of the specific project you contributed to in Month 1. Read their style guide, review 5 recently merged contributions, and observe how reviewers give feedback. Start to understand the project's roadmap and who the key contributors are.`
-    : `Go deeper into ${targetSkills ? targetSkills.split(/,|;/)[0].trim() : 'the skills needed for your target role'}. Read documentation, watch talks, and practice deliberately. Reach out to an existing contributor for a 15-minute conversation — most are happy to chat.`;
+  const m2Contrib = [
+    `**Second contribution:** Make a contribution that is meaningfully more complex than your first. Ideally, it should address something you noticed during Month 1 — a gap, an inconsistency, or an improvement only someone who has now spent time with the project would spot.`,
+    `**Community presence:** By end of Month 2, you should be a recognisable name in the community channel. Introduce yourself formally if you haven't. Ask one question that shows you've read the documentation. Answer one question from a newer contributor — even if you're still learning yourself.`,
+    `**Relationship goal:** Have one real conversation — async or synchronous — with a project maintainer or long-term contributor. It can be a question about the project's direction, a thank-you for feedback, or a check-in about an issue. The goal is a human connection, not a transaction.`,
+    isDeep ? `**Stretch goal (if time allows):** Draft a proposal for a contribution you'd like to make in Month 3 and share it in the community for early feedback. Getting buy-in before you build saves enormous amounts of wasted effort.` : '',
+  ].filter(Boolean).join('\n\n');
 
-  const m2Contrib = `Make a second contribution — more complex than the first, and to a project you already have context on. Introduce yourself in the community channel if you haven't already. Respond to at least one question or discussion from another contributor. Goal: be a recognisable name in the community.`;
+  // ── MONTH 3 ────────────────────────────────────────────
+  const m3Learn = [
+    `**Governance and growth paths (Days 61–70):** Read every public document about how this project makes decisions. Who reviews what? How are roles assigned? What does the path from contributor to named role actually look like? Most projects have this documented somewhere — it just requires looking.`,
+    `**Identifying your role (Days 71–80):** Based on your skills (${allSkills || firstSkill}), your contributions so far, and the project's needs — identify the specific named role you're working toward. Write it down explicitly: "I am working toward becoming [Role Name] in [Project Name] by [Date]." Vague ambitions stay vague.`,
+    `**Preparing to be visible (Days 81–90):** Your contributions are real. Now make them legible to others. Update your GitHub profile or portfolio. Submit yourself to All-Contributors if the project uses it. Draft a short post (LinkedIn, Twitter/X, or a personal blog) about what you've built and learned. ${impact1 ? 'Connect it to your stated goal: "' + impact1 + '".' : 'Frame it around the impact you want to make.'}`,
+  ].join('\n\n');
 
-  const m3Learn = `Understand the project's governance and long-term direction. Read any public roadmap documents, open RFCs, or discussions. Identify a specific named role (Docs Lead, Community Manager, Accessibility Advocate, etc.) that aligns with ${impact ? '"' + impact.split('.')[0] + '"' : 'your goals'} and understand what it requires.`;
+  const m3Contrib = isLight ? [
+    `**Third contribution:** Complete one more contribution — ideally something you proposed or discussed with the community in advance, so the review process is smoother and faster. Completion matters more than ambition at this stage.`,
+    `**Visibility action:** Publish one piece of public content about your open source journey — a short blog post, a LinkedIn update, a thread, or a community forum post. It doesn't need to be polished. The habit of being public about your work compounds over time.`,
+    `**Planning forward:** By Day 90, write down your next three months in a single paragraph. What's the next contribution? What skill are you sharpening? What role are you working toward? You've now proven you can start. The next challenge is proving you can sustain.`,
+  ].join('\n\n') : [
+    `**Month 3 contribution target:** Make ${isDeep ? 'two meaningful contributions' : 'one substantial contribution'} — at least one of which addresses something you identified, proposed, or discussed with the community yourself. You're moving from "responds to issues" to "identifies needs." That shift is what defines a valued contributor.`,
+    `**Role conversation:** Ask a maintainer directly — not hinting, asking — whether there's a need for someone with your background in ${firstSkill}. The worst outcome is a "not right now." The best outcome is the conversation that changes your trajectory. Most contributors never ask. Be the one who does.`,
+    `**Documentation of growth:** Compile your contribution record: links to all accepted contributions, any community discussions you led, any feedback you gave, any questions you answered. This is your portfolio. Put it somewhere shareable.`,
+    goal6m ? `**6-month horizon:** You stated your 6-month goal as: "${goal6m.split('.')[0]}". Day 90 is the halfway point. Does your trajectory match? If not, what's the one thing to change in the next 90 days?` : `**Looking forward:** Day 90 is not a finish line — it's a launch pad. The habits you've built, the relationships you've started, and the skills you've developed are the foundation for everything that comes next.`,
+  ].join('\n\n');
 
-  const m3Contrib = isLight
-    ? `Make your third contribution and write a short public post (blog, LinkedIn, Twitter/X, or community forum) about what you've learned contributing to open source. Visibility matters for recognition and for attracting collaborators.`
-    : `Make two contributions this month. Begin conversations with maintainers about taking on more responsibility — ask directly: "Is there a need for someone with my background in ${firstSkill}?" Document your contributions in a format you can share (portfolio page, LinkedIn update, All-Contributors submission).`;
-
+  // ── MILESTONES ─────────────────────────────────────────
   const milestones = [
-    `Day 30: First contribution submitted and ${isFast ? 'accepted' : 'under review'}. Introduced in community channel. Project bookmarked and CONTRIBUTING.md read.`,
-    `Day 60: Second contribution accepted. Name recognised by at least one maintainer or community member. Clearer picture of the role you want to grow into.`,
-    `Day 90: Three contributions made. Publicly shared your open source journey in at least one channel. Concrete next step identified — ${goal6m ? goal6m.split('.')[0] : 'on track toward 6-month goal'}.`,
+    `Day 30: First contribution submitted${isFast ? ' and accepted' : ' and under review'}. Introduced yourself in the community channel. Can name 2 maintainers by username. CONTRIBUTING.md read in full.`,
+    `Day 60: Second contribution accepted. Responded to at least 3 community discussions. Have had one real conversation with a maintainer or long-term contributor. Target role identified and written down.`,
+    `Day 90: ${isDeep ? 'Three or more' : 'Three'} contributions made or in review. Publicly visible as an open source contributor — profile updated, work documented. Next 90 days mapped. ${goal6m ? 'On track toward: "' + goal6m.split('.')[0] + '".' : 'Concrete next step defined.'}`,
   ];
 
   // Store in hidden fields for PDF
-  document.getElementById('rm-first').value = m1Contrib;
-  document.getElementById('rm-m1-learn').value = m1Learn;
-  document.getElementById('rm-month1').value = m1Contrib;
-  document.getElementById('rm-m2-learn').value = m2Learn;
-  document.getElementById('rm-month2').value = m2Contrib;
-  document.getElementById('rm-m3-learn').value = m3Learn;
-  document.getElementById('rm-month3').value = m3Contrib;
+  document.getElementById('rm-first').value    = `Month 1 — First contribution in ${firstInterest} using ${firstSkill}`;
+  document.getElementById('rm-m1-learn').value  = m1Learn.replace(/\*\*/g,'');
+  document.getElementById('rm-month1').value    = m1Contrib.replace(/\*\*/g,'');
+  document.getElementById('rm-m2-learn').value  = m2Learn.replace(/\*\*/g,'');
+  document.getElementById('rm-month2').value    = m2Contrib.replace(/\*\*/g,'');
+  document.getElementById('rm-m3-learn').value  = m3Learn.replace(/\*\*/g,'');
+  document.getElementById('rm-month3').value    = m3Contrib.replace(/\*\*/g,'');
   document.getElementById('rm-milestones').value = milestones.join('\n');
 
   return { m1Learn, m1Contrib, m2Learn, m2Contrib, m3Learn, m3Contrib, milestones };
@@ -4351,6 +4588,11 @@ function generateRoadmap() {
   months.forEach(m => {
     const monthEl = document.createElement('div');
     monthEl.className = 'gen-plan-month';
+    const fmt = txt => txt
+      .replace(/\*\*([^*]+)\*\*/g, '<strong style="color:inherit;opacity:0.9;">$1</strong>')
+      .replace(/\n\n/g, '</p><p style="margin-top:0.75rem;">')
+      .replace(/^/, '<p>')
+      .replace(/$/, '</p>');
     monthEl.innerHTML = `
       <div class="gen-plan-month-header">
         <div class="gen-plan-month-num" style="background:${m.bg};color:${m.color};">${m.num}</div>
@@ -4359,11 +4601,11 @@ function generateRoadmap() {
       <div class="gen-plan-month-body">
         <div class="gen-plan-item">
           <div class="gen-plan-item-label">Learning Goal</div>
-          ${m.learn}
+          <div style="font-size:0.84rem;line-height:1.75;color:var(--text);">${fmt(m.learn)}</div>
         </div>
-        <div class="gen-plan-item">
+        <div class="gen-plan-item" style="border-top:1px solid var(--border);padding-top:0.85rem;margin-top:0.2rem;">
           <div class="gen-plan-item-label">Contribution Goal</div>
-          ${m.contrib}
+          <div style="font-size:0.84rem;line-height:1.75;color:var(--text);">${fmt(m.contrib)}</div>
         </div>
       </div>`;
     planSection.appendChild(monthEl);
@@ -4514,7 +4756,273 @@ function updateProgress() {
   const pctEl = document.getElementById('jb-pct');
   if (fill) fill.style.width = pct + '%';
   if (pctEl) pctEl.textContent = pct + '%';
+  updateJourneyProgress();
 }
+
+// ── JOURNEY BUILDER PROGRESS ──────────────────────────────
+function updateJourneyProgress() {
+  const stages = ['discovery','orientation','firstcontrib','retention','recognition','growth'];
+  const stageMap = { discovery:'.js-1', orientation:'.js-2', firstcontrib:'.js-3', retention:'.js-4', recognition:'.js-5', growth:'.js-6' };
+  let filled = 0;
+  stages.forEach(key => {
+    const el = document.querySelector(stageMap[key]);
+    if (el && el.querySelectorAll('.stage-opt.picked').length > 0) filled++;
+  });
+  const fill = document.getElementById('journey-prog-fill');
+  const pct = document.getElementById('journey-prog-pct');
+  if (fill) fill.style.width = (filled / 6 * 100) + '%';
+  if (pct) pct.textContent = filled + ' / 6';
+}
+
+// ── ASSESSMENT PROGRESS ────────────────────────────────────
+function updateAssessProgress() {
+  const total = Object.keys(state.ratings).length;
+  const maxQ = 10; // contributor mode has 10 questions
+  const fill = document.getElementById('assess-prog-fill');
+  const pct = document.getElementById('assess-prog-pct');
+  if (fill) fill.style.width = Math.min(total / maxQ * 100, 100) + '%';
+  if (pct) pct.textContent = Math.min(total, maxQ) + ' / ' + maxQ;
+}
+
+// Patch rateItem to also update assess progress
+const _origRateItem = rateItem;
+rateItem = function(row, level) {
+  _origRateItem(row, level);
+  updateAssessProgress();
+};
+
+// ── SAVE DRAFT ─────────────────────────────────────────────
+function saveDraft(context) {
+  try {
+    if (context === 'journey') {
+      const stageMap = { discovery:'.js-1', orientation:'.js-2', firstcontrib:'.js-3', retention:'.js-4', recognition:'.js-5', growth:'.js-6' };
+      const draft = {};
+      Object.entries(stageMap).forEach(([key, sel]) => {
+        const el = document.querySelector(sel);
+        if (el) draft[key] = [...el.querySelectorAll('.stage-opt.picked')].map(o => o.textContent.trim());
+      });
+      localStorage.setItem('nccm_journey_draft', JSON.stringify(draft));
+    } else if (context === 'assess') {
+      localStorage.setItem('nccm_assess_draft', JSON.stringify(state.ratings));
+    }
+    const toast = document.getElementById('save-toast');
+    toast.textContent = '✓ Draft saved';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  } catch(e) {
+    const toast = document.getElementById('save-toast');
+    toast.textContent = '✓ Progress noted';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+}
+
+// Restore saved drafts on load
+function restoreDrafts() {
+  try {
+    const journeyDraft = localStorage.getItem('nccm_journey_draft');
+    if (journeyDraft) {
+      const draft = JSON.parse(journeyDraft);
+      const stageMap = { discovery:'.js-1', orientation:'.js-2', firstcontrib:'.js-3', retention:'.js-4', recognition:'.js-5', growth:'.js-6' };
+      Object.entries(draft).forEach(([key, picked]) => {
+        const stageEl = document.querySelector(stageMap[key]);
+        if (stageEl) {
+          stageEl.querySelectorAll('.stage-opt').forEach(opt => {
+            if (picked.includes(opt.textContent.trim())) opt.classList.add('picked');
+          });
+        }
+      });
+      updateJourneyProgress();
+    }
+    const assessDraft = localStorage.getItem('nccm_assess_draft');
+    if (assessDraft) {
+      const ratings = JSON.parse(assessDraft);
+      Object.entries(ratings).forEach(([id, level]) => {
+        state.ratings[id] = level;
+        const row = document.querySelector('[data-id="' + id + '"]');
+        if (row) {
+          const stars = row.querySelectorAll('.star');
+          stars.forEach((s, i) => s.classList.toggle('lit', i < level));
+          const item = row.closest('.assess-item');
+          if (item) {
+            const fill = item.querySelector('.assess-mini-fill');
+            const label = item.querySelector('.assess-score-label');
+            if (fill) fill.style.width = (level / 5 * 100) + '%';
+            const labels5 = ['','Not yet','Rarely','Sometimes','Mostly','Fully'];
+            if (label) label.textContent = labels5[level] + ' (' + level + '/5)';
+          }
+        }
+      });
+      updateAssessmentScores();
+      updateAssessProgress();
+    }
+  } catch(e) {}
+}
+
+// Patch toggleOpt to update journey progress
+const _origToggleOpt = toggleOpt;
+toggleOpt = function(event, el, stageKey) {
+  _origToggleOpt(event, el, stageKey);
+  updateJourneyProgress();
+};
+
+// ── CONTRIBUTION PROFILE DASHBOARD ────────────────────────
+const CATEGORY_META = {
+  'Technical Writing & Documentation': { icon:'✍️', color:'var(--accent1)', colorRgb:'124,255,196', short:'Writing & Docs' },
+  'Design & User Experience':          { icon:'🎨', color:'var(--accent3)', colorRgb:'255,206,71',  short:'Design & UX' },
+  'Community Building & Moderation':   { icon:'🤝', color:'var(--accent2)', colorRgb:'255,107,107', short:'Community' },
+  'Accessibility & Inclusion':         { icon:'♿', color:'var(--accent4)', colorRgb:'107,159,255', short:'Accessibility' },
+  'Marketing & Outreach':              { icon:'📣', color:'var(--accent5)', colorRgb:'208,107,255', short:'Outreach' },
+  'Education & Knowledge Sharing':     { icon:'🎓', color:'var(--accent6)', colorRgb:'255,159,71',  short:'Education' },
+  'Research & Strategy':               { icon:'🔬', color:'var(--teal)',    colorRgb:'77,217,224',  short:'Research' },
+  'Testing & Quality Assurance':       { icon:'🧪', color:'var(--pink)',    colorRgb:'224,107,159', short:'Testing & QA' },
+};
+
+// Max tags per category (for percentage calc)
+const CAT_MAX = {
+  'Technical Writing & Documentation': 14,
+  'Design & User Experience': 13,
+  'Community Building & Moderation': 12,
+  'Accessibility & Inclusion': 10,
+  'Marketing & Outreach': 11,
+  'Education & Knowledge Sharing': 10,
+  'Research & Strategy': 10,
+  'Testing & Quality Assurance': 10,
+};
+
+function renderProfileDashboard() {
+  const allSelected = state.selected;
+  const totalSelected = Object.values(allSelected).flat().length;
+
+  const emptyState = document.getElementById('profile-empty-state');
+  const dashboard = document.getElementById('profile-dashboard');
+
+  if (totalSelected === 0) {
+    emptyState.style.display = 'block';
+    dashboard.style.display = 'none';
+    return;
+  }
+  emptyState.style.display = 'none';
+  dashboard.style.display = 'block';
+
+  // Update identity from roadmap fields if filled
+  const name = document.getElementById('rm-name')?.value.trim() || '';
+  const role = document.getElementById('rm-role')?.value.trim() || '';
+  const initials = name ? name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?';
+  document.getElementById('profile-avatar-initials').textContent = initials || '?';
+  document.getElementById('profile-display-name').textContent = name || 'Your Name';
+  document.getElementById('profile-display-role').textContent = role || 'Open Source Contributor';
+
+  // Top tags
+  const topTags = Object.values(allSelected).flat().slice(0,5);
+  document.getElementById('profile-top-tags').innerHTML = topTags.map(t=>`<span class="profile-tag">${t}</span>`).join('');
+
+  // Profile completeness ring (based on categories filled + roadmap fields)
+  const catsWithSkills = Object.keys(allSelected).filter(k => allSelected[k].length > 0).length;
+  const rmFilled = ['rm-name','rm-role','rm-impact','rm-goal-6m'].filter(id => document.getElementById(id)?.value.trim()).length;
+  const completeness = Math.round((catsWithSkills / 8 * 60) + (rmFilled / 4 * 40));
+  const circumference = 201;
+  const offset = circumference - (completeness / 100 * circumference);
+  document.getElementById('profile-ring-fill').style.strokeDashoffset = offset;
+  document.getElementById('profile-ring-pct').textContent = completeness + '%';
+
+  // Strength bars
+  const barsContainer = document.getElementById('profile-bars');
+  barsContainer.innerHTML = '';
+  const sortedCats = Object.entries(allSelected)
+    .filter(([,tags]) => tags.length > 0)
+    .sort((a,b) => b[1].length - a[1].length);
+  const maxTags = sortedCats[0]?.[1].length || 1;
+
+  sortedCats.forEach(([cat, tags]) => {
+    const meta = CATEGORY_META[cat] || { icon:'⭐', color:'var(--accent1)', colorRgb:'124,255,196', short: cat };
+    const catMax = CAT_MAX[cat] || 10;
+    const pct = Math.round((tags.length / catMax) * 100);
+    const barPct = Math.round((tags.length / maxTags) * 100);
+    const row = document.createElement('div');
+    row.className = 'profile-bar-row';
+    row.innerHTML = `
+      <div class="profile-bar-icon">${meta.icon}</div>
+      <div class="profile-bar-label" style="color:${meta.color}">${meta.short}</div>
+      <div class="profile-bar-track">
+        <div class="profile-bar-fill" style="background:${meta.color};width:0%;" data-target="${barPct}"></div>
+      </div>
+      <div class="profile-bar-pct" style="color:${meta.color}">${pct}%</div>
+      <div class="profile-bar-count">${tags.length} skill${tags.length!==1?'s':''}</div>`;
+    barsContainer.appendChild(row);
+    // Animate bars in after a tick
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      row.querySelector('.profile-bar-fill').style.width = barPct + '%';
+    }));
+  });
+
+  // Skill badges
+  const badgesContainer = document.getElementById('profile-badges');
+  badgesContainer.innerHTML = '';
+  sortedCats.forEach(([cat, tags]) => {
+    const meta = CATEGORY_META[cat] || { icon:'⭐', color:'var(--accent1)', colorRgb:'124,255,196' };
+    tags.forEach((tag, i) => {
+      const badge = document.createElement('span');
+      badge.className = 'profile-badge';
+      badge.style.cssText = `border-color:rgba(${meta.colorRgb},0.35);color:${meta.color};background:rgba(${meta.colorRgb},0.07);animation-delay:${i*0.03}s`;
+      badge.innerHTML = `<span class="profile-badge-icon">${meta.icon}</span>${tag}`;
+      badgesContainer.appendChild(badge);
+    });
+  });
+
+  // Headline statement
+  const topCat = sortedCats[0];
+  if (topCat) {
+    const meta = CATEGORY_META[topCat[0]] || { icon:'⭐', short: topCat[0] };
+    const pct = Math.round((topCat[1].length / (CAT_MAX[topCat[0]] || 10)) * 100);
+    const headlines = {
+      'Technical Writing & Documentation': `You're a Documentation Champion`,
+      'Design & User Experience': `You're a Design & UX Specialist`,
+      'Community Building & Moderation': `You're a Community Builder`,
+      'Accessibility & Inclusion': `You're an Accessibility Advocate`,
+      'Marketing & Outreach': `You're an Outreach & Advocacy Leader`,
+      'Education & Knowledge Sharing': `You're an Educator & Mentor`,
+      'Research & Strategy': `You're a Research & Strategy Contributor`,
+      'Testing & Quality Assurance': `You're a Quality & Testing Specialist`,
+    };
+    const subs = {
+      'Technical Writing & Documentation': `Your strongest contribution area is words that make projects understandable. Documentation is often a project's first impression — and you're primed to make it great.`,
+      'Design & User Experience': `Visual clarity, usability, and brand are where you shine. Open source projects desperately need designers who understand contributor workflows.`,
+      'Community Building & Moderation': `You build the spaces that make contribution possible. Community is the infrastructure of open source — you're an infrastructure engineer.`,
+      'Accessibility & Inclusion': `You make open source work for everyone. Accessibility advocacy is one of the most high-impact, underrepresented contribution paths in the ecosystem.`,
+      'Marketing & Outreach': `You bring projects to the people who need them. Advocacy and outreach are force multipliers — one good piece of content can bring in dozens of contributors.`,
+      'Education & Knowledge Sharing': `You lower the barrier for every future contributor. Teaching, mentoring, and knowledge sharing are what allow communities to scale beyond their founding team.`,
+      'Research & Strategy': `You ask the right questions before building the wrong things. Strategic and research contributions prevent wasted effort across entire communities.`,
+      'Testing & Quality Assurance': `You protect the people who depend on these projects. Quality assurance is unglamorous, essential, and almost always under-resourced.`,
+    };
+    document.getElementById('profile-headline').style.display = 'block';
+    document.getElementById('profile-headline-text').textContent = `${meta.icon} ${headlines[topCat[0]] || topCat[0]} — ${pct}% ${meta.short}`;
+    document.getElementById('profile-headline-sub').textContent = subs[topCat[0]] || '';
+  }
+}
+
+// Patch showPanel to re-render profile when switching to it
+const _origShowPanel = showPanel;
+showPanel = function(id, btn) {
+  _origShowPanel(id, btn);
+  if (id === 'profile') renderProfileDashboard();
+};
+
+// Patch toggleTag to also update profile if on profile tab
+const _origToggleTag = toggleTag;
+toggleTag = function(el, category) {
+  _origToggleTag(el, category);
+  // Refresh profile if currently visible
+  if (document.getElementById('panel-profile')?.classList.contains('active')) {
+    renderProfileDashboard();
+  }
+};
+
+// Init on load
+window.addEventListener('DOMContentLoaded', function() {
+  restoreDrafts();
+  updateJourneyProgress();
+});
 </script>
 </body>
 </html>
