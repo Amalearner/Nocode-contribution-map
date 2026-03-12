@@ -1,7 +1,6 @@
-# Nocode-contribution-map
 # 🗺️ No-Code Contribution Map
 
-> **A fully interactive, browser-based tool that helps contributors discover where they belong in open source — and helps organizations build inclusive, welcoming contributor journeys.**
+> **A fully interactive, browser-based tool that helps contributors discover where they belong in open source, and helps organizations build inclusive, welcoming contributor journeys.**
 
 Open source is far bigger than code. This project makes that real.
 
@@ -11,14 +10,9 @@ Open source is far bigger than code. This project makes that real.
 
 - [Overview](#overview)
 - [Why This Exists](#why-this-exists)
-- [Live Demo](#live-demo)
 - [Features](#features)
-- [How to Use](#how-to-use)
 - [The Four Sections](#the-four-sections)
 - [Who This Is For](#who-this-is-for)
-- [Tech Stack](#tech-stack)
-- [Getting Started Locally](#getting-started-locally)
-- [File Structure](#file-structure)
 - [Contributing](#contributing)
 - [License](#license)
 - [Author](#author)
@@ -30,19 +24,15 @@ Open source is far bigger than code. This project makes that real.
 
 The **No-Code Contribution Map** is a single-file, interactive HTML tool designed to:
 
-- Help **contributors** — especially non-technical ones — identify, name, and map every skill they bring to open source projects
+- Help **non-technical contributors** identify, name, and map every skill they bring to open source projects
 - Help **open source organizations and maintainers** design structured, inclusive contributor journeys from discovery to growth
 - Provide a shared language and framework for recognizing all forms of contribution: writing, design, accessibility, community building, outreach, education, research, testing, and more
-
-This tool was built for a 60-minute hands-on workshop titled **"Everyone Belongs to Open Source"** and is intended to be used as both a learning resource and a practical planning tool.
 
 ---
 
 ## Why This Exists
 
-Most open source contribution guides still start and end with code.
-
-The result? Writers, designers, accessibility advocates, community organizers, translators, researchers, and educators — people whose work is essential to the adoption, sustainability, and inclusivity of open source — often don't see themselves in the contributor pipeline.
+Most open source contribution guides still start and end with code. This results in Writers, designers, accessibility advocates, community organizers, translators, researchers, and educators, people whose work is essential to the adoption, sustainability, and inclusivity of open source, not seeing  themselves in the contributor pipeline.
 
 This project reframes what contribution means. It provides:
 
@@ -55,49 +45,14 @@ The goal is simple: **everyone who shows up belongs.**
 
 ---
 
-## Live Demo
-
-> Open `nocode-contribution-map.html` directly in any modern browser — no server, no installation, no dependencies.
-
-```
-open nocode-contribution-map.html
-```
-
-Or host it on GitHub Pages, Netlify, Vercel, or any static hosting platform.
-
----
-
 ## Features
 
 | Feature | Description |
 |---|---|
-| 🗺️ **Contributor Map** | 8 categories, 100+ skill tags — click to build your personal contribution profile |
+| 🗺️ **Contributor Map** | 8 categories, 100+ skill tags, click to build your personal contribution profile |
 | 🏢 **Organization Journey Builder** | 6-stage interactive journey (Discovery → Growth) with a save + download builder |
 | 🏆 **Recognition Framework** | 6 recognition patterns with implementation tips + anti-patterns to avoid |
 | 📊 **Self-Assessment** | Dual assessment for contributors (10 questions) and projects (10 questions) with scored results |
-| 📄 **PDF Downloads** | All outputs — contribution map, journey plan, assessment results — export as formatted PDFs |
-| 🔗 **Social Sharing** | Share to Twitter/X, LinkedIn, WhatsApp, Email, Slack, or copy link |
-| ✅ **Zero Dependencies** | Single HTML file, runs entirely in the browser |
-| 📱 **Responsive** | Works on desktop, tablet, and mobile |
-
----
-
-## How to Use
-
-### Option 1 — Open directly in your browser
-
-Download `nocode-contribution-map.html` and open it in Chrome, Firefox, Safari, or Edge.
-
-### Option 2 — Host on GitHub Pages
-
-1. Fork this repository
-2. Go to **Settings → Pages**
-3. Set source to `main` branch, `/ (root)`
-4. Your map will be live at `https://yourusername.github.io/repo-name/nocode-contribution-map.html`
-
-### Option 3 — Embed in your project
-
-Copy the HTML file into your project's documentation folder and link to it from your README or contributing guide.
 
 ---
 
@@ -184,80 +139,15 @@ Each question is rated 1–5 stars. Scores are calculated in real-time with pers
 
 ---
 
-## Tech Stack
-
-This project is intentionally simple:
-
-- **Pure HTML, CSS, JavaScript** — no frameworks, no build step
-- **[jsPDF 2.5.1](https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js)** — loaded from CDN for PDF generation (the only external dependency)
-- **[Google Fonts](https://fonts.google.com)** — Syne (headings) + DM Sans (body), loaded from CDN
-- **No backend, no database, no authentication** — everything runs in the browser
-
-Everything except the two CDN resources works fully offline if you cache the fonts.
-
----
-
-## Getting Started Locally
-
-```bash
-# Clone the repo
-git clone https://github.com/yourusername/nocode-contribution-map.git
-
-# Navigate into it
-cd nocode-contribution-map
-
-# Open in your browser (macOS)
-open nocode-contribution-map.html
-
-# Open in your browser (Linux)
-xdg-open nocode-contribution-map.html
-
-# Open in your browser (Windows)
-start nocode-contribution-map.html
-```
-
-No `npm install`. No `pip install`. No build process. Just open and use.
-
----
-
-## File Structure
-
-```
-nocode-contribution-map/
-│
-├── nocode-contribution-map.html   # The entire application (single file)
-├── README.md                      # This file
-└── LICENSE                        # License
-```
-
-The entire tool lives in one self-contained HTML file. If you want to extend it, everything — HTML structure, CSS styles, and JavaScript logic — is organized with clear section comments inside that file.
-
-Key sections inside the HTML:
-
-```
-/* ── HERO ── */           → Title, overview, navigation pills
-/* ── TABS ── */           → Tab navigation bar
-/* PANEL 1 — CONTRIBUTOR MAP */
-/* PANEL 2 — ORGANIZATION JOURNEY */
-/* PANEL 3 — RECOGNITION */
-/* PANEL 4 — SELF ASSESSMENT */
-/* ── SHARE MODAL ── */    → Social sharing sheet
-/* jsPDF helpers */        → PDF generation functions
-/* ── SHARE MODAL JS ── */ → Share logic
-```
-
----
-
 ## Contributing
 
-Contributions of all kinds are welcome — and yes, that very much includes non-code contributions.
+Contributions of all kinds are welcome!
 
 ### Ways to contribute
 
 - 🐛 **Report a bug** — Open an issue describing what happened and what you expected
 - 💡 **Suggest a feature** — Open an issue with your idea and the problem it solves
 - ✍️ **Improve the docs** — Fix typos, clarify instructions, translate this README
-- 🎨 **Design improvements** — Suggest or implement UI/UX improvements
 - ♿ **Accessibility** — Audit and improve the tool's accessibility
 - 🌍 **Translations** — Help translate the tool's content into other languages
 - 📣 **Spread the word** — Share this tool with communities that need it
@@ -273,13 +163,13 @@ Contributions of all kinds are welcome — and yes, that very much includes non-
 
 ### Good first contributions
 
-Look for issues labeled `good first issue` or `help wanted`. Non-code contributions are explicitly labeled too.
+Look for issues labeled `good first issue` or `help wanted`.
 
 ---
 
 ## Code of Conduct
 
-This project follows the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
+This project follows the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/3/0/code_of_conduct/).
 
 By participating, you agree to uphold a welcoming, respectful, and inclusive environment for everyone. To report any concerns, open a private issue or reach out directly.
 
@@ -295,18 +185,16 @@ You are free to use, modify, and distribute this tool for personal, educational,
 
 ## Author
 
-Built with care by **[Your Name]**
+Built with care with the help of AI by **Cynthia Udoh (you can call me Cindy)**
 
-- 🌐 Website: [yourwebsite.com](https://yourwebsite.com)
-- 🐦 Twitter/X: [@yourhandle](https://twitter.com/yourhandle)
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [@yourusername](https://github.com/yourusername)
+- 🐦 Twitter/X: [@thecynthiaudoh](https://x.com/thecynthiaudoh)
+- 💼 LinkedIn: [linkedin.com/in/cynthia-udoh](https://www.linkedin.com/in/cynthia-udoh/)
 
 ---
 
 ## Acknowledgements
 
-This tool was originally built for the workshop **"Everyone Belongs to Open Source"** — a session designed to reframe diversity and inclusion in open source by demonstrating how non-code contributions are powerful tools for outreach, adoption, and community growth.
+This tool was originally built for the [FOSS Backstage 2026 workshop](https://26.foss-backstage.de/session/everyone-belongs-to-open-source/) (ps: my first workshop ever in open source) **"Everyone Belongs to Open Source"**, a session designed to reframe diversity and inclusion in open source by demonstrating how non-code contributions are powerful tools for outreach, adoption, and community growth.
 
 Thank you to everyone in the open source community who has ever written a README, organized a meetup, translated a string, answered a question in a forum, or made a newcomer feel welcome. This is for you.
 
@@ -316,4 +204,4 @@ Thank you to everyone in the open source community who has ever written a README
 
 ---
 
-### ⭐ If this tool helped you, consider starring the repo — it helps others find it.
+### ⭐ If this tool helped you, consider starring the repo, it helps others find it.
