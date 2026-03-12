@@ -792,6 +792,51 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.popup-category-label {
+  font-size: 0.67rem; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 700; margin: 1rem 0 0.5rem; opacity: 0.85;
+}
+.popup-category-label:first-child { margin-top: 0; }
+
+/* Generated 90-day plan styles */
+.gen-plan-section { margin-bottom: 1.5rem; }
+.gen-plan-month {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; margin-bottom: 1rem;
+}
+.gen-plan-month-header {
+  display: flex; align-items: center; gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.gen-plan-month-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.gen-plan-month-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; }
+.gen-plan-month-body { padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.85rem; }
+.gen-plan-item { font-size: 0.84rem; line-height: 1.65; color: var(--text); }
+.gen-plan-item-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.11em; color: var(--muted); margin-bottom: 0.2rem; }
+.gen-plan-milestones {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;
+}
+.gen-plan-milestone {
+  font-size: 0.75rem; padding: 0.3rem 0.75rem;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text);
+}
+.gen-plan-milestone::before { content: '✓ '; opacity: 0.5; }
+
+/* Roadmap output header banner */
+.rm-out-generated-banner {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: rgba(77,217,224,0.07); border: 1px solid rgba(77,217,224,0.2);
+  border-radius: 9px; padding: 0.9rem 1.25rem;
+  font-size: 0.82rem; color: var(--teal); margin-bottom: 2rem;
+}
 </style>
 </head>
 <body>
@@ -2022,13 +2067,17 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
     </div>
 
     <div class="rm-fields">
-      <div class="field-group">
+      <div class="field-group" style="grid-column:1/-1;">
         <label class="field-label">Tools and platforms you're already comfortable with</label>
-        <textarea class="field-input" rows="2" id="rm-tools" placeholder="e.g. Figma, Notion, GitHub (issues/PRs but not code), Slack, Canva, Google Analytics, Airtable, VS Code…" oninput="updateRoadmapProgress()"></textarea>
+        <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:0.6rem;">
+          <button class="btn btn-outline" style="font-size:0.72rem;padding:0.4rem 1rem;" onclick="openPopup('tools-popup')">+ Select platforms / tools</button>
+          <span id="tools-count-badge" style="font-size:0.72rem;color:var(--accent1);display:none;"></span>
+        </div>
+        <input class="field-input" type="text" id="rm-tools" placeholder="Or type additional tools here (e.g. Airtable, Google Analytics, Notion…)" oninput="updateRoadmapProgress()" style="font-size:0.83rem;">
       </div>
       <div class="field-group">
         <label class="field-label">Your area of greatest confidence right now</label>
-        <textarea class="field-input" rows="2" id="rm-confidence" placeholder="e.g. I'm most confident in written communication and community facilitation. I've run meetups for 3 years and I'm good at making people feel welcome…" oninput="updateRoadmapProgress()"></textarea>
+        <textarea class="field-input" rows="3" id="rm-confidence" placeholder="e.g. I'm most confident in written communication and community facilitation. I've run meetups for 3 years and I'm good at making people feel welcome…" oninput="updateRoadmapProgress()"></textarea>
       </div>
     </div>
   </div>
@@ -2043,8 +2092,13 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       </div>
     </div>
     <div class="field-group" style="margin-bottom:1.25rem;">
-      <label class="field-label">Skills you want to learn or improve (click all that apply)</label>
-      <div class="rm-chip-group" id="chips-learn">
+      <label class="field-label">Skills you want to learn or improve</label>
+      <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:0.6rem;">
+        <button class="btn btn-outline" style="font-size:0.72rem;padding:0.4rem 1rem;" onclick="openPopup('skills-learn-popup')">+ Add skills to develop</button>
+        <button class="btn btn-outline" style="font-size:0.72rem;padding:0.4rem 1rem;border-color:rgba(255,206,71,0.35);color:var(--accent3);" onclick="openPopup('skills-generate-popup')">✦ Generate skill suggestions</button>
+        <span id="learn-count-badge" style="font-size:0.72rem;color:var(--accent3);display:none;"></span>
+      </div>
+      <div class="rm-chip-group" id="chips-learn" style="margin-bottom:0.6rem;">
         <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Git &amp; GitHub workflows</span>
         <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Technical writing</span>
         <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Open source governance</span>
@@ -2060,12 +2114,20 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Design systems</span>
         <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Code review</span>
         <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Event organising</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Video production</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Fundraising &amp; grants</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Data visualization</span>
       </div>
-      <textarea class="field-input" rows="2" id="rm-learn" placeholder="Add skills not listed above, or describe what level you want to reach…" style="margin-top:0.75rem;" oninput="updateRoadmapProgress()"></textarea>
+      <textarea class="field-input" rows="2" id="rm-learn" placeholder="Add skills not listed above, or describe what level you want to reach…" oninput="updateRoadmapProgress()"></textarea>
     </div>
     <div class="field-group">
       <label class="field-label">Skills required for your target contribution level</label>
-      <textarea class="field-input" rows="2" id="rm-target-skills" placeholder="e.g. To become a Docs Lead I'll need: advanced Markdown, understanding of information architecture, familiarity with Docusaurus or similar tools…" oninput="updateRoadmapProgress()"></textarea>
+      <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:0.6rem;">
+        <button class="btn btn-outline" style="font-size:0.72rem;padding:0.4rem 1rem;" onclick="openPopup('target-skills-popup')">+ Browse target-level skills</button>
+        <span id="target-skills-count-badge" style="font-size:0.72rem;color:var(--accent3);display:none;"></span>
+      </div>
+      <div class="rm-chip-group" id="chips-target-skills" style="margin-bottom:0.6rem;"></div>
+      <textarea class="field-input" rows="2" id="rm-target-skills" placeholder="e.g. To become a Docs Lead I'll need: advanced Markdown, information architecture, familiarity with Docusaurus…" oninput="updateRoadmapProgress()"></textarea>
     </div>
   </div>
 
@@ -2079,7 +2141,11 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       </div>
     </div>
     <div class="field-group" style="margin-bottom:1.25rem;">
-      <label class="field-label">Areas you want to contribute to (select all that interest you)</label>
+      <label class="field-label">Areas you want to contribute to</label>
+      <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:0.6rem;">
+        <button class="btn btn-outline" style="font-size:0.72rem;padding:0.4rem 1rem;border-color:rgba(107,159,255,0.35);color:var(--accent4);" onclick="openPopup('contrib-interest-popup')">✦ Browse contribution areas</button>
+        <span id="interests-count-badge" style="font-size:0.72rem;color:var(--accent4);display:none;"></span>
+      </div>
       <div class="rm-chip-group" id="chips-interests">
         <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">✍️ Writing &amp; documentation</span>
         <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🔬 Research &amp; analysis</span>
@@ -2100,11 +2166,11 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
     <div class="rm-fields">
       <div class="field-group">
         <label class="field-label">What kind of projects interest you?</label>
-        <textarea class="field-input" rows="2" id="rm-interest" placeholder="e.g. Developer tools I use daily, social impact tech, African language NLP, accessibility tooling, education platforms…" oninput="updateRoadmapProgress()"></textarea>
+        <textarea class="field-input" rows="3" id="rm-interest" placeholder="e.g. Developer tools I use daily, social impact tech, African language NLP, accessibility tooling, education platforms…" oninput="updateRoadmapProgress()"></textarea>
       </div>
       <div class="field-group">
         <label class="field-label">Specific projects or communities on your radar</label>
-        <textarea class="field-input" rows="2" id="rm-projects" placeholder="e.g. I use VS Code daily and want to help with their docs. I follow Outreachy. I want to contribute to CHAOSS community metrics…" oninput="updateRoadmapProgress()"></textarea>
+        <textarea class="field-input" rows="3" id="rm-projects" placeholder="e.g. I use VS Code daily and want to help with their docs. I follow Outreachy. I want to contribute to CHAOSS community metrics…" oninput="updateRoadmapProgress()"></textarea>
       </div>
     </div>
   </div>
@@ -2141,81 +2207,40 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         </select>
       </div>
       <div class="field-group" style="grid-column:1/-1;">
-        <label class="field-label">When do you plan to contribute? (days/times)</label>
-        <input class="field-input" type="text" id="rm-when" placeholder="e.g. Weekend mornings, Tuesday/Thursday evenings, whenever I have a free hour at lunch…" oninput="updateRoadmapProgress()">
+        <label class="field-label">When do you plan to contribute?</label>
+        <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:0.6rem;">
+          <button class="btn btn-outline" style="font-size:0.72rem;padding:0.4rem 1rem;border-color:rgba(208,107,255,0.35);color:var(--accent5);" onclick="openPopup('when-popup')">📅 Select days &amp; times</button>
+          <span id="when-selection-badge" style="font-size:0.72rem;color:var(--accent5);display:none;"></span>
+        </div>
+        <input class="field-input" type="text" id="rm-when" placeholder="Or type your availability (e.g. Tuesday evenings, weekend mornings…)" oninput="updateRoadmapProgress()">
       </div>
     </div>
   </div>
 
-  <!-- SECTION 6: 90-DAY CONTRIBUTION PLAN -->
-  <div class="rm-section">
-    <div class="rm-section-header" style="border-color:var(--accent4);">
-      <span class="rm-section-icon">🗓️</span>
-      <div>
-        <div class="rm-section-title" style="color:var(--accent4);">90-Day Contribution Plan</div>
-        <div class="rm-section-desc">A 90-day plan turns intent into action. Be specific. Vague goals like "contribute more" don't stick — specific plans like "submit one doc fix by the 15th" do.</div>
-      </div>
-    </div>
-    <div class="rm-fields">
-      <div class="field-group" style="grid-column:1/-1;">
-        <label class="field-label">Your planned first contribution (be as specific as possible)</label>
-        <textarea class="field-input" rows="3" id="rm-first" placeholder="e.g. Find a project with a 'good first issue (docs)' label and improve their getting-started guide. Target: complete by [date]." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Month 1 — Learning goal</label>
-        <textarea class="field-input" rows="2" id="rm-m1-learn" placeholder="e.g. Learn how to fork a repo, create a branch, and submit a PR. Complete the first-contributions tutorial." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Month 1 — Contribution goal</label>
-        <textarea class="field-input" rows="2" id="rm-month1" placeholder="e.g. Submit one documentation fix or improvement to any project with a 'good first issue' label." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Month 2 — Learning goal</label>
-        <textarea class="field-input" rows="2" id="rm-m2-learn" placeholder="e.g. Understand the project's conventions and review process. Read 5 merged PRs in my area." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Month 2 — Contribution goal</label>
-        <textarea class="field-input" rows="2" id="rm-month2" placeholder="e.g. Make a second, slightly more complex contribution to the same project. Introduce myself in the community channel." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Month 3 — Learning goal</label>
-        <textarea class="field-input" rows="2" id="rm-m3-learn" placeholder="e.g. Learn about the project's roadmap, open discussions, and governance. Identify a role I could grow into." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Month 3 — Contribution goal</label>
-        <textarea class="field-input" rows="2" id="rm-month3" placeholder="e.g. Make a third contribution. Ask the maintainer if there's a need for someone with my specific skill set." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-      <div class="field-group" style="grid-column:1/-1;">
-        <label class="field-label">90-Day milestones — what does success look like at Day 30, 60, and 90?</label>
-        <textarea class="field-input" rows="3" id="rm-milestones" placeholder="Day 30: First contribution submitted and under review. Day 60: Second contribution accepted. Day 90: Active community member, known by at least 2 maintainers by name." oninput="updateRoadmapProgress()"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION 7: LONG-TERM GOALS -->
+  <!-- SECTION 6: VISION & GOALS (moved before 90-day plan) -->
   <div class="rm-section">
     <div class="rm-section-header" style="border-color:var(--accent2);">
       <span class="rm-section-icon">🌱</span>
       <div>
-        <div class="rm-section-title" style="color:var(--accent2);">Long-Term Goals</div>
-        <div class="rm-section-desc">Where do you want this to lead? Six months from now? A year? Career change, named role, portfolio building, or simply belonging — all are valid goals.</div>
+        <div class="rm-section-title" style="color:var(--accent2);">Your Vision &amp; Goals</div>
+        <div class="rm-section-desc">Where do you want this to lead? Your answers here shape your auto-generated 90-day plan — be specific and honest.</div>
       </div>
     </div>
     <div class="rm-fields">
       <div class="field-group" style="grid-column:1/-1;">
         <label class="field-label">What impact do you want to make in open source?</label>
-        <textarea class="field-input" rows="2" id="rm-impact" placeholder="e.g. I want to make documentation in African language tech more accessible. Or: I want to be a named maintainer for a tool I use daily. Or: I want to build a portfolio of open source work that shows my design skills." oninput="updateRoadmapProgress()"></textarea>
+        <textarea class="field-input" rows="2" id="rm-impact" placeholder="e.g. I want to make documentation in African language tech more accessible. Or: I want to be a named maintainer for a tool I use daily." oninput="updateRoadmapProgress()"></textarea>
       </div>
       <div class="field-group">
         <label class="field-label">Where do you want to be in 6 months?</label>
-        <textarea class="field-input" rows="2" id="rm-goal-6m" placeholder="e.g. Regular contributor to at least one project. Have 5+ accepted contributions. Active in the community channel." oninput="updateRoadmapProgress()"></textarea>
+        <textarea class="field-input" rows="2" id="rm-goal-6m" placeholder="e.g. Regular contributor to at least one project, 5+ accepted contributions, active in the community channel." oninput="updateRoadmapProgress()"></textarea>
       </div>
       <div class="field-group">
         <label class="field-label">Where do you want to be in 12 months?</label>
-        <textarea class="field-input" rows="2" id="rm-goal-12m" placeholder="e.g. Named contributor role. Mentoring at least one newer contributor. Representing the project at a community event." oninput="updateRoadmapProgress()"></textarea>
+        <textarea class="field-input" rows="2" id="rm-goal-12m" placeholder="e.g. Named contributor role, mentoring at least one newer contributor, representing the project at a community event." oninput="updateRoadmapProgress()"></textarea>
       </div>
       <div class="field-group">
-        <label class="field-label">How do you want to be recognised for your contributions?</label>
+        <label class="field-label">Who do you want to be recognised as? How?</label>
         <textarea class="field-input" rows="2" id="rm-recognition" placeholder="e.g. Named in release notes, All-Contributors, a portfolio piece, a named role I can add to LinkedIn, a reference from a maintainer." oninput="updateRoadmapProgress()"></textarea>
       </div>
       <div class="field-group">
@@ -2223,6 +2248,30 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
         <textarea class="field-input" rows="2" id="rm-blockers" placeholder="e.g. Imposter syndrome, not knowing where to find projects, fear of rejection, not understanding GitHub workflows." oninput="updateRoadmapProgress()"></textarea>
       </div>
     </div>
+  </div>
+
+  <!-- SECTION 7: 90-DAY PLAN — AUTO-GENERATED -->
+  <div class="rm-section" style="border-color:rgba(107,159,255,0.35);background:rgba(107,159,255,0.03);">
+    <div class="rm-section-header" style="border-color:var(--accent4);">
+      <span class="rm-section-icon">🗓️</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--accent4);">Your 90-Day Contribution Plan</div>
+        <div class="rm-section-desc">Based on everything you've told us, your personalised 90-day plan will be <strong style="color:var(--accent4)">generated automatically</strong> when you click "Generate My Roadmap" below. You don't need to fill anything in here — it will be crafted for you based on your skills, interests, availability, and goals.</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:rgba(107,159,255,0.07);border:1px dashed rgba(107,159,255,0.3);border-radius:10px;font-size:0.82rem;color:var(--accent4);">
+      <span style="font-size:1.6rem;">✦</span>
+      <span>Your month-by-month learning goals, contribution milestones, and Day 30/60/90 checkpoints will be tailored to your profile and presented in your roadmap. Fill in the sections above and click <strong>Generate My Roadmap</strong> to see it.</span>
+    </div>
+    <!-- Hidden fields kept for PDF compatibility -->
+    <input type="hidden" id="rm-first">
+    <input type="hidden" id="rm-m1-learn">
+    <input type="hidden" id="rm-month1">
+    <input type="hidden" id="rm-m2-learn">
+    <input type="hidden" id="rm-month2">
+    <input type="hidden" id="rm-m3-learn">
+    <input type="hidden" id="rm-month3">
+    <input type="hidden" id="rm-milestones">
   </div>
 
   <!-- Progress + Generate -->
@@ -3022,6 +3071,313 @@ document.getElementById('map-modal').addEventListener('click', function(e) {
 });
 </script>
 
+<!-- ═══ POPUP MODALS ═══ -->
+
+<!-- Tools/Platforms Popup -->
+<div class="modal-overlay" id="tools-popup" style="z-index:1200;">
+  <div class="modal" style="max-width:680px;">
+    <button class="modal-close" onclick="closePopup('tools-popup')">✕</button>
+    <h2 style="color:var(--accent1);">🛠️ Select Your Tools & Platforms</h2>
+    <p class="modal-subtitle">Click everything you're already comfortable using. You can deselect any time.</p>
+    <div id="tools-popup-body">
+      <div class="popup-category-label" style="color:var(--accent1);">Design & Creative</div>
+      <div class="rm-chip-group" id="chips-tools-design">
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Figma</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Canva</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Adobe XD</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Sketch</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Illustrator</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Photoshop</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">InDesign</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Loom</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Miro</span>
+      </div>
+      <div class="popup-category-label" style="color:var(--accent3);">Documentation & Writing</div>
+      <div class="rm-chip-group" id="chips-tools-docs">
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Notion</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Google Docs</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Confluence</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Markdown</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Docusaurus</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">GitBook</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Obsidian</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">WordPress</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Grammarly</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Hemingway</span>
+      </div>
+      <div class="popup-category-label" style="color:var(--accent4);">Dev & Version Control</div>
+      <div class="rm-chip-group" id="chips-tools-dev">
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">GitHub (issues/PRs)</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">GitHub (code)</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">GitLab</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">VS Code</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Terminal / CLI</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Jira</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Linear</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Trello</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Asana</span>
+      </div>
+      <div class="popup-category-label" style="color:var(--accent5);">Community & Communication</div>
+      <div class="rm-chip-group" id="chips-tools-comm">
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Slack</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Discord</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Zoom</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Matrix / Element</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Twitter / X</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">LinkedIn</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Mastodon</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Beehiiv / Substack</span>
+      </div>
+      <div class="popup-category-label" style="color:var(--accent6);">Data & Analytics</div>
+      <div class="rm-chip-group" id="chips-tools-data">
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Google Analytics</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Airtable</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Google Sheets</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Excel</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Tableau</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Looker Studio</span>
+        <span class="rm-chip" onclick="togglePopupChip(this,'tools','rm-tools')">Webflow</span>
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:1.5rem;">
+      <button class="btn btn-primary" onclick="closePopup('tools-popup')">Done — Save Selection</button>
+      <span id="tools-popup-count" style="font-size:0.8rem;color:var(--muted);align-self:center;"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Skills to Develop — Browse Popup -->
+<div class="modal-overlay" id="skills-learn-popup" style="z-index:1200;">
+  <div class="modal" style="max-width:680px;">
+    <button class="modal-close" onclick="closePopup('skills-learn-popup')">✕</button>
+    <h2 style="color:var(--accent3);">📈 Browse Skills to Develop</h2>
+    <p class="modal-subtitle">Select skills you want to build. These will be added to your development list.</p>
+    <div class="popup-category-label" style="color:var(--accent1);">Open Source & Collaboration</div>
+    <div class="rm-chip-group" id="chips-learn-oss">
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Git &amp; GitHub workflows</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Open source governance</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Issue triaging</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Code review</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Project roadmapping</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">CI/CD basics</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent3);">Writing & Communication</div>
+    <div class="rm-chip-group" id="chips-learn-writing">
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Technical writing</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Content strategy</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Public speaking</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Newsletter writing</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Copywriting</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Storytelling</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent4);">Community & Leadership</div>
+    <div class="rm-chip-group" id="chips-learn-comm">
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Community management</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Mentoring others</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Event organising</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Conflict resolution</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Facilitation</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Fundraising &amp; grants</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent5);">Design & Accessibility</div>
+    <div class="rm-chip-group" id="chips-learn-design">
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Accessibility auditing</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">User research</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Design systems</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">UX writing</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Translation tools</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Data visualization</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'skills-learn','rm-learn')">Video production</span>
+    </div>
+    <div class="modal-actions" style="margin-top:1.5rem;">
+      <button class="btn btn-primary" onclick="closePopup('skills-learn-popup')">Done — Save Selection</button>
+    </div>
+  </div>
+</div>
+
+<!-- Skills to Develop — Generate Suggestions Popup -->
+<div class="modal-overlay" id="skills-generate-popup" style="z-index:1200;">
+  <div class="modal" style="max-width:620px;">
+    <button class="modal-close" onclick="closePopup('skills-generate-popup')">✕</button>
+    <h2 style="color:var(--accent3);">✦ Skill Suggestions for Your Profile</h2>
+    <p class="modal-subtitle">Based on your existing skills and target areas, here are recommended skills to develop:</p>
+    <div id="generated-skills-list" style="display:flex;flex-direction:column;gap:0.85rem;margin-bottom:1.5rem;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="background:var(--accent3);color:var(--bg);" onclick="applyGeneratedSkills()">Add Selected to My List</button>
+      <button class="btn btn-outline" onclick="closePopup('skills-generate-popup')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Target-level Skills Popup -->
+<div class="modal-overlay" id="target-skills-popup" style="z-index:1200;">
+  <div class="modal" style="max-width:680px;">
+    <button class="modal-close" onclick="closePopup('target-skills-popup')">✕</button>
+    <h2 style="color:var(--accent3);">🎯 Skills Required for Your Target Level</h2>
+    <p class="modal-subtitle">What skills will you need to reach the contribution role you're aiming for? Select all that apply.</p>
+    <div class="popup-category-label" style="color:var(--accent1);">Docs Lead / Documentation</div>
+    <div class="rm-chip-group" id="chips-target-docs">
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Advanced Markdown</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Information architecture</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Docusaurus / MkDocs</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Style guide authoring</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Docs-as-code workflow</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">API documentation</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent2);">Community Manager</div>
+    <div class="rm-chip-group" id="chips-target-cm">
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Community analytics</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Moderation best practices</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Event planning</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Onboarding design</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Conflict de-escalation</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Newsletter management</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent4);">Core Contributor / Maintainer</div>
+    <div class="rm-chip-group" id="chips-target-maintainer">
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Code review process</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Triage &amp; prioritisation</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Release management</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Open source governance</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Security basics</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Roadmap planning</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent5);">Design / Accessibility Lead</div>
+    <div class="rm-chip-group" id="chips-target-design">
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">WCAG guidelines</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Design systems</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Screen reader testing</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Prototype testing</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">User interviews</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'target-skills','rm-target-skills')">Component documentation</span>
+    </div>
+    <div class="modal-actions" style="margin-top:1.5rem;">
+      <button class="btn btn-primary" onclick="closePopupWithChips('target-skills-popup','chips-target-docs,chips-target-cm,chips-target-maintainer,chips-target-design','rm-target-skills','chips-target-skills')">Done — Add to My Profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- Contribution Interest Popup -->
+<div class="modal-overlay" id="contrib-interest-popup" style="z-index:1200;">
+  <div class="modal" style="max-width:720px;">
+    <button class="modal-close" onclick="closePopup('contrib-interest-popup')">✕</button>
+    <h2 style="color:var(--accent4);">🎯 Browse Contribution Areas</h2>
+    <p class="modal-subtitle">Explore different types of open source contribution. Select any that excite you — there's no wrong answer.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;">
+        <div class="popup-category-label" style="color:var(--accent1);font-size:0.78rem;font-weight:700;margin-bottom:0.6rem;">✍️ Writing & Docs</div>
+        <div class="rm-chip-group" id="chips-ci-writing">
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">README improvements</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Tutorial writing</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">API docs</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Blog posts</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Changelogs</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Translation</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;">
+        <div class="popup-category-label" style="color:var(--accent3);font-size:0.78rem;font-weight:700;margin-bottom:0.6rem;">🎨 Design & UX</div>
+        <div class="rm-chip-group" id="chips-ci-design">
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">UI mockups</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Logo &amp; branding</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Icon sets</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">UX research</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Prototype testing</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Infographics</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;">
+        <div class="popup-category-label" style="color:var(--accent2);font-size:0.78rem;font-weight:700;margin-bottom:0.6rem;">🤝 Community</div>
+        <div class="rm-chip-group" id="chips-ci-community">
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Answering questions</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">1:1 mentoring</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Forum moderation</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Event organising</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Onboarding newcomers</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Newsletter curation</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;">
+        <div class="popup-category-label" style="color:var(--accent4);font-size:0.78rem;font-weight:700;margin-bottom:0.6rem;">🔬 Research & Testing</div>
+        <div class="rm-chip-group" id="chips-ci-research">
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Bug reporting</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Usability testing</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Accessibility audits</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Market research</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Competitive analysis</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">User interviews</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;">
+        <div class="popup-category-label" style="color:var(--accent5);font-size:0.78rem;font-weight:700;margin-bottom:0.6rem;">📣 Advocacy & Outreach</div>
+        <div class="rm-chip-group" id="chips-ci-advocacy">
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Social media content</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Conference talks</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Case study writing</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Project promotion</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Podcast appearances</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Ambassador programs</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;">
+        <div class="popup-category-label" style="color:var(--accent6);font-size:0.78rem;font-weight:700;margin-bottom:0.6rem;">📋 Project & Product</div>
+        <div class="rm-chip-group" id="chips-ci-product">
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Issue triage</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Roadmap input</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Feature proposals</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Project management</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Grant writing</span>
+          <span class="rm-chip" onclick="togglePopupChip(this,'contrib-interest','rm-interests')">Fundraising support</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" style="background:var(--accent4);color:var(--bg);" onclick="closePopupSyncChips('contrib-interest-popup','contrib-interest','rm-interests','chips-interests')">Done — Add to My Profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- When to Contribute — Days & Times Popup -->
+<div class="modal-overlay" id="when-popup" style="z-index:1200;">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="closePopup('when-popup')">✕</button>
+    <h2 style="color:var(--accent5);">📅 When Will You Contribute?</h2>
+    <p class="modal-subtitle">Select the days and time slots that work for you. You can pick as many as you like.</p>
+    <div class="popup-category-label" style="color:var(--accent5);margin-bottom:0.6rem;">Days of the week</div>
+    <div class="rm-chip-group" id="chips-when-days" style="margin-bottom:1.25rem;">
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Monday</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Tuesday</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Wednesday</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Thursday</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Friday</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Saturday</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Sunday</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent5);margin-bottom:0.6rem;">Time of day</div>
+    <div class="rm-chip-group" id="chips-when-times" style="margin-bottom:1.25rem;">
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Early morning (5–8am)</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Morning (8–12pm)</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Lunch break</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Afternoon (12–5pm)</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Evening (5–9pm)</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Night (9pm+)</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Anytime I'm free</span>
+    </div>
+    <div class="popup-category-label" style="color:var(--accent5);margin-bottom:0.6rem;">Rhythm</div>
+    <div class="rm-chip-group" id="chips-when-rhythm">
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Daily habit (short bursts)</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">A few set days per week</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Weekends mainly</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Deep work sessions (2–4hr)</span>
+      <span class="rm-chip" onclick="togglePopupChip(this,'when','rm-when')">Irregular — when inspired</span>
+    </div>
+    <div class="modal-actions" style="margin-top:1.5rem;">
+      <button class="btn btn-primary" style="background:var(--accent5);color:var(--bg);" onclick="closePopup('when-popup')">Done — Save Schedule</button>
+      <span id="when-popup-count" style="font-size:0.8rem;color:var(--muted);align-self:center;"></span>
+    </div>
+  </div>
+</div>
+
 <!-- SHARE MODAL -->
 <div class="share-modal-overlay" id="share-modal">
   <div class="share-modal">
@@ -3445,14 +3801,200 @@ document.getElementById('share-modal').addEventListener('click', function(e) {
 });
 
 // ── MY CONTRIBUTOR ROADMAP ─────────────────────────────
-const RM_FIELDS = ['rm-name','rm-role','rm-experience','rm-url','rm-skills','rm-tools','rm-confidence','rm-learn','rm-target-skills','rm-interests','rm-interest','rm-projects','rm-time','rm-pace','rm-when','rm-first','rm-m1-learn','rm-month1','rm-m2-learn','rm-month2','rm-m3-learn','rm-month3','rm-milestones','rm-impact','rm-goal-6m','rm-goal-12m','rm-recognition','rm-blockers'];
+const RM_FIELDS = ['rm-name','rm-role','rm-experience','rm-url','rm-skills','rm-tools','rm-confidence','rm-learn','rm-target-skills','rm-interests','rm-interest','rm-projects','rm-time','rm-pace','rm-when','rm-impact','rm-goal-6m','rm-goal-12m','rm-recognition','rm-blockers'];
+
+// Popup state: track selected items per popup group
+const popupSelections = {};
+
+function openPopup(id) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('open'); document.body.style.overflow='hidden'; }
+  // Special case: generate skills popup
+  if (id === 'skills-generate-popup') buildGeneratedSkillsSuggestions();
+}
+
+function closePopup(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+  document.body.style.overflow = '';
+  // Sync all popup chips to their target fields
+  syncAllPopupChips();
+}
+
+// Close popup when clicking overlay (event delegation for dynamically added modals)
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay')) {
+    closePopup(e.target.id);
+  }
+});
+
+function togglePopupChip(chipEl, groupKey, targetFieldId) {
+  chipEl.classList.toggle('selected');
+  // Update count badge dynamically
+  updatePopupCount(chipEl.closest('.modal-overlay')?.id);
+  // Sync to hidden field
+  syncAllPopupChips();
+  updateRoadmapProgress();
+}
+
+function syncAllPopupChips() {
+  // Tools
+  const toolChips = document.querySelectorAll('#tools-popup .rm-chip.selected');
+  const toolsField = document.getElementById('rm-tools');
+  if (toolChips.length) {
+    const selected = [...toolChips].map(c=>c.textContent.trim()).join(', ');
+    const manual = toolsField.value.replace(/^[^|]*\|?\s*/,'');
+    toolsField.value = selected + (manual ? ' | ' + manual : '');
+  }
+  const tcBadge = document.getElementById('tools-count-badge');
+  if (tcBadge) { tcBadge.style.display = toolChips.length ? 'inline' : 'none'; tcBadge.textContent = toolChips.length + ' selected'; }
+
+  // Skills to learn (from skills-learn-popup)
+  const learnChips = document.querySelectorAll('#skills-learn-popup .rm-chip.selected');
+  const learnField = document.getElementById('rm-learn');
+  // Also include manually-selected inline chips
+  const inlineLearnChips = document.querySelectorAll('#chips-learn .rm-chip.selected');
+  const allLearn = [...new Set([...learnChips, ...inlineLearnChips].map(c=>c.textContent.trim()))];
+  if (allLearn.length || learnField.dataset.manual) {
+    const manual = learnField.dataset.manual || '';
+    learnField.value = allLearn.join(', ') + (manual ? '\n' + manual : '');
+  }
+  const lcBadge = document.getElementById('learn-count-badge');
+  if (lcBadge) { lcBadge.style.display = allLearn.length ? 'inline' : 'none'; lcBadge.textContent = allLearn.length + ' selected'; }
+
+  // Target skills
+  const targetChips = document.querySelectorAll('#target-skills-popup .rm-chip.selected');
+  const targetField = document.getElementById('rm-target-skills');
+  const inlineTargetChips = document.querySelectorAll('#chips-target-skills .rm-chip.selected');
+  const allTarget = [...new Set([...targetChips, ...inlineTargetChips].map(c=>c.textContent.trim()))];
+  if (allTarget.length) {
+    targetField.value = allTarget.join(', ');
+  }
+  const tscBadge = document.getElementById('target-skills-count-badge');
+  if (tscBadge) { tscBadge.style.display = allTarget.length ? 'inline' : 'none'; tscBadge.textContent = allTarget.length + ' selected'; }
+
+  // Contribution interests (from contrib-interest-popup)
+  const ciChips = document.querySelectorAll('#contrib-interest-popup .rm-chip.selected');
+  const inlineCiChips = document.querySelectorAll('#chips-interests .rm-chip.selected');
+  const allCi = [...new Set([...ciChips, ...inlineCiChips].map(c=>c.textContent.trim()))];
+  const ciField = document.getElementById('rm-interests');
+  if (allCi.length && !ciField.value.trim().startsWith('Describe')) {
+    const manualPart = ciField.value.split('\n').filter(l=>!allCi.some(c=>l.includes(c))).join('\n');
+    ciField.value = allCi.join(', ') + (manualPart.trim() ? '\n' + manualPart.trim() : '');
+  }
+  const icBadge = document.getElementById('interests-count-badge');
+  if (icBadge) { icBadge.style.display = allCi.length ? 'inline' : 'none'; icBadge.textContent = allCi.length + ' selected'; }
+
+  // When
+  const whenChips = document.querySelectorAll('#when-popup .rm-chip.selected');
+  const whenField = document.getElementById('rm-when');
+  if (whenChips.length) {
+    whenField.value = [...whenChips].map(c=>c.textContent.trim()).join(', ');
+  }
+  const wcBadge = document.getElementById('when-selection-badge');
+  if (wcBadge) { wcBadge.style.display = whenChips.length ? 'inline' : 'none'; wcBadge.textContent = [...whenChips].map(c=>c.textContent.trim()).join(' · '); }
+}
+
+function updatePopupCount(overlayId) {
+  if (!overlayId) return;
+  const count = document.querySelectorAll('#' + overlayId + ' .rm-chip.selected').length;
+  const countEl = document.getElementById(overlayId.replace('-popup', '-popup-count'));
+  if (countEl) countEl.textContent = count ? count + ' selected' : '';
+}
+
+function closePopupWithChips(popupId, chipGroupIds, targetFieldId, inlineGroupId) {
+  closePopup(popupId);
+}
+
+function closePopupSyncChips(popupId, groupKey, targetFieldId, inlineGroupId) {
+  closePopup(popupId);
+}
+
+function buildGeneratedSkillsSuggestions() {
+  const skills = document.getElementById('rm-skills')?.value || '';
+  const interests = document.getElementById('rm-interests')?.value || '';
+  const experience = document.getElementById('rm-experience')?.value || '';
+
+  const suggestions = [];
+
+  // Logic-based suggestions
+  if (!skills.toLowerCase().includes('git') && !skills.toLowerCase().includes('github')) {
+    suggestions.push({ skill: 'Git & GitHub workflows', reason: 'Essential for contributing to any open source project — even for non-code work like docs and design.' });
+  }
+  if (skills.toLowerCase().includes('writ') || interests.toLowerCase().includes('doc')) {
+    suggestions.push({ skill: 'Information architecture', reason: 'Writers and docs contributors benefit enormously from understanding how to structure complex information.' });
+    suggestions.push({ skill: 'Docs-as-code workflow', reason: 'Most OSS projects manage docs the same way as code — this skill bridges the gap.' });
+  }
+  if (interests.toLowerCase().includes('communit') || skills.toLowerCase().includes('facilit')) {
+    suggestions.push({ skill: 'Community analytics', reason: 'Data helps you measure the health and growth of the spaces you manage.' });
+    suggestions.push({ skill: 'Onboarding design', reason: 'Community managers who design great onboarding experiences retain far more contributors.' });
+  }
+  if (interests.toLowerCase().includes('design') || skills.toLowerCase().includes('design')) {
+    suggestions.push({ skill: 'WCAG accessibility guidelines', reason: 'Design contributions are 10× more impactful when they include accessibility from the start.' });
+    suggestions.push({ skill: 'Design systems', reason: 'Projects with design systems have far more consistent, maintainable interfaces.' });
+  }
+  if (experience.toLowerCase().includes('begin') || experience.toLowerCase().includes('curious')) {
+    suggestions.push({ skill: 'Open source governance basics', reason: 'Understanding how OSS projects make decisions helps you contribute more effectively from day one.' });
+    suggestions.push({ skill: 'Technical writing', reason: 'Even non-writers can learn the basics — it\'s the single highest-ROI skill for non-code contributors.' });
+  }
+  if (skills.toLowerCase().includes('research') || skills.toLowerCase().includes('analyt')) {
+    suggestions.push({ skill: 'User research methods', reason: 'Research skills translate powerfully to open source — projects rarely have dedicated user researchers.' });
+    suggestions.push({ skill: 'Competitive analysis', reason: 'Strategic analysis helps maintainers understand how their project fits the landscape.' });
+  }
+
+  // Always suggest at least 3
+  const always = [
+    { skill: 'Public speaking & presenting', reason: 'Conference talks and lightning talks are among the most impactful ways to grow your contributor reputation.' },
+    { skill: 'Mentoring others', reason: 'Once you\'ve contributed for 3+ months, mentoring new contributors is one of the most valued things you can do.' },
+    { skill: 'Issue triaging', reason: 'Helping maintainers categorise and prioritise issues is high-impact, low-barrier, and always needed.' },
+  ];
+  always.forEach(a => { if (!suggestions.some(s => s.skill === a.skill)) suggestions.push(a); });
+
+  const container = document.getElementById('generated-skills-list');
+  container.innerHTML = '';
+  suggestions.slice(0, 6).forEach(s => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:flex-start;gap:0.85rem;padding:0.85rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:border-color 0.2s;';
+    div.innerHTML = `
+      <div style="width:20px;height:20px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;" class="gen-skill-check"></div>
+      <div>
+        <div style="font-size:0.87rem;font-weight:600;color:var(--text);margin-bottom:0.2rem;">${s.skill}</div>
+        <div style="font-size:0.78rem;color:var(--muted);line-height:1.55;">${s.reason}</div>
+      </div>`;
+    div.addEventListener('click', function() {
+      const check = this.querySelector('.gen-skill-check');
+      const isSelected = this.dataset.selected === 'true';
+      this.dataset.selected = isSelected ? 'false' : 'true';
+      this.style.borderColor = isSelected ? 'var(--border)' : 'var(--accent3)';
+      check.style.background = isSelected ? '' : 'var(--accent3)';
+      check.style.borderColor = isSelected ? 'var(--border)' : 'var(--accent3)';
+      check.innerHTML = isSelected ? '' : '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="var(--bg)" stroke-width="1.8" stroke-linecap="round"/></svg>';
+      check.dataset.skill = s.skill;
+    });
+    container.appendChild(div);
+  });
+}
+
+function applyGeneratedSkills() {
+  const selected = [...document.querySelectorAll('#generated-skills-list [data-selected="true"]')]
+    .map(el => el.querySelector('.gen-skill-check')?.dataset.skill)
+    .filter(Boolean);
+  if (selected.length) {
+    const field = document.getElementById('rm-learn');
+    const existing = field.value.trim();
+    field.value = existing ? existing + ', ' + selected.join(', ') : selected.join(', ');
+    updateRoadmapProgress();
+  }
+  closePopup('skills-generate-popup');
+}
 
 function toggleChip(el, targetId) {
   el.classList.toggle('selected');
   const target = document.getElementById(targetId);
   if (!target) return;
-  const selected = [...el.closest('.rm-chip-group').querySelectorAll('.rm-chip.selected')].map(c => c.textContent.trim()).join(', ');
-  // Preserve any manually typed content after the chips line
+  const group = el.closest('.rm-chip-group');
+  if (!group) return;
+  const selected = [...group.querySelectorAll('.rm-chip.selected')].map(c => c.textContent.trim()).join(', ');
   const existing = target.value;
   const firstNewline = existing.indexOf('\n');
   const manual = firstNewline > -1 ? existing.substring(firstNewline) : '';
@@ -3474,21 +4016,97 @@ function updateRoadmapProgress() {
 
 function clearRoadmap() {
   RM_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  document.querySelectorAll('.rm-chip.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.rm-chip.selected, #tools-popup .rm-chip.selected, #skills-learn-popup .rm-chip.selected, #target-skills-popup .rm-chip.selected, #contrib-interest-popup .rm-chip.selected, #when-popup .rm-chip.selected').forEach(c => c.classList.remove('selected'));
+  ['tools-count-badge','learn-count-badge','target-skills-count-badge','interests-count-badge','when-selection-badge'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; });
   updateRoadmapProgress();
   document.getElementById('roadmap-output').style.display = 'none';
+}
+
+// ── AUTO-GENERATE 90-DAY PLAN ─────────────────────────────
+function generate90DayPlan(data) {
+  const { experience, skills, interests, time, pace, when, confidence, impact, goal6m, goal12m, blockers, targetSkills } = data;
+
+  // Determine intensity from time
+  const isLight = time.includes('1') || time.includes('Less');
+  const isDeep  = time.includes('10+') || time.includes('6–10');
+  const isFast  = pace.includes('Fast') || pace.includes('Deadline');
+  const isBeginner = experience.includes('begin') || experience.includes('Curious') || experience.includes('never');
+
+  // Derive primary contribution area
+  const area = interests || skills || 'open source contribution';
+  const firstSkill = skills.split(/,|;/)[0]?.trim() || 'your skills';
+  const firstInterest = interests.split(/,|;/)[0]?.replace(/[✍️🔬🤝💻🎨🌍♿📣🧪🎓📋🎤🖼️]/g,'').trim() || interests.trim() || 'your chosen area';
+
+  // Blocker note
+  const blockerNote = blockers ? ` One key thing to address early: "${blockers.split(/[.,]/)[0].trim()}"` : '';
+
+  // Build plan
+  const m1Learn = isBeginner
+    ? `Orientation — understand how open source projects work. Complete the first-contributions tutorial (github.com/firstcontributions). Learn the fork → branch → PR workflow, even if your contributions won't be code. Explore 3–5 projects in your area of ${firstInterest} and read their CONTRIBUTING.md files carefully.`
+    : `Deepen your understanding of the specific project(s) on your radar. Read their open issues, recent merged PRs, community discussions, and governance documents. Identify the communication norms and what kind of contributions are most needed right now.`;
+
+  const m1Contrib = `Find one project with a clearly labeled "good first issue" or non-code task in ${firstInterest}. Make your first contribution — ${isBeginner ? 'a documentation improvement, a translation, a bug report, or a community post' : 'a well-scoped task that uses ' + firstSkill}. The goal is completion and a merged/accepted outcome, not perfection.${blockerNote}`;
+
+  const m2Learn = isBeginner
+    ? `Learn the conventions of the specific project you contributed to in Month 1. Read their style guide, review 5 recently merged contributions, and observe how reviewers give feedback. Start to understand the project's roadmap and who the key contributors are.`
+    : `Go deeper into ${targetSkills ? targetSkills.split(/,|;/)[0].trim() : 'the skills needed for your target role'}. Read documentation, watch talks, and practice deliberately. Reach out to an existing contributor for a 15-minute conversation — most are happy to chat.`;
+
+  const m2Contrib = `Make a second contribution — more complex than the first, and to a project you already have context on. Introduce yourself in the community channel if you haven't already. Respond to at least one question or discussion from another contributor. Goal: be a recognisable name in the community.`;
+
+  const m3Learn = `Understand the project's governance and long-term direction. Read any public roadmap documents, open RFCs, or discussions. Identify a specific named role (Docs Lead, Community Manager, Accessibility Advocate, etc.) that aligns with ${impact ? '"' + impact.split('.')[0] + '"' : 'your goals'} and understand what it requires.`;
+
+  const m3Contrib = isLight
+    ? `Make your third contribution and write a short public post (blog, LinkedIn, Twitter/X, or community forum) about what you've learned contributing to open source. Visibility matters for recognition and for attracting collaborators.`
+    : `Make two contributions this month. Begin conversations with maintainers about taking on more responsibility — ask directly: "Is there a need for someone with my background in ${firstSkill}?" Document your contributions in a format you can share (portfolio page, LinkedIn update, All-Contributors submission).`;
+
+  const milestones = [
+    `Day 30: First contribution submitted and ${isFast ? 'accepted' : 'under review'}. Introduced in community channel. Project bookmarked and CONTRIBUTING.md read.`,
+    `Day 60: Second contribution accepted. Name recognised by at least one maintainer or community member. Clearer picture of the role you want to grow into.`,
+    `Day 90: Three contributions made. Publicly shared your open source journey in at least one channel. Concrete next step identified — ${goal6m ? goal6m.split('.')[0] : 'on track toward 6-month goal'}.`,
+  ];
+
+  // Store in hidden fields for PDF
+  document.getElementById('rm-first').value = m1Contrib;
+  document.getElementById('rm-m1-learn').value = m1Learn;
+  document.getElementById('rm-month1').value = m1Contrib;
+  document.getElementById('rm-m2-learn').value = m2Learn;
+  document.getElementById('rm-month2').value = m2Contrib;
+  document.getElementById('rm-m3-learn').value = m3Learn;
+  document.getElementById('rm-month3').value = m3Contrib;
+  document.getElementById('rm-milestones').value = milestones.join('\n');
+
+  return { m1Learn, m1Contrib, m2Learn, m2Contrib, m3Learn, m3Contrib, milestones };
 }
 
 function generateRoadmap() {
   const name = document.getElementById('rm-name')?.value.trim();
   if (!name) { alert('Please enter your name first — it will appear as the title of your roadmap.'); document.getElementById('rm-name').focus(); return; }
 
+  syncAllPopupChips();
   const get = id => document.getElementById(id)?.value.trim() || '';
+
+  const planData = {
+    experience: get('rm-experience'),
+    skills: get('rm-skills'),
+    interests: get('rm-interests'),
+    time: get('rm-time'),
+    pace: get('rm-pace'),
+    when: get('rm-when'),
+    confidence: get('rm-confidence'),
+    impact: get('rm-impact'),
+    goal6m: get('rm-goal-6m'),
+    goal12m: get('rm-goal-12m'),
+    blockers: get('rm-blockers'),
+    targetSkills: get('rm-target-skills'),
+  };
+
+  const plan = generate90DayPlan(planData);
 
   document.getElementById('rm-output-name').textContent = name + "'s Contributor Journey Roadmap";
   const metaParts = [get('rm-role'), get('rm-experience')].filter(Boolean);
   document.getElementById('rm-output-meta').textContent = metaParts.join('  ·  ') || 'No-Code Contribution Map';
 
+  // Build output sections
   const sections = [
     { color:'var(--accent1)', title:'💡 Current Skills & Experience', items:[
       { label:'Skills & Expertise', value: get('rm-skills') },
@@ -3509,17 +4127,7 @@ function generateRoadmap() {
       { label:'Preferred Pace', value: get('rm-pace') },
       { label:'When I Plan to Contribute', value: get('rm-when') },
     ]},
-    { color:'var(--accent4)', title:'🗓️ 90-Day Contribution Plan', items:[
-      { label:'My First Contribution', value: get('rm-first') },
-      { label:'Month 1 — Learning Goal', value: get('rm-m1-learn') },
-      { label:'Month 1 — Contribution Goal', value: get('rm-month1') },
-      { label:'Month 2 — Learning Goal', value: get('rm-m2-learn') },
-      { label:'Month 2 — Contribution Goal', value: get('rm-month2') },
-      { label:'Month 3 — Learning Goal', value: get('rm-m3-learn') },
-      { label:'Month 3 — Contribution Goal', value: get('rm-month3') },
-      { label:'Milestones at Day 30 / 60 / 90', value: get('rm-milestones') },
-    ]},
-    { color:'var(--accent2)', title:'🌱 Long-Term Goals', items:[
+    { color:'var(--accent2)', title:'🌱 Vision & Long-Term Goals', items:[
       { label:'Impact I Want to Make', value: get('rm-impact') },
       { label:'Where I Want to Be in 6 Months', value: get('rm-goal-6m') },
       { label:'Where I Want to Be in 12 Months', value: get('rm-goal-12m') },
@@ -3530,6 +4138,14 @@ function generateRoadmap() {
 
   const container = document.getElementById('roadmap-sections');
   container.innerHTML = '';
+
+  // Opening banner
+  const banner = document.createElement('div');
+  banner.className = 'rm-out-generated-banner';
+  banner.innerHTML = `<span style="font-size:1.4rem;">✦</span><span>Here is your <strong>personalised 90-day contribution plan</strong>, built from the No-Code Contribution Map based on your skills, interests, availability, and goals.</span>`;
+  container.appendChild(banner);
+
+  // Personal sections
   sections.forEach(s => {
     const validItems = s.items.filter(it => it.value);
     if (!validItems.length) return;
@@ -3545,6 +4161,48 @@ function generateRoadmap() {
         </div>`).join('')}`;
     container.appendChild(div);
   });
+
+  // Auto-generated 90-day plan
+  const planSection = document.createElement('div');
+  planSection.className = 'rm-out-section gen-plan-section';
+  planSection.style.borderColor = 'var(--accent4)';
+  planSection.innerHTML = `<div class="rm-out-title" style="color:var(--accent4)">🗓️ Your 90-Day Contribution Plan</div>
+  <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;">Generated for you by the No-Code Contribution Map based on your profile.</div>`;
+
+  const months = [
+    { num: 1, color: 'var(--accent1)', bg: 'rgba(124,255,196,0.12)', label: 'Month 1 — Start', learn: plan.m1Learn, contrib: plan.m1Contrib },
+    { num: 2, color: 'var(--accent3)', bg: 'rgba(255,206,71,0.12)',  label: 'Month 2 — Deepen', learn: plan.m2Learn, contrib: plan.m2Contrib },
+    { num: 3, color: 'var(--accent4)', bg: 'rgba(107,159,255,0.12)', label: 'Month 3 — Grow', learn: plan.m3Learn, contrib: plan.m3Contrib },
+  ];
+
+  months.forEach(m => {
+    const monthEl = document.createElement('div');
+    monthEl.className = 'gen-plan-month';
+    monthEl.innerHTML = `
+      <div class="gen-plan-month-header">
+        <div class="gen-plan-month-num" style="background:${m.bg};color:${m.color};">${m.num}</div>
+        <div class="gen-plan-month-title" style="color:${m.color};">${m.label}</div>
+      </div>
+      <div class="gen-plan-month-body">
+        <div class="gen-plan-item">
+          <div class="gen-plan-item-label">Learning Goal</div>
+          ${m.learn}
+        </div>
+        <div class="gen-plan-item">
+          <div class="gen-plan-item-label">Contribution Goal</div>
+          ${m.contrib}
+        </div>
+      </div>`;
+    planSection.appendChild(monthEl);
+  });
+
+  // Milestones
+  const milestonesEl = document.createElement('div');
+  milestonesEl.style.marginTop = '1rem';
+  milestonesEl.innerHTML = `<div class="rm-out-item-label" style="margin-bottom:0.6rem;">Milestones — Day 30 / 60 / 90</div>
+  <div class="gen-plan-milestones">${plan.milestones.map(m=>`<div class="gen-plan-milestone">${m}</div>`).join('')}</div>`;
+  planSection.appendChild(milestonesEl);
+  container.appendChild(planSection);
 
   const out = document.getElementById('roadmap-output');
   out.style.display = 'block';
