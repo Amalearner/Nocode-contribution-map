@@ -3378,12 +3378,22 @@ document.getElementById('map-modal').addEventListener('click', function(e) {
   </div>
 </div>
 
+<!-- SHARED ROADMAP VIEW OVERLAY -->
+<div class="modal-overlay" id="shared-roadmap-overlay" style="z-index:1300;align-items:flex-start;padding:2rem 1rem;overflow-y:auto;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:820px;overflow:hidden;animation:fadeUp 0.4s ease;margin:auto;">
+    <div id="shared-roadmap-content"></div>
+  </div>
+</div>
+
 <!-- SHARE MODAL -->
 <div class="share-modal-overlay" id="share-modal">
   <div class="share-modal">
     <button class="modal-close" onclick="closeShareModal()">✕</button>
     <h3>🔗 Share This</h3>
     <p id="share-modal-desc">Share your contribution journey with your team or community.</p>
+    <div id="share-roadmap-note" style="display:none;margin-bottom:1rem;padding:0.75rem 1rem;background:rgba(77,217,224,0.07);border:1px solid rgba(77,217,224,0.2);border-radius:8px;font-size:0.78rem;color:var(--teal);line-height:1.6;">
+      ✦ Anyone who opens this link will see <strong>your personal roadmap</strong> — your name, skills, goals, and 90-day plan — exactly as you built it.
+    </div>
     <div class="share-grid">
       <a class="share-btn sb-twitter"  id="share-twitter"  href="#" target="_blank" rel="noopener">
         <div class="share-icon">𝕏</div><span>Post on X / Twitter</span>
@@ -3750,32 +3760,192 @@ const SHARE_MSGS = {
   journey:  { title:'Our Contributor Journey Plan',  text:'We just designed our contributor journey for open source — from discovery to recognition to growth. Built with the No-Code Contribution Map 🌱' },
   'c-assess':{ title:'My Contributor Self-Assessment',text:'I just completed a self-assessment on my open source contribution readiness. Open source is for everyone 💚' },
   'p-assess':{ title:'Our Project Inclusion Audit',  text:'We just audited our project for non-code contributor readiness and inclusion. Built with the No-Code Contribution Map 🔍' },
-  'roadmap':  { title:'My Open Source Contributor Roadmap', text:'I just built my personal open source contribution roadmap — 3 months planned, skills mapped, goals set. Built with the No-Code Contribution Map 🗺️' },
+  'roadmap':  { title:'My Open Source Contributor Roadmap', text:'I just built my personal open source contribution roadmap — skills mapped, goals set, 90-day plan ready. Built with the No-Code Contribution Map 🗺️' },
 };
+
+// ── ROADMAP SHARE URL ENCODER ─────────────────────────────
+// Encodes all roadmap field values into a compact URL hash so the
+// shared link opens directly to the recipient's personal roadmap view.
+function buildRoadmapShareUrl() {
+  const fields = ['rm-name','rm-role','rm-experience','rm-url','rm-skills','rm-tools','rm-confidence','rm-learn','rm-target-skills','rm-interests','rm-interest','rm-projects','rm-time','rm-pace','rm-when','rm-impact','rm-goal-6m','rm-goal-12m','rm-recognition','rm-blockers','rm-first','rm-m1-learn','rm-month1','rm-m2-learn','rm-month2','rm-m3-learn','rm-month3','rm-milestones'];
+  const data = {};
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value.trim()) data[id.replace('rm-','')] = el.value.trim();
+  });
+  const json = JSON.stringify(data);
+  // Base64-encode to keep URL clean
+  const encoded = btoa(unescape(encodeURIComponent(json)));
+  const base = window.location.href.split('#')[0].split('?')[0];
+  return base + '?roadmap=' + encoded + '#roadmap-view';
+}
+
+// ── ROADMAP SHARE READER — runs on page load ──────────────
+function checkRoadmapShareParam() {
+  const params = new URLSearchParams(window.location.search);
+  const encoded = params.get('roadmap');
+  if (!encoded) return;
+  try {
+    const json = decodeURIComponent(escape(atob(encoded)));
+    const data = JSON.parse(json);
+    // Show the shared roadmap view modal
+    renderSharedRoadmapView(data);
+  } catch(e) { /* malformed param — ignore */ }
+}
+
+function renderSharedRoadmapView(data) {
+  const get = key => data[key] || '';
+  const name = get('name') || 'A Contributor';
+
+  // Build the full 90-day plan if the fields are present, else regenerate
+  const planData = {
+    experience: get('experience'), skills: get('skills'), interests: get('interests'),
+    time: get('time'), pace: get('pace'), when: get('when'), confidence: get('confidence'),
+    impact: get('impact'), goal6m: get('goal-6m'), goal12m: get('goal-12m'),
+    blockers: get('blockers'), targetSkills: get('target-skills'),
+  };
+
+  // Use stored 90-day plan if present, otherwise regenerate
+  const hasPlan = get('m1-learn') || get('month1');
+
+  const sections = [
+    { color:'var(--accent1)', title:'💡 Current Skills & Experience', items:[
+      { label:'Skills & Expertise', value: get('skills') },
+      { label:'Tools & Platforms', value: get('tools') },
+      { label:'Area of Greatest Confidence', value: get('confidence') },
+    ]},
+    { color:'var(--accent3)', title:'📈 Skills to Develop', items:[
+      { label:'Skills I Want to Learn', value: get('learn') },
+      { label:'Skills Required for My Target Level', value: get('target-skills') },
+    ]},
+    { color:'var(--accent4)', title:'🎯 Contribution Interests', items:[
+      { label:'Contribution Areas', value: get('interests') },
+      { label:'Types of Projects', value: get('interest') },
+      { label:'Specific Projects / Communities', value: get('projects') },
+    ]},
+    { color:'var(--accent5)', title:'⏱️ Time & Pace', items:[
+      { label:'Hours Available Per Week', value: get('time') },
+      { label:'Preferred Pace', value: get('pace') },
+      { label:'When I Plan to Contribute', value: get('when') },
+    ]},
+    { color:'var(--accent2)', title:'🌱 Vision & Goals', items:[
+      { label:'Impact I Want to Make', value: get('impact') },
+      { label:'6-Month Goal', value: get('goal-6m') },
+      { label:'12-Month Goal', value: get('goal-12m') },
+      { label:'How I Want to Be Recognised', value: get('recognition') },
+      { label:'Blockers to Overcome', value: get('blockers') },
+    ]},
+  ];
+
+  // Build HTML
+  let html = `
+    <div style="background:rgba(77,217,224,0.06);border-bottom:1px solid var(--border);padding:2rem 2.5rem;">
+      <div style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:0.4rem;">Personal Open Source Contribution Roadmap</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:0.3rem;">${name}'s Contributor Journey Roadmap</h2>
+      <div style="font-size:0.83rem;color:var(--muted);">${[get('role'), get('experience')].filter(Boolean).join('  ·  ') || 'No-Code Contribution Map'}</div>
+    </div>
+    <div style="padding:1.5rem 2.5rem 0;">
+      <div class="rm-out-generated-banner"><span style="font-size:1.3rem;">✦</span><span>This is <strong>${name}'s</strong> personalised contributor roadmap, built with the <strong>No-Code Contribution Map</strong>.</span></div>
+    </div>
+    <div style="padding:0 2.5rem 2rem;">`;
+
+  sections.forEach(s => {
+    const valid = s.items.filter(it => it.value);
+    if (!valid.length) return;
+    html += `<div class="rm-out-section" style="border-color:${s.color}">
+      <div class="rm-out-title" style="color:${s.color}">${s.title}</div>
+      ${valid.map(it=>`<div class="rm-out-item"><div class="rm-out-item-label">${it.label}</div><div class="rm-out-item-value">${it.value}</div></div>`).join('')}
+    </div>`;
+  });
+
+  // 90-day plan section
+  let plan;
+  if (hasPlan) {
+    plan = { m1Learn: get('m1-learn'), m1Contrib: get('month1'), m2Learn: get('m2-learn'), m2Contrib: get('month2'), m3Learn: get('m3-learn'), m3Contrib: get('month3'), milestones: get('milestones').split('\n').filter(Boolean) };
+  } else {
+    // Temporarily set hidden fields to regenerate
+    Object.keys(data).forEach(k => {
+      const el = document.getElementById('rm-' + k);
+      if (el) el.value = data[k];
+    });
+    plan = generate90DayPlan(planData);
+  }
+
+  const months = [
+    { num:1, color:'var(--accent1)', bg:'rgba(124,255,196,0.12)', label:'Month 1 — Start',  learn: plan.m1Learn, contrib: plan.m1Contrib },
+    { num:2, color:'var(--accent3)', bg:'rgba(255,206,71,0.12)',  label:'Month 2 — Deepen', learn: plan.m2Learn, contrib: plan.m2Contrib },
+    { num:3, color:'var(--accent4)', bg:'rgba(107,159,255,0.12)', label:'Month 3 — Grow',   learn: plan.m3Learn, contrib: plan.m3Contrib },
+  ];
+
+  html += `<div class="rm-out-section gen-plan-section" style="border-color:var(--accent4)">
+    <div class="rm-out-title" style="color:var(--accent4)">🗓️ 90-Day Contribution Plan</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;">Generated by the No-Code Contribution Map based on ${name}'s profile.</div>`;
+
+  months.forEach(m => {
+    html += `<div class="gen-plan-month">
+      <div class="gen-plan-month-header">
+        <div class="gen-plan-month-num" style="background:${m.bg};color:${m.color};">${m.num}</div>
+        <div class="gen-plan-month-title" style="color:${m.color};">${m.label}</div>
+      </div>
+      <div class="gen-plan-month-body">
+        <div class="gen-plan-item"><div class="gen-plan-item-label">Learning Goal</div>${m.learn || '—'}</div>
+        <div class="gen-plan-item"><div class="gen-plan-item-label">Contribution Goal</div>${m.contrib || '—'}</div>
+      </div></div>`;
+  });
+
+  if (plan.milestones && plan.milestones.length) {
+    html += `<div style="margin-top:1rem;"><div class="rm-out-item-label" style="margin-bottom:0.6rem;">Milestones — Day 30 / 60 / 90</div>
+    <div class="gen-plan-milestones">${plan.milestones.map(m=>`<div class="gen-plan-milestone">${m}</div>`).join('')}</div></div>`;
+  }
+
+  html += `</div></div>`;
+
+  // Footer
+  html += `<div style="padding:1.25rem 2.5rem 2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <span style="font-size:0.78rem;color:var(--muted);">Built with the <strong style="color:var(--accent1)">No-Code Contribution Map</strong> · Open source is for everyone who shows up.</span>
+    <button class="btn btn-primary" style="background:var(--teal);color:var(--bg);" onclick="document.getElementById('shared-roadmap-overlay').classList.remove('open');window.history.replaceState({},'',window.location.pathname);">✕ Close</button>
+  </div>`;
+
+  // Inject into overlay and show
+  document.getElementById('shared-roadmap-content').innerHTML = html;
+  document.getElementById('shared-roadmap-overlay').classList.add('open');
+}
 
 function openShareModal(context) {
   const msg = SHARE_MSGS[context] || SHARE_MSGS.map;
-  const url = window.location.href.split('#')[0];
-  const enc = encodeURIComponent(msg.text + ' ' + url);
+
+  // For roadmap: build a rich URL that encodes the person's data
+  let url, shareText;
+  if (context === 'roadmap') {
+    url = buildRoadmapShareUrl();
+    const name = document.getElementById('rm-name')?.value.trim() || 'I';
+    shareText = `${name === 'I' ? 'I' : name} just built a personal open source contributor roadmap — skills mapped, goals set, 90-day plan ready. Built with the No-Code Contribution Map 🗺️`;
+  } else {
+    url = window.location.href.split('#')[0];
+    shareText = msg.text;
+  }
+
+  const enc  = encodeURIComponent(shareText + ' ' + url);
   const encT = encodeURIComponent(msg.title);
   const encU = encodeURIComponent(url);
 
-  document.getElementById('share-modal-desc').textContent = msg.text;
+  document.getElementById('share-modal-desc').textContent = shareText;
   document.getElementById('share-link-input').value = url;
   document.getElementById('share-twitter').href  = `https://twitter.com/intent/tweet?text=${enc}`;
   document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encU}&summary=${enc}&title=${encT}`;
   document.getElementById('share-whatsapp').href = `https://wa.me/?text=${enc}`;
-  document.getElementById('share-email').href    = `mailto:?subject=${encT}&body=${encodeURIComponent(msg.text+'\n\n'+url)}`;
-  // Slack: copy to clipboard with a Slack-friendly format, then link to slack.com
+  document.getElementById('share-email').href    = `mailto:?subject=${encT}&body=${encodeURIComponent(shareText+'\n\n'+url)}`;
+
   document.getElementById('share-slack').onclick = function(e) {
     e.preventDefault();
-    navigator.clipboard.writeText(msg.text + '\n' + url).then(() => {
+    navigator.clipboard.writeText(shareText + '\n' + url).then(() => {
       document.getElementById('share-copied').textContent = '✓ Copied! Paste it into any Slack channel.';
       document.getElementById('share-copied').classList.add('show');
       setTimeout(() => { document.getElementById('share-copied').classList.remove('show'); document.getElementById('share-copied').textContent = '✓ Link copied to clipboard!'; }, 3000);
     });
   };
 
+  document.getElementById('share-roadmap-note').style.display = context === 'roadmap' ? 'block' : 'none';
   document.getElementById('share-copied').classList.remove('show');
   document.getElementById('share-modal').classList.add('open');
 }
@@ -3799,6 +3969,9 @@ function copyShareLink() {
 document.getElementById('share-modal').addEventListener('click', function(e) {
   if (e.target === this) closeShareModal();
 });
+
+// Run on load — display shared roadmap if URL contains ?roadmap=
+window.addEventListener('DOMContentLoaded', checkRoadmapShareParam);
 
 // ── MY CONTRIBUTOR ROADMAP ─────────────────────────────
 const RM_FIELDS = ['rm-name','rm-role','rm-experience','rm-url','rm-skills','rm-tools','rm-confidence','rm-learn','rm-target-skills','rm-interests','rm-interest','rm-projects','rm-time','rm-pace','rm-when','rm-impact','rm-goal-6m','rm-goal-12m','rm-recognition','rm-blockers'];
