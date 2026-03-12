@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No-Code Contribution Map — Everyone Belongs to Open Source</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent1: #7cffc4;
+    --accent2: #ff6b6b;
+    --accent3: #ffce47;
+    --accent4: #6b9fff;
+    --accent5: #d06bff;
+    --text: #e8e8f0;
+    --muted: #6b6b85;
+    --card: #161622;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 3rem 4rem 2rem;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(124, 255, 196, 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(107, 159, 255, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .event-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(124, 255, 196, 0.1);
+    border: 1px solid rgba(124, 255, 196, 0.3);
+    color: var(--accent1);
+    padding: 0.35rem 0.85rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .event-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent1);
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    max-width: 700px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent1);
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* NAV TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 4rem;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 1rem 1.5rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent1); border-bottom-color: var(--accent1); }
+
+  /* CONTENT PANELS */
+  .panel { display: none; padding: 3rem 4rem; animation: fadeUp 0.4s ease; }
+  .panel.active { display: block; }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .section-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ===== PANEL 1: THE MAP ===== */
+  .map-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .contrib-category {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+
+  .contrib-category::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .contrib-category:hover {
+    transform: translateY(-3px);
+  }
+
+  .cat-writing::before { background: var(--accent1); }
+  .cat-design::before { background: var(--accent3); }
+  .cat-community::before { background: var(--accent2); }
+  .cat-accessibility::before { background: var(--accent4); }
+  .cat-outreach::before { background: var(--accent5); }
+  .cat-teaching::before { background: #ff9f47; }
+
+  .cat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .cat-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .cat-writing .cat-name { color: var(--accent1); }
+  .cat-design .cat-name { color: var(--accent3); }
+  .cat-community .cat-name { color: var(--accent2); }
+  .cat-accessibility .cat-name { color: var(--accent4); }
+  .cat-outreach .cat-name { color: var(--accent5); }
+  .cat-teaching .cat-name { color: #ff9f47; }
+
+  .cat-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .contrib-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 2rem;
+    border: 1px solid;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .tag:hover { opacity: 0.8; transform: scale(1.05); }
+  .tag.selected { opacity: 1; }
+  .tag:not(.selected) { opacity: 0.5; }
+
+  .cat-writing .tag { border-color: var(--accent1); color: var(--accent1); }
+  .cat-design .tag { border-color: var(--accent3); color: var(--accent3); }
+  .cat-community .tag { border-color: var(--accent2); color: var(--accent2); }
+  .cat-accessibility .tag { border-color: var(--accent4); color: var(--accent4); }
+  .cat-outreach .tag { border-color: var(--accent5); color: var(--accent5); }
+  .cat-teaching .tag { border-color: #ff9f47; color: #ff9f47; }
+
+  .tag.selected {
+    background: currentColor;
+    color: var(--bg) !important;
+  }
+
+  /* ===== PANEL 2: JOURNEY BUILDER ===== */
+  .journey-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .journey-stages {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .stage {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .stage:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: -20px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+
+  .stage-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    border: 2px solid;
+    transition: all 0.3s;
+  }
+
+  .stage-1 .stage-num { border-color: var(--accent1); color: var(--accent1); }
+  .stage-2 .stage-num { border-color: var(--accent3); color: var(--accent3); }
+  .stage-3 .stage-num { border-color: var(--accent4); color: var(--accent4); }
+  .stage-4 .stage-num { border-color: var(--accent5); color: var(--accent5); }
+
+  .stage-content {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    flex: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .stage-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+  .stage-1 .stage-title { color: var(--accent1); }
+  .stage-2 .stage-title { color: var(--accent3); }
+  .stage-3 .stage-title { color: var(--accent4); }
+  .stage-4 .stage-title { color: var(--accent5); }
+
+  .stage-detail { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  .stage-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .ex-badge {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    color: var(--muted);
+  }
+
+  .journey-canvas {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    position: sticky;
+    top: 2rem;
+  }
+
+  .journey-canvas h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--accent4);
+  }
+
+  .canvas-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    resize: none;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .canvas-input:focus { border-color: var(--accent4); }
+  .canvas-input::placeholder { color: var(--muted); }
+
+  .canvas-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  .btn {
+    padding: 0.65rem 1.5rem;
+    border-radius: 6px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent1);
+    color: var(--bg);
+  }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-outline:hover { border-color: var(--accent1); color: var(--accent1); }
+
+  /* ===== PANEL 3: RECOGNITION ===== */
+  .recognition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+  }
+
+  .rec-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rec-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .rec-card:hover::after { opacity: 1; }
+  .rec-card:hover { transform: translateY(-2px); }
+
+  .rec-card-1::after { background: radial-gradient(circle at 80% 20%, rgba(124,255,196,0.05), transparent 60%); }
+  .rec-card-2::after { background: radial-gradient(circle at 80% 20%, rgba(255,206,71,0.05), transparent 60%); }
+  .rec-card-3::after { background: radial-gradient(circle at 80% 20%, rgba(107,159,255,0.05), transparent 60%); }
+  .rec-card-4::after { background: radial-gradient(circle at 80% 20%, rgba(208,107,255,0.05), transparent 60%); }
+
+  .rec-icon { font-size: 1.75rem; margin-bottom: 0.75rem; display: block; position: relative; z-index: 1; }
+  .rec-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; position: relative; z-index: 1; }
+  .rec-body { font-size: 0.8rem; color: var(--muted); line-height: 1.65; position: relative; z-index: 1; }
+
+  .rec-card-1 .rec-title { color: var(--accent1); }
+  .rec-card-2 .rec-title { color: var(--accent3); }
+  .rec-card-3 .rec-title { color: var(--accent4); }
+  .rec-card-4 .rec-title { color: var(--accent5); }
+
+  /* ===== PANEL 4: WORKSHOP ACTIVITY ===== */
+  .activity-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+  }
+
+  .act-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .act-time {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .act-time::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--border);
+  }
+
+  .act-num {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .act-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .act-body { font-size: 0.8rem; color: var(--muted); line-height: 1.65; }
+
+  .act-step:nth-child(1) .act-title { color: var(--accent1); }
+  .act-step:nth-child(2) .act-title { color: var(--accent3); }
+  .act-step:nth-child(3) .act-title { color: var(--accent4); }
+  .act-step:nth-child(4) .act-title { color: var(--accent2); }
+  .act-step:nth-child(5) .act-title { color: var(--accent5); }
+
+  /* SKILL SELF-ASSESSMENT */
+  .self-assess {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .self-assess h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent3);
+    margin-bottom: 0.5rem;
+  }
+
+  .self-assess p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .skill-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .skill-name {
+    width: 160px;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .skill-dots {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .dot:hover { border-color: var(--accent3); }
+  .dot.lit { background: var(--accent3); border-color: var(--accent3); }
+
+  .dot[data-level="3"].lit { background: var(--accent1); border-color: var(--accent1); }
+  .dot[data-level="4"].lit { background: var(--accent1); border-color: var(--accent1); }
+  .dot[data-level="5"].lit { background: var(--accent1); border-color: var(--accent1); }
+
+  .skill-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    flex: 1;
+  }
+
+  /* ===== SUMMARY BAR ===== */
+  .summary-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 1rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 100;
+  }
+
+  .summary-bar.visible { transform: translateY(0); }
+
+  .summary-text {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .summary-text strong {
+    color: var(--accent1);
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+  }
+
+  .selected-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    max-width: 60%;
+  }
+
+  .pill {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.7rem;
+    background: rgba(124, 255, 196, 0.1);
+    border: 1px solid rgba(124, 255, 196, 0.3);
+    color: var(--accent1);
+    border-radius: 2rem;
+  }
+
+  /* HORIZONTAL RULE */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* FOOTER NOTE */
+  .footer-note {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .footer-note strong { color: var(--accent1); font-family: 'Syne', sans-serif; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero, .tabs, .panel, .footer-note { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .journey-wrap { grid-template-columns: 1fr; }
+    .summary-bar { padding: 1rem 1.5rem; }
+    .selected-pills { max-width: 50%; }
+  }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="event-tag">Everyone Belongs to Open Source · 2026</div>
+  <h1>No-Code <em>Contribution</em><br>Map</h1>
+  <div class="hero-meta">
+    <span>📅 March 17 · 14:10–15:10</span>
+    <span>📍 Wintergarten</span>
+    <span>⏱ 60-min Workshop</span>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs">
+  <button class="tab active" onclick="showPanel('map', this)">The Map</button>
+  <button class="tab" onclick="showPanel('journey', this)">Contributor Journey</button>
+  <button class="tab" onclick="showPanel('recognition', this)">Recognition</button>
+  <button class="tab" onclick="showPanel('activity', this)">Workshop Activity</button>
+</nav>
+
+<!-- PANEL 1: THE MAP -->
+<section id="panel-map" class="panel active">
+  <div class="section-label">Step 1 of 4</div>
+  <h2 class="section-title">Explore the Contribution Map</h2>
+  <p class="section-desc">Open source is more than code. Click any contribution type to add it to your personal map. Explore the full range of skills that power thriving open source communities.</p>
+
+  <div class="map-grid">
+    <!-- Writing -->
+    <div class="contrib-category cat-writing">
+      <span class="cat-icon">✍️</span>
+      <div class="cat-name">Technical Writing</div>
+      <div class="cat-desc">Documentation, tutorials, and guides that make projects understandable and accessible to all skill levels.</div>
+      <div class="contrib-tags">
+        <span class="tag selected" onclick="toggleTag(this)">README files</span>
+        <span class="tag selected" onclick="toggleTag(this)">How-to guides</span>
+        <span class="tag" onclick="toggleTag(this)">API docs</span>
+        <span class="tag" onclick="toggleTag(this)">Release notes</span>
+        <span class="tag" onclick="toggleTag(this)">Blog posts</span>
+        <span class="tag" onclick="toggleTag(this)">Changelogs</span>
+        <span class="tag" onclick="toggleTag(this)">Glossaries</span>
+        <span class="tag" onclick="toggleTag(this)">Translations</span>
+      </div>
+    </div>
+    <!-- Design -->
+    <div class="contrib-category cat-design">
+      <span class="cat-icon">🎨</span>
+      <div class="cat-name">Design & UX</div>
+      <div class="cat-desc">Visual communication, usability, and branding that helps projects make great first impressions and retain users.</div>
+      <div class="contrib-tags">
+        <span class="tag selected" onclick="toggleTag(this)">Logo & branding</span>
+        <span class="tag" onclick="toggleTag(this)">UI mockups</span>
+        <span class="tag" onclick="toggleTag(this)">Icon design</span>
+        <span class="tag" onclick="toggleTag(this)">UX research</span>
+        <span class="tag" onclick="toggleTag(this)">Illustrations</span>
+        <span class="tag" onclick="toggleTag(this)">Website design</span>
+        <span class="tag" onclick="toggleTag(this)">Infographics</span>
+        <span class="tag" onclick="toggleTag(this)">Social assets</span>
+      </div>
+    </div>
+    <!-- Community -->
+    <div class="contrib-category cat-community">
+      <span class="cat-icon">🤝</span>
+      <div class="cat-name">Community Building</div>
+      <div class="cat-desc">Organizing people, moderating spaces, and creating cultures where every contributor feels genuinely welcomed.</div>
+      <div class="contrib-tags">
+        <span class="tag selected" onclick="toggleTag(this)">Event organizing</span>
+        <span class="tag" onclick="toggleTag(this)">Forum moderation</span>
+        <span class="tag" onclick="toggleTag(this)">Code of Conduct</span>
+        <span class="tag" onclick="toggleTag(this)">Onboarding</span>
+        <span class="tag" onclick="toggleTag(this)">Mentoring</span>
+        <span class="tag" onclick="toggleTag(this)">Welcoming newcomers</span>
+        <span class="tag" onclick="toggleTag(this)">Issue triage</span>
+        <span class="tag" onclick="toggleTag(this)">Q&amp;A support</span>
+      </div>
+    </div>
+    <!-- Accessibility -->
+    <div class="contrib-category cat-accessibility">
+      <span class="cat-icon">♿</span>
+      <div class="cat-name">Accessibility</div>
+      <div class="cat-desc">Advocating and implementing practices that ensure projects are usable by people of all abilities and backgrounds.</div>
+      <div class="contrib-tags">
+        <span class="tag selected" onclick="toggleTag(this)">A11y auditing</span>
+        <span class="tag" onclick="toggleTag(this)">Alt text</span>
+        <span class="tag" onclick="toggleTag(this)">Screen reader testing</span>
+        <span class="tag" onclick="toggleTag(this)">Color contrast</span>
+        <span class="tag" onclick="toggleTag(this)">Plain language</span>
+        <span class="tag" onclick="toggleTag(this)">Keyboard nav</span>
+        <span class="tag" onclick="toggleTag(this)">Captions</span>
+        <span class="tag" onclick="toggleTag(this)">WCAG review</span>
+      </div>
+    </div>
+    <!-- Outreach -->
+    <div class="contrib-category cat-outreach">
+      <span class="cat-icon">📣</span>
+      <div class="cat-name">Outreach & Advocacy</div>
+      <div class="cat-desc">Promoting projects, speaking at events, and connecting open source to new audiences and underrepresented communities.</div>
+      <div class="contrib-tags">
+        <span class="tag selected" onclick="toggleTag(this)">Conference talks</span>
+        <span class="tag" onclick="toggleTag(this)">Social media</span>
+        <span class="tag" onclick="toggleTag(this)">Newsletters</span>
+        <span class="tag" onclick="toggleTag(this)">Podcast appearances</span>
+        <span class="tag" onclick="toggleTag(this)">Partnership building</span>
+        <span class="tag" onclick="toggleTag(this)">DEI advocacy</span>
+        <span class="tag" onclick="toggleTag(this)">Case studies</span>
+        <span class="tag" onclick="toggleTag(this)">Demo videos</span>
+      </div>
+    </div>
+    <!-- Teaching -->
+    <div class="contrib-category cat-teaching">
+      <span class="cat-icon">🎓</span>
+      <div class="cat-name">Education & Mentorship</div>
+      <div class="cat-desc">Creating learning pathways and knowledge-sharing systems that reduce barriers and grow the contributor pipeline.</div>
+      <div class="contrib-tags">
+        <span class="tag selected" onclick="toggleTag(this)">Workshops</span>
+        <span class="tag" onclick="toggleTag(this)">Video tutorials</span>
+        <span class="tag" onclick="toggleTag(this)">Curriculum design</span>
+        <span class="tag" onclick="toggleTag(this)">Office hours</span>
+        <span class="tag" onclick="toggleTag(this)">Good first issues</span>
+        <span class="tag" onclick="toggleTag(this)">Pairing sessions</span>
+        <span class="tag" onclick="toggleTag(this)">Internship programs</span>
+        <span class="tag" onclick="toggleTag(this)">Study groups</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PANEL 2: JOURNEY -->
+<section id="panel-journey" class="panel">
+  <div class="section-label">Step 2 of 4</div>
+  <h2 class="section-title">Contributor Journey</h2>
+  <p class="section-desc">Every contributor starts somewhere. Design pathways that meet people where they are — no code required to begin.</p>
+
+  <div class="journey-wrap">
+    <div class="journey-stages">
+      <div class="stage stage-1">
+        <div class="stage-num">1</div>
+        <div class="stage-content">
+          <div class="stage-title">Discover</div>
+          <div class="stage-detail">The first touch. How does someone find out your project exists and believes they could contribute?</div>
+          <div class="stage-examples">
+            <span class="ex-badge">Social media</span>
+            <span class="ex-badge">Conference talk</span>
+            <span class="ex-badge">Blog post</span>
+            <span class="ex-badge">Word of mouth</span>
+            <span class="ex-badge">Good first issue label</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage stage-2">
+        <div class="stage-num">2</div>
+        <div class="stage-content">
+          <div class="stage-title">Orient</div>
+          <div class="stage-detail">Can they quickly understand what the project does, who it's for, and what kinds of help are needed?</div>
+          <div class="stage-examples">
+            <span class="ex-badge">Clear README</span>
+            <span class="ex-badge">CONTRIBUTING.md</span>
+            <span class="ex-badge">Welcoming README</span>
+            <span class="ex-badge">Contributor types listed</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage stage-3">
+        <div class="stage-num">3</div>
+        <div class="stage-content">
+          <div class="stage-title">Contribute</div>
+          <div class="stage-detail">A low-friction, high-impact first action. Something achievable without deep technical knowledge.</div>
+          <div class="stage-examples">
+            <span class="ex-badge">Fix a typo</span>
+            <span class="ex-badge">Improve a doc</span>
+            <span class="ex-badge">Translate a string</span>
+            <span class="ex-badge">Report an issue</span>
+            <span class="ex-badge">Test a feature</span>
+          </div>
+        </div>
+      </div>
+      <div class="stage stage-4">
+        <div class="stage-num">4</div>
+        <div class="stage-content">
+          <div class="stage-title">Belong</div>
+          <div class="stage-detail">They're recognized, welcomed back, and given a path to grow into a sustained community member.</div>
+          <div class="stage-examples">
+            <span class="ex-badge">Public thanks</span>
+            <span class="ex-badge">All-contributors badge</span>
+            <span class="ex-badge">Invited to meetings</span>
+            <span class="ex-badge">Mentorship offered</span>
+            <span class="ex-badge">Role & responsibilities</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="journey-canvas">
+      <h3>🗺 Design Your Project's Journey</h3>
+      
+      <label class="canvas-label">Your project name</label>
+      <input class="canvas-input" type="text" placeholder="e.g. My Open Source Project" id="proj-name">
+
+      <label class="canvas-label">How do new contributors discover you?</label>
+      <textarea class="canvas-input" rows="2" placeholder="e.g. Twitter, conference talks, GitHub trending..."></textarea>
+
+      <label class="canvas-label">What's the easiest first contribution?</label>
+      <textarea class="canvas-input" rows="2" placeholder="e.g. Review our docs for confusing language..."></textarea>
+
+      <label class="canvas-label">How do you recognize non-code contributions?</label>
+      <textarea class="canvas-input" rows="2" placeholder="e.g. All-Contributors bot, shoutouts in releases..."></textarea>
+
+      <div style="display:flex; gap:0.75rem; margin-top: 0.5rem;">
+        <button class="btn btn-primary" onclick="saveJourney()">Save Journey</button>
+        <button class="btn btn-outline" onclick="clearJourney()">Clear</button>
+      </div>
+
+      <div id="saved-note" style="margin-top:1rem; font-size:0.75rem; color:var(--accent1); display:none;">
+        ✓ Journey saved! Share with your team.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PANEL 3: RECOGNITION -->
+<section id="panel-recognition" class="panel">
+  <div class="section-label">Step 3 of 4</div>
+  <h2 class="section-title">Recognition Systems</h2>
+  <p class="section-desc">What gets recognized gets repeated. These practices ensure non-code contributors feel their work matters as much as any pull request.</p>
+
+  <div class="recognition-grid">
+    <div class="rec-card rec-card-1">
+      <span class="rec-icon">🤖</span>
+      <div class="rec-title">All-Contributors</div>
+      <div class="rec-body">A bot and spec that adds every contributor to your README — not just code authors. Recognizes docs, design, talks, translations, and more with emoji-coded contribution types.</div>
+    </div>
+    <div class="rec-card rec-card-2">
+      <span class="rec-icon">📣</span>
+      <div class="rec-title">Release Shoutouts</div>
+      <div class="rec-body">Name non-code contributors in every release announcement. When someone fixes a typo that unblocked 200 users, say so publicly in the changelog.</div>
+    </div>
+    <div class="rec-card rec-card-3">
+      <span class="rec-icon">🏷️</span>
+      <div class="rec-title">Contributor Roles</div>
+      <div class="rec-body">Create explicit roles like Community Manager, Documentation Lead, or Accessibility Advocate. These titles are visible, meaningful, and give contributors a home.</div>
+    </div>
+    <div class="rec-card rec-card-4">
+      <span class="rec-icon">🎤</span>
+      <div class="rec-title">Platform Access</div>
+      <div class="rec-body">Invite non-code contributors to speak at project events, write for the blog, or co-host office hours. Giving voice is recognition in action.</div>
+    </div>
+    <div class="rec-card rec-card-1">
+      <span class="rec-icon">🌱</span>
+      <div class="rec-title">Mentorship Pathways</div>
+      <div class="rec-body">Pair newcomers with an existing contributor for their first few months. A mentor's investment is recognition that says "you belong here and we'll invest in you."</div>
+    </div>
+    <div class="rec-card rec-card-2">
+      <span class="rec-icon">📋</span>
+      <div class="rec-title">Contribution Tracking</div>
+      <div class="rec-body">Maintain a public record of impact — event attendees reached, docs improved, issues responded to. Data makes invisible work visible.</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2rem;">
+    <h3 style="font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; color:var(--accent2); margin-bottom:0.5rem;">⚠️ Anti-Patterns to Avoid</h3>
+    <p style="font-size:0.82rem; color:var(--muted); line-height:1.7; margin-bottom:1rem;">These common mistakes actively discourage non-code contributors from staying:</p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0.75rem;">
+      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
+        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">Code-only changelogs</strong>
+        Only listing PRs erases the documentation, design, and community work that shipped alongside them.
+      </div>
+      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
+        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">No contribution guide</strong>
+        If someone has to ask "can I help with X?", there's no guide. Silence reads as "non-coders not welcome."
+      </div>
+      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
+        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">Code of Conduct theater</strong>
+        Having a CoC that's never enforced is worse than none — it signals safety, then betrays it.
+      </div>
+      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
+        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">Gatekeeping by default</strong>
+        "If you want to help, open a PR" assumes coding fluency. Inclusive projects define multiple doors.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PANEL 4: ACTIVITY -->
+<section id="panel-activity" class="panel">
+  <div class="section-label">Step 4 of 4</div>
+  <h2 class="section-title">Workshop Activities</h2>
+  <p class="section-desc">60 minutes. Five activities. One goal: leave with a real plan for making your project more inclusive.</p>
+
+  <div class="activity-steps">
+    <div class="act-step">
+      <div class="act-time">0–5 min</div>
+      <div class="act-num">01</div>
+      <div class="act-title">Warm-Up: Skills Inventory</div>
+      <div class="act-body">Each person lists 3 skills they bring outside of coding. Share with a neighbor. Notice the diversity already in the room.</div>
+    </div>
+    <div class="act-step">
+      <div class="act-time">5–20 min</div>
+      <div class="act-num">02</div>
+      <div class="act-title">Map Exploration</div>
+      <div class="act-body">In pairs, explore the Contribution Map. Mark which categories your project currently supports. Circle the gaps. What's missing?</div>
+    </div>
+    <div class="act-step">
+      <div class="act-time">20–40 min</div>
+      <div class="act-num">03</div>
+      <div class="act-title">Journey Design Sprint</div>
+      <div class="act-body">Groups of 3–4 design a contributor journey for a fictional (or real) project. Define Discover → Orient → Contribute → Belong for one non-code role.</div>
+    </div>
+    <div class="act-step">
+      <div class="act-time">40–55 min</div>
+      <div class="act-num">04</div>
+      <div class="act-title">Gallery Walk & Critique</div>
+      <div class="act-body">Groups post their maps. Everyone walks, adds sticky notes with "⭐ strengths" and "❓ questions." Presenter answers in 90 seconds.</div>
+    </div>
+    <div class="act-step">
+      <div class="act-time">55–60 min</div>
+      <div class="act-num">05</div>
+      <div class="act-title">One Commitment</div>
+      <div class="act-body">Each person writes one thing they'll change in their project this week. Shared aloud or posted to the group channel.</div>
+    </div>
+  </div>
+
+  <div class="self-assess">
+    <h3>🔍 Self-Assessment: Rate Your Project</h3>
+    <p>How well does your project currently support non-code contributors? Click to rate 1–5 stars.</p>
+
+    <div class="skill-row">
+      <div class="skill-name">Contribution Guide</div>
+      <div class="skill-dots" id="dots-0">
+        <div class="dot lit" data-level="1" onclick="rateDot(0,1)"></div>
+        <div class="dot lit" data-level="2" onclick="rateDot(0,2)"></div>
+        <div class="dot" data-level="3" onclick="rateDot(0,3)"></div>
+        <div class="dot" data-level="4" onclick="rateDot(0,4)"></div>
+        <div class="dot" data-level="5" onclick="rateDot(0,5)"></div>
+      </div>
+      <div class="skill-label">Does your CONTRIBUTING.md mention non-code roles?</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-name">Recognition System</div>
+      <div class="skill-dots" id="dots-1">
+        <div class="dot lit" data-level="1" onclick="rateDot(1,1)"></div>
+        <div class="dot" data-level="2" onclick="rateDot(1,2)"></div>
+        <div class="dot" data-level="3" onclick="rateDot(1,3)"></div>
+        <div class="dot" data-level="4" onclick="rateDot(1,4)"></div>
+        <div class="dot" data-level="5" onclick="rateDot(1,5)"></div>
+      </div>
+      <div class="skill-label">Are non-code contributions publicly credited?</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-name">Onboarding Clarity</div>
+      <div class="skill-dots" id="dots-2">
+        <div class="dot" data-level="1" onclick="rateDot(2,1)"></div>
+        <div class="dot" data-level="2" onclick="rateDot(2,2)"></div>
+        <div class="dot" data-level="3" onclick="rateDot(2,3)"></div>
+        <div class="dot" data-level="4" onclick="rateDot(2,4)"></div>
+        <div class="dot" data-level="5" onclick="rateDot(2,5)"></div>
+      </div>
+      <div class="skill-label">Can a non-technical person figure out how to start?</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-name">Accessibility</div>
+      <div class="skill-dots" id="dots-3">
+        <div class="dot lit" data-level="1" onclick="rateDot(3,1)"></div>
+        <div class="dot lit" data-level="2" onclick="rateDot(3,2)"></div>
+        <div class="dot lit" data-level="3" onclick="rateDot(3,3)"></div>
+        <div class="dot" data-level="4" onclick="rateDot(3,4)"></div>
+        <div class="dot" data-level="5" onclick="rateDot(3,5)"></div>
+      </div>
+      <div class="skill-label">Is your project usable by people with disabilities?</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-name">Community Safety</div>
+      <div class="skill-dots" id="dots-4">
+        <div class="dot lit" data-level="1" onclick="rateDot(4,1)"></div>
+        <div class="dot lit" data-level="2" onclick="rateDot(4,2)"></div>
+        <div class="dot" data-level="3" onclick="rateDot(4,3)"></div>
+        <div class="dot" data-level="4" onclick="rateDot(4,4)"></div>
+        <div class="dot" data-level="5" onclick="rateDot(4,5)"></div>
+      </div>
+      <div class="skill-label">Is your CoC enforced and your community genuinely safe?</div>
+    </div>
+  </div>
+</section>
+
+<!-- SUMMARY BAR -->
+<div class="summary-bar" id="summary-bar">
+  <div class="summary-text">
+    <strong id="selected-count">0</strong> contributions selected for your map
+  </div>
+  <div class="selected-pills" id="selected-pills"></div>
+  <button class="btn btn-primary" onclick="exportMap()">Export My Map</button>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer-note">
+  <span>No-Code Contribution Map · <strong>Everyone Belongs to Open Source</strong></span>
+  <span>March 17, 2026 · Wintergarten · 14:10–15:10</span>
+</footer>
+
+<script>
+  // Tab switching
+  function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Tag selection
+  function toggleTag(el) {
+    el.classList.toggle('selected');
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const selected = document.querySelectorAll('.tag.selected');
+    const bar = document.getElementById('summary-bar');
+    const count = document.getElementById('selected-count');
+    const pills = document.getElementById('selected-pills');
+    
+    count.textContent = selected.length;
+    pills.innerHTML = '';
+    
+    const texts = Array.from(selected).map(t => t.textContent);
+    texts.slice(0, 8).forEach(txt => {
+      const pill = document.createElement('span');
+      pill.className = 'pill';
+      pill.textContent = txt;
+      pills.appendChild(pill);
+    });
+    if (texts.length > 8) {
+      const pill = document.createElement('span');
+      pill.className = 'pill';
+      pill.textContent = '+' + (texts.length - 8) + ' more';
+      pills.appendChild(pill);
+    }
+
+    if (selected.length > 0) {
+      bar.classList.add('visible');
+    } else {
+      bar.classList.remove('visible');
+    }
+  }
+
+  // Journey save
+  function saveJourney() {
+    const note = document.getElementById('saved-note');
+    note.style.display = 'block';
+    setTimeout(() => { note.style.display = 'none'; }, 3000);
+  }
+
+  function clearJourney() {
+    document.querySelectorAll('#panel-journey .canvas-input').forEach(i => {
+      if (i.tagName === 'TEXTAREA') i.value = '';
+      if (i.tagName === 'INPUT') i.value = '';
+    });
+  }
+
+  // Rating dots
+  function rateDot(skillIndex, level) {
+    const container = document.getElementById('dots-' + skillIndex);
+    const dots = container.querySelectorAll('.dot');
+    dots.forEach(dot => {
+      const dotLevel = parseInt(dot.dataset.level);
+      dot.classList.toggle('lit', dotLevel <= level);
+    });
+  }
+
+  // Export
+  function exportMap() {
+    const selected = Array.from(document.querySelectorAll('.tag.selected')).map(t => t.textContent);
+    const projName = document.getElementById('proj-name').value || 'My Project';
+    
+    let content = `NO-CODE CONTRIBUTION MAP\n`;
+    content += `${projName}\n`;
+    content += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+    content += `SELECTED CONTRIBUTIONS (${selected.length}):\n`;
+    selected.forEach(s => content += `  ✓ ${s}\n`);
+    content += `\nEVERYONE BELONGS TO OPEN SOURCE\nMarch 17, 2026 · Wintergarten Workshop`;
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nocode-contribution-map.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Init
+  updateSummary();
+</script>
+</body>
+</html>
