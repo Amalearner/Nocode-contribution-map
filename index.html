@@ -236,7 +236,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 /* ══════════════════════════════════════
    PANEL 2 — ORGANIZATION JOURNEY
 ══════════════════════════════════════ */
-.org-layout { display: grid; grid-template-columns: 1fr 400px; gap: 3rem; align-items: start; }
+.org-layout { display: grid; grid-template-columns: 1fr 460px; gap: 3rem; align-items: start; }
 
 /* Journey stages */
 .stages-track { display: flex; flex-direction: column; }
@@ -316,6 +316,144 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 .jb-header { margin-bottom: 1.5rem; }
 .jb-header h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent4); margin-bottom: 0.3rem; }
 .jb-header p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+/* Stage tip tooltip */
+.stage-tip {
+  margin-top: 0.85rem; padding: 0.75rem 1rem;
+  background: rgba(107,159,255,0.07); border: 1px solid rgba(107,159,255,0.2);
+  border-radius: 8px; font-size: 0.78rem; color: var(--accent4); line-height: 1.6;
+  display: none; animation: fadeUp 0.25s ease;
+}
+.stage-tip.show { display: block; }
+.stage-tip strong { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; opacity: 0.7; }
+
+/* Stage warnings */
+.stage-warning {
+  margin-top: 0.75rem; padding: 0.65rem 0.9rem;
+  background: rgba(255,206,71,0.07); border: 1px solid rgba(255,206,71,0.25);
+  border-radius: 7px; font-size: 0.76rem; color: var(--accent3); line-height: 1.55;
+  display: none;
+}
+.stage-warning.show { display: flex; gap: 0.5rem; align-items: flex-start; }
+
+/* Blueprint output */
+.blueprint-wrap {
+  margin-top: 3rem;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; display: none;
+}
+.blueprint-wrap.show { display: block; animation: fadeUp 0.4s ease; }
+.blueprint-header {
+  background: linear-gradient(135deg, rgba(124,255,196,0.1), rgba(107,159,255,0.08));
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+.blueprint-header h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent1); }
+.blueprint-header p  { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+.blueprint-actions   { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+
+/* Visual flow */
+.flow-diagram {
+  padding: 2rem; border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.flow-track {
+  display: flex; align-items: flex-start; gap: 0; min-width: max-content;
+}
+.flow-node {
+  display: flex; flex-direction: column; align-items: center; position: relative;
+}
+.flow-node:not(:last-child)::after {
+  content: '→';
+  position: absolute; top: 22px; right: -18px;
+  color: var(--muted); font-size: 1rem; z-index: 1;
+}
+.flow-box {
+  width: 130px; border-radius: 10px; padding: 0.9rem 0.75rem; text-align: center;
+  border: 1px solid; transition: all 0.2s; margin: 0 18px;
+}
+.flow-box:hover { transform: translateY(-3px); }
+.flow-icon { font-size: 1.4rem; display: block; margin-bottom: 0.4rem; }
+.flow-label { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; margin-bottom: 0.5rem; }
+.flow-items { display: flex; flex-direction: column; gap: 0.25rem; }
+.flow-item { font-size: 0.62rem; color: var(--muted); line-height: 1.4; }
+.flow-item::before { content: '• '; }
+
+.fn-1 .flow-box { border-color: rgba(124,255,196,0.3); background: rgba(124,255,196,0.05); }
+.fn-1 .flow-label { color: var(--accent1); }
+.fn-2 .flow-box { border-color: rgba(255,206,71,0.3); background: rgba(255,206,71,0.05); }
+.fn-2 .flow-label { color: var(--accent3); }
+.fn-3 .flow-box { border-color: rgba(107,159,255,0.3); background: rgba(107,159,255,0.05); }
+.fn-3 .flow-label { color: var(--accent4); }
+.fn-4 .flow-box { border-color: rgba(208,107,255,0.3); background: rgba(208,107,255,0.05); }
+.fn-4 .flow-label { color: var(--accent5); }
+.fn-5 .flow-box { border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.05); }
+.fn-5 .flow-label { color: var(--accent2); }
+.fn-6 .flow-box { border-color: rgba(255,159,71,0.3); background: rgba(255,159,71,0.05); }
+.fn-6 .flow-label { color: var(--accent6); }
+
+/* Blueprint list view */
+.blueprint-list { padding: 1.5rem 2rem; }
+.bp-stage { margin-bottom: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; }
+.bp-stage-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
+.bp-stage-body { flex: 1; }
+.bp-stage-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem; }
+.bp-stage-tags  { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.bp-tag { font-size: 0.68rem; padding: 0.18rem 0.55rem; border-radius: 2rem; border: 1px solid var(--border); color: var(--muted); }
+
+/* Warnings banner */
+.warnings-banner {
+  margin: 1.5rem 2rem; padding: 1rem 1.25rem;
+  background: rgba(255,206,71,0.06); border: 1px solid rgba(255,206,71,0.2);
+  border-radius: 10px; display: none;
+}
+.warnings-banner.show { display: block; }
+.warnings-banner h4 { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--accent3); margin-bottom: 0.75rem; }
+.warn-item { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; display: flex; gap: 0.5rem; line-height: 1.55; }
+.warn-item::before { content: '⚠️'; flex-shrink: 0; }
+
+/* Persona selector */
+.persona-bar {
+  padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+}
+.persona-bar span { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; flex-shrink: 0; }
+.persona-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.persona-btn {
+  padding: 0.35rem 0.85rem; border-radius: 2rem; font-size: 0.72rem; font-weight: 600;
+  border: 1px solid var(--border); color: var(--muted); background: none;
+  cursor: pointer; transition: all 0.2s;
+}
+.persona-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.persona-btn.active { background: rgba(124,255,196,0.1); border-color: var(--accent1); color: var(--accent1); }
+
+/* Export markdown modal */
+.md-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,10,15,0.92); backdrop-filter: blur(10px);
+  z-index: 1100; display: none; align-items: center; justify-content: center; padding: 2rem;
+}
+.md-modal-overlay.open { display: flex; }
+.md-modal {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; width: 100%; max-width: 680px; max-height: 85vh;
+  display: flex; flex-direction: column; position: relative;
+  animation: fadeUp 0.3s ease;
+}
+.md-modal-header {
+  padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.md-modal-header h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent1); }
+.md-modal-body { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+.md-code {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1.25rem; font-family: 'Courier New', monospace; font-size: 0.78rem;
+  color: var(--accent1); line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+  max-height: 400px; overflow-y: auto;
+}
+.md-modal-footer { padding: 1.25rem 2rem; border-top: 1px solid var(--border); display: flex; gap: 0.65rem; flex-wrap: wrap; }
 
 .field-group { margin-bottom: 1rem; }
 .field-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; display: block; }
@@ -806,22 +944,25 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <div class="journey-stage js-1 active" onclick="activateStage(this)">
         <div class="stage-dot">1</div>
         <div class="stage-card">
-          <div class="stage-title">Discovery — How do people find you?</div>
+          <div class="stage-title">🔎 Discovery — How do people find you?</div>
           <div class="stage-desc">Before anyone can contribute, they need to know your project exists and feel like someone like them could be involved. What channels bring contributors to your door?</div>
           <div class="stage-options">
-            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Social media</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Conference talks</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Blog posts</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Word of mouth</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">GitHub trending</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Open source communities</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Hackathons</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">University programs</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Podcast features</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">DEI programs</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Newsletter features</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this,'discovery')">Social media</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">Conference talks</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">Blog posts</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">Word of mouth</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">GitHub trending</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">Open source communities</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">Hackathons</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">University programs</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">Podcast features</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">DEI programs</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'discovery')">Newsletter features</span>
           </div>
-          <div class="stage-note">💡 Tip: Projects that show up in spaces where underrepresented communities already gather attract more diverse contributors.</div>
+          <div class="stage-tip" id="tip-discovery"></div>
+          <div class="stage-warning" id="warn-discovery">
+            <span>No discovery channels selected. Projects with no intentional discovery strategy rely entirely on luck — and miss most non-technical contributors.</span>
+          </div>
         </div>
       </div>
 
@@ -829,22 +970,25 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <div class="journey-stage js-2" onclick="activateStage(this)">
         <div class="stage-dot">2</div>
         <div class="stage-card">
-          <div class="stage-title">Orientation — Can they understand and orient quickly?</div>
+          <div class="stage-title">🧭 Orientation — Can they understand and orient quickly?</div>
           <div class="stage-desc">Within minutes of landing on your project, a potential contributor should understand what it does, who it's for, and what kind of help is needed — without having to ask.</div>
           <div class="stage-options">
-            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Clear README</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Welcome README</span>
-            <span class="stage-opt picked" onclick="toggleOpt(event,this)">CONTRIBUTING.md</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Contribution types listed</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Project roadmap</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Code of Conduct</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Good first issue labels</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Non-code tasks labeled</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Project website</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Video intro / demo</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">FAQ document</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this,'orientation')">Clear README</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Welcome README</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this,'orientation')">CONTRIBUTING.md</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Contribution types listed</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Project roadmap</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Code of Conduct</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Good first issue labels</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Non-code tasks labeled</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Project website</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">Video intro / demo</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'orientation')">FAQ document</span>
           </div>
-          <div class="stage-note">💡 Tip: If your CONTRIBUTING.md only mentions code, it's implicitly excluding everyone else. Name every type of contribution explicitly.</div>
+          <div class="stage-tip" id="tip-orientation"></div>
+          <div class="stage-warning" id="warn-orientation">
+            No orientation materials selected. This is the #1 drop-off point — contributors who can't find a CONTRIBUTING.md or a clear README leave in under 60 seconds.
+          </div>
         </div>
       </div>
 
@@ -852,45 +996,51 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <div class="journey-stage js-3" onclick="activateStage(this)">
         <div class="stage-dot">3</div>
         <div class="stage-card">
-          <div class="stage-title">First Contribution — What's the easiest meaningful first step?</div>
+          <div class="stage-title">🛠️ First Contribution — What's the easiest meaningful first step?</div>
           <div class="stage-desc">The first contribution should be low-friction, low-stakes, and genuinely useful. It should be achievable without deep technical knowledge and give the contributor a feeling of real impact.</div>
           <div class="stage-options">
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Fix a typo in docs</span>
-            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Improve documentation</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Translate a page</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Report a bug</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Respond to an issue</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Test a new feature</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Share the project</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Write a blog post</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Add an example</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Review a pull request</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Answer a community question</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Fix a typo in docs</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this,'firstcontrib')">Improve documentation</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Translate a page</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Report a bug</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Respond to an issue</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Test a new feature</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Share the project</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Write a blog post</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Add an example</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Review a pull request</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'firstcontrib')">Answer a community question</span>
           </div>
-          <div class="stage-note">💡 Tip: Label non-code "good first issues" just like code ones. Visibility signals that non-code is a real contribution, not a consolation prize.</div>
+          <div class="stage-tip" id="tip-firstcontrib"></div>
+          <div class="stage-warning" id="warn-firstcontrib">
+            ⚠️ No first contribution path defined. Projects without a clear, non-code first step lose most new contributors before they ever engage.
+          </div>
         </div>
       </div>
 
-      <!-- STAGE 4: COMMUNITY & RETENTION -->
+      <!-- STAGE 4: RETENTION -->
       <div class="journey-stage js-4" onclick="activateStage(this)">
         <div class="stage-dot">4</div>
         <div class="stage-card">
-          <div class="stage-title">Retention — How do you keep contributors coming back?</div>
+          <div class="stage-title">🤝 Retention — How do you keep contributors coming back?</div>
           <div class="stage-desc">First-time contributors become regulars when they feel connected, valued, and clear on what to do next. What structures help people stay?</div>
           <div class="stage-options">
-            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Community Slack/Discord</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">GitHub Discussions</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Regular community calls</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Office hours</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Welcome intro call</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Contributor newsletter</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Mentorship matching</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Contributor buddy system</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Regular check-ins</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Roadmap transparency</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Decision-making involvement</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this,'retention')">Community Slack/Discord</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">GitHub Discussions</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Regular community calls</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Office hours</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Welcome intro call</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Contributor newsletter</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Mentorship matching</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Contributor buddy system</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Regular check-ins</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Roadmap transparency</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'retention')">Decision-making involvement</span>
           </div>
-          <div class="stage-note">💡 Tip: A single intro call or "welcome" message from a maintainer can double contributor retention. The human touch matters enormously.</div>
+          <div class="stage-tip" id="tip-retention"></div>
+          <div class="stage-warning" id="warn-retention">
+            ⚠️ No retention mechanisms selected. Without community touchpoints, contributors complete one task and disappear — there's nothing pulling them back.
+          </div>
         </div>
       </div>
 
@@ -898,22 +1048,25 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <div class="journey-stage js-5" onclick="activateStage(this)">
         <div class="stage-dot">5</div>
         <div class="stage-card">
-          <div class="stage-title">Recognition — How are contributions seen and celebrated?</div>
+          <div class="stage-title">🏆 Recognition — How are contributions seen and celebrated?</div>
           <div class="stage-desc">Recognition closes the loop. Without it, contributors feel invisible and eventually leave. What systems make contributions — especially non-code ones — publicly valued?</div>
           <div class="stage-options">
-            <span class="stage-opt picked" onclick="toggleOpt(event,this)">All-Contributors bot</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Named in release notes</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Contributor spotlight posts</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Dedicated roles/titles</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Blog features</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Speaking opportunities</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Community awards</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Public thank-you threads</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Swag & badges</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Contribution tracking page</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Conference sponsorship</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this,'recognition')">All-Contributors bot</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Named in release notes</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Contributor spotlight posts</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Dedicated roles/titles</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Blog features</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Speaking opportunities</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Community awards</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Public thank-you threads</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Swag & badges</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Contribution tracking page</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'recognition')">Conference sponsorship</span>
           </div>
-          <div class="stage-note">💡 Tip: Ask yourself — if a contributor's friends searched their name and your project, what would they find? Recognition should be visible beyond your community.</div>
+          <div class="stage-tip" id="tip-recognition"></div>
+          <div class="stage-warning" id="warn-recognition">
+            ⚠️ No recognition system selected. Contributors who feel invisible eventually stop showing up — recognition is infrastructure, not a bonus.
+          </div>
         </div>
       </div>
 
@@ -921,21 +1074,24 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <div class="journey-stage js-6" onclick="activateStage(this)">
         <div class="stage-dot">6</div>
         <div class="stage-card">
-          <div class="stage-title">Growth — What paths exist beyond "contributor"?</div>
+          <div class="stage-title">🌱 Growth — What paths exist beyond "contributor"?</div>
           <div class="stage-desc">Sustainable communities need clear growth paths. When contributors can see a future for themselves in a project, they invest more deeply and stay longer.</div>
           <div class="stage-options">
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Maintainer pathway</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Reviewer role</span>
-            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Community manager role</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Documentation lead</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Accessibility advocate</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Event organizer role</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Governance participation</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Steering committee</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Mentoring newer contributors</span>
-            <span class="stage-opt" onclick="toggleOpt(event,this)">Ambassador program</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Maintainer pathway</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Reviewer role</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this,'growth')">Community manager role</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Documentation lead</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Accessibility advocate</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Event organizer role</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Governance participation</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Steering committee</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Mentoring newer contributors</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this,'growth')">Ambassador program</span>
           </div>
-          <div class="stage-note">💡 Tip: Non-code roles need explicit names and responsibilities. "Community Manager" is as real a role as "Core Maintainer." Make it visible.</div>
+          <div class="stage-tip" id="tip-growth"></div>
+          <div class="stage-warning" id="warn-growth">
+            ⚠️ No growth paths defined. Contributors who can't see a future in your project plateau and leave — even great ones.
+          </div>
         </div>
       </div>
 
@@ -991,7 +1147,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
       <div class="jb-actions">
         <button class="btn btn-blue" onclick="saveJourney()">Save Journey</button>
-        <button class="btn btn-purple" onclick="downloadJourneyPDF()">Download Plan (PDF)</button>
+        <button class="btn btn-purple" onclick="buildBlueprint()">Build Blueprint →</button>
         <button class="btn btn-outline" onclick="clearJourney()">Clear</button>
       </div>
 
@@ -1004,7 +1160,66 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       </div>
     </div>
   </div>
+
+  <!-- ── BLUEPRINT OUTPUT ── -->
+  <div class="blueprint-wrap" id="blueprint-wrap">
+
+    <div class="blueprint-header">
+      <div>
+        <h3>📋 Contributor Journey Blueprint</h3>
+        <p id="blueprint-subtitle">Your structured plan — ready to implement, share, and present.</p>
+      </div>
+      <div class="blueprint-actions">
+        <button class="btn btn-primary" onclick="downloadJourneyPDF()">Download PDF</button>
+        <button class="btn btn-outline" onclick="openMarkdownModal()">Export Markdown</button>
+        <button class="btn btn-outline" onclick="openShareModal('journey')">🔗 Share</button>
+      </div>
+    </div>
+
+    <!-- Persona selector -->
+    <div class="persona-bar">
+      <span>Filter by persona:</span>
+      <div class="persona-btns">
+        <button class="persona-btn active" id="persona-all"      onclick="setPersona(null,this)">All Contributors</button>
+        <button class="persona-btn"        id="persona-designer"  onclick="setPersona('designer',this)">🎨 Designer</button>
+        <button class="persona-btn"        id="persona-writer"    onclick="setPersona('writer',this)">✍️ Writer / Docs</button>
+        <button class="persona-btn"        id="persona-community" onclick="setPersona('community',this)">🤝 Community Builder</button>
+        <button class="persona-btn"        id="persona-developer" onclick="setPersona('developer',this)">💻 Developer</button>
+      </div>
+    </div>
+
+    <!-- Warnings -->
+    <div class="warnings-banner" id="blueprint-warnings"></div>
+
+    <!-- Visual flow diagram -->
+    <div class="flow-diagram">
+      <div class="flow-track" id="flow-track"></div>
+    </div>
+
+    <!-- Stage-by-stage list -->
+    <div class="blueprint-list" id="blueprint-list"></div>
+
+  </div>
 </section>
+
+<!-- MARKDOWN EXPORT MODAL -->
+<div class="md-modal-overlay" id="md-modal">
+  <div class="md-modal">
+    <div class="md-modal-header">
+      <h3>📄 Export as Markdown</h3>
+      <button class="modal-close" onclick="closeMdModal()">✕</button>
+    </div>
+    <div class="md-modal-body">
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Copy this Markdown and paste it directly into your GitHub README, CONTRIBUTING.md, or Notion doc.</p>
+      <div class="md-code" id="md-output"></div>
+    </div>
+    <div class="md-modal-footer">
+      <button class="btn btn-primary" onclick="copyMarkdown()">Copy Markdown</button>
+      <button class="btn btn-outline" onclick="downloadMarkdown()">Download .md file</button>
+      <button class="btn btn-outline" onclick="closeMdModal()">Close</button>
+    </div>
+  </div>
+</div>
 
 
 <!-- ════════════════════════════════════
@@ -1832,10 +2047,262 @@ function activateStage(el) {
   el.classList.add('active');
 }
 
-function toggleOpt(event, el) {
+const STAGE_TIPS = {
+  discovery: {
+    'Social media':            'Projects with active Twitter/LinkedIn presence see 2–3× more first-time contributors.',
+    'Conference talks':        'A single well-placed conference talk can bring in 10–50 engaged contributors overnight.',
+    'GitHub trending':         'Trending on GitHub is powerful but brief — combine it with a follow-up blog post to retain momentum.',
+    'DEI programs':            'Intentional outreach to DEI programs reaches contributors who are often overlooked by default channels.',
+    'Newsletter features':     'Newsletter audiences are highly targeted — a feature in the right newsletter beats 10 generic tweets.',
+    'University programs':     'University partnerships create a steady pipeline of motivated first-time contributors each semester.',
+    'Hackathons':              'Hackathons work best when you provide a clear, scoped task — vague asks at hackathons get ignored.',
+    'Open source communities': 'Communities like CHAOSS, OpenUK, and OSCA already have members looking for projects to join.',
+  },
+  orientation: {
+    'CONTRIBUTING.md':         'A CONTRIBUTING.md that only mentions code implicitly excludes everyone else — name every contribution type explicitly.',
+    'Code of Conduct':         'Projects with a visible, enforced Code of Conduct retain contributors 40% longer on average.',
+    'Good first issue labels': 'Projects with active "good first issue" labels receive 3× more first-time contributions.',
+    'Non-code tasks labeled':  'Labeling non-code tasks signals to non-developers that they are genuinely welcome — not an afterthought.',
+    'Clear README':            'A contributor should understand your project\'s purpose within 30 seconds of landing on your README.',
+    'Video intro / demo':      'A 2-minute video intro dramatically lowers the barrier for contributors who struggle with text-heavy docs.',
+  },
+  firstcontrib: {
+    'Fix a typo in docs':      'Typo fixes are a gateway drug to deeper contribution — never dismiss them as "too small".',
+    'Translate a page':        'Translation tasks are ideal first contributions: scoped, meaningful, and accessible to non-coders.',
+    'Improve documentation':   'Documentation improvements have the highest ROI of any contribution — they help every future contributor.',
+    'Test a new feature':      'Testing tasks are perfect for non-coders: they require real-world perspective, not technical depth.',
+    'Write a blog post':       'A contributor\'s first blog post about your project is also your best word-of-mouth marketing.',
+    'Answer a community question': 'Answering questions builds confidence fast — it\'s contribution and learning at the same time.',
+  },
+  retention: {
+    'Welcome intro call':      'A single 15-minute welcome call from a maintainer can double a contributor\'s likelihood of returning.',
+    'Mentorship matching':     'Structured mentorship increases contributor retention by up to 60% in the first 3 months.',
+    'Regular community calls': 'Synchronous touchpoints create belonging. Even monthly calls have a measurable retention impact.',
+    'Contributor newsletter':  'A regular newsletter keeps contributors in the loop even when they\'re between contributions.',
+    'Community Slack/Discord': 'An active community channel is often the single biggest predictor of contributor retention.',
+    'Roadmap transparency':    'Contributors who can see where the project is going invest more deeply — uncertainty kills motivation.',
+  },
+  recognition: {
+    'All-Contributors bot':    'All-Contributors is the fastest way to make non-code contributions permanently visible in your repo.',
+    'Named in release notes':  'Being named in release notes is the single most-cited thing that makes contributors feel valued.',
+    'Contributor spotlight posts': 'Spotlight posts have a secondary effect: they attract similar contributors who see themselves in the story.',
+    'Speaking opportunities':  'Inviting contributors to speak is the highest-signal recognition you can offer — it\'s transformative.',
+    'Contribution tracking page': 'A public contributions page makes invisible work visible and gives contributors something to share.',
+  },
+  growth: {
+    'Maintainer pathway':      'A clear pathway to maintainership is the strongest retention signal you can send to committed contributors.',
+    'Documentation lead':      'A named Docs Lead role legitimizes documentation as a senior responsibility — not a beginner task.',
+    'Community manager role':  '"Community Manager" is as real a role as "Core Maintainer". Make it visible, named, and credited.',
+    'Accessibility advocate':  'A named Accessibility Advocate signals to disabled contributors that inclusion is structural, not optional.',
+    'Ambassador program':      'Ambassadors are your most powerful distribution channel — and the role itself is deeply motivating.',
+    'Steering committee':      'Governance participation gives contributors ownership of the project\'s future — the deepest form of belonging.',
+  },
+};
+
+const PERSONA_FILTERS = {
+  designer:  { discovery:['Social media','Conference talks','DEI programs'], orientation:['Project website','Video intro / demo','Clear README'], firstcontrib:['Add an example','Write a blog post','Improve documentation'], retention:['Community Slack/Discord','Regular community calls'], recognition:['Contributor spotlight posts','Dedicated roles/titles'], growth:['Documentation lead','Community manager role'] },
+  writer:    { discovery:['Newsletter features','Blog posts','Open source communities'], orientation:['Clear README','CONTRIBUTING.md','Contribution types listed'], firstcontrib:['Fix a typo in docs','Improve documentation','Write a blog post'], retention:['Contributor newsletter','Roadmap transparency'], recognition:['Named in release notes','Contributor spotlight posts'], growth:['Documentation lead','Community manager role'] },
+  community: { discovery:['Conference talks','DEI programs','University programs','Hackathons'], orientation:['Code of Conduct','Welcome README','Video intro / demo'], firstcontrib:['Answer a community question','Share the project','Write a blog post'], retention:['Welcome intro call','Mentorship matching','Regular community calls'], recognition:['Community awards','Public thank-you threads','Dedicated roles/titles'], growth:['Community manager role','Ambassador program','Steering committee'] },
+  developer: { discovery:['GitHub trending','Open source communities','Hackathons'], orientation:['CONTRIBUTING.md','Good first issue labels','Project roadmap'], firstcontrib:['Fix a typo in docs','Report a bug','Review a pull request'], retention:['GitHub Discussions','Roadmap transparency','Office hours'], recognition:['All-Contributors bot','Named in release notes','Contribution tracking page'], growth:['Maintainer pathway','Reviewer role','Governance participation'] },
+};
+
+let activePersona = null;
+
+function toggleOpt(event, el, stageKey) {
   event.stopPropagation();
   el.classList.toggle('picked');
+
+  // Show tip for this selection
+  const tipEl = document.getElementById('tip-' + stageKey);
+  if (tipEl && el.classList.contains('picked')) {
+    const tip = STAGE_TIPS[stageKey]?.[el.textContent.trim()];
+    if (tip) {
+      tipEl.innerHTML = '<strong>💡 Best Practice</strong>' + tip;
+      tipEl.classList.add('show');
+      clearTimeout(tipEl._timer);
+      tipEl._timer = setTimeout(() => tipEl.classList.remove('show'), 6000);
+    }
+  }
+
+  // Show/hide warning if no items selected in this stage
+  const warnEl = document.getElementById('warn-' + stageKey);
+  if (warnEl) {
+    const stage = el.closest('.journey-stage');
+    const anyPicked = stage.querySelectorAll('.stage-opt.picked').length > 0;
+    warnEl.classList.toggle('show', !anyPicked);
+  }
+
+  updateProgress();
 }
+
+// ── BLUEPRINT ─────────────────────────────────────────────
+const STAGE_META = [
+  { key:'discovery',    icon:'🔎', label:'Discovery',         color:[124,255,196],  cssColor:'var(--accent1)', fieldId:'jb-discovery'  },
+  { key:'orientation',  icon:'🧭', label:'Orientation',       color:[255,206,71],   cssColor:'var(--accent3)', fieldId:'jb-orient'     },
+  { key:'firstcontrib', icon:'🛠️', label:'First Contribution',color:[107,159,255],  cssColor:'var(--accent4)', fieldId:'jb-first'      },
+  { key:'retention',    icon:'🤝', label:'Retention',         color:[208,107,255],  cssColor:'var(--accent5)', fieldId:'jb-community'  },
+  { key:'recognition',  icon:'🏆', label:'Recognition',       color:[255,107,107],  cssColor:'var(--accent2)', fieldId:'jb-recognition'},
+  { key:'growth',       icon:'🌱', label:'Growth',            color:[255,159,71],   cssColor:'var(--accent6)', fieldId:'jb-growth'     },
+];
+
+function getPickedForStage(key) {
+  const stageMap = { discovery:'.js-1', orientation:'.js-2', firstcontrib:'.js-3', retention:'.js-4', recognition:'.js-5', growth:'.js-6' };
+  const stageEl = document.querySelector(stageMap[key]);
+  if (!stageEl) return [];
+  return [...stageEl.querySelectorAll('.stage-opt.picked')].map(o => o.textContent.trim());
+}
+
+function buildBlueprint() {
+  saveJourney();
+
+  const projName = document.getElementById('jb-project').value || 'Your Project';
+  document.getElementById('blueprint-subtitle').textContent = projName + ' — Contributor Journey Plan';
+
+  renderFlow();
+  renderBlueprintList();
+  renderWarnings();
+
+  const wrap = document.getElementById('blueprint-wrap');
+  wrap.classList.add('show');
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderFlow(persona) {
+  const track = document.getElementById('flow-track');
+  track.innerHTML = '';
+  STAGE_META.forEach((s, i) => {
+    let items = getPickedForStage(s.key);
+    if (persona && PERSONA_FILTERS[persona]) {
+      const pf = PERSONA_FILTERS[persona][s.key] || [];
+      items = items.filter(it => pf.some(p => it.toLowerCase().includes(p.toLowerCase())));
+      if (!items.length) items = pf.slice(0, 3); // show suggested if none picked
+    }
+    const node = document.createElement('div');
+    node.className = `flow-node fn-${i+1}`;
+    node.innerHTML = `
+      <div class="flow-box">
+        <span class="flow-icon">${s.icon}</span>
+        <div class="flow-label">${s.label}</div>
+        <div class="flow-items">${items.slice(0,4).map(it=>`<span class="flow-item">${it}</span>`).join('')}${items.length>4?`<span class="flow-item">+${items.length-4} more</span>`:''}</div>
+      </div>`;
+    track.appendChild(node);
+  });
+}
+
+function renderBlueprintList(persona) {
+  const list = document.getElementById('blueprint-list');
+  list.innerHTML = '';
+  const fields = {
+    jb_discovery: document.getElementById('jb-discovery').value,
+    jb_orient:    document.getElementById('jb-orient').value,
+    jb_first:     document.getElementById('jb-first').value,
+    jb_community: document.getElementById('jb-community').value,
+    jb_recognition: document.getElementById('jb-recognition').value,
+    jb_growth:    document.getElementById('jb-growth').value,
+  };
+
+  STAGE_META.forEach(s => {
+    let items = getPickedForStage(s.key);
+    if (persona && PERSONA_FILTERS[persona]) {
+      const pf = PERSONA_FILTERS[persona][s.key] || [];
+      items = items.filter(it => pf.some(p => it.toLowerCase().includes(p.toLowerCase())));
+      if (!items.length) items = pf.slice(0, 3);
+    }
+    const fieldVal = fields['jb_' + (s.key === 'firstcontrib' ? 'first' : s.key === 'orientation' ? 'orient' : s.key === 'retention' ? 'community' : s.key)];
+
+    const row = document.createElement('div');
+    row.className = 'bp-stage';
+    row.innerHTML = `
+      <div class="bp-stage-icon">${s.icon}</div>
+      <div class="bp-stage-body">
+        <div class="bp-stage-title" style="color:${s.cssColor}">${s.label}</div>
+        <div class="bp-stage-tags">${items.map(t=>`<span class="bp-tag">${t}</span>`).join('')}</div>
+        ${fieldVal ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;line-height:1.6;">${fieldVal}</div>` : ''}
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function renderWarnings() {
+  const banner = document.getElementById('blueprint-warnings');
+  const warns = [];
+  STAGE_META.forEach(s => {
+    const picked = getPickedForStage(s.key);
+    if (!picked.length) warns.push(`${s.icon} <strong>${s.label}</strong> has no options selected. This stage is missing from your journey — contributors may drop off here.`);
+  });
+  if (warns.length) {
+    banner.innerHTML = '<h4>⚠️ Journey Gaps Detected</h4>' + warns.map(w=>`<div class="warn-item">${w}</div>`).join('');
+    banner.classList.add('show');
+  } else {
+    banner.innerHTML = '<h4 style="color:var(--accent1)">✅ Complete Journey</h4><div class="warn-item" style="color:var(--muted)">All 6 stages have selections — your contributor journey is fully mapped.</div>';
+    banner.classList.add('show');
+  }
+}
+
+function setPersona(persona, btn) {
+  activePersona = persona;
+  document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderFlow(persona);
+  renderBlueprintList(persona);
+}
+
+// ── MARKDOWN EXPORT ────────────────────────────────────────
+function generateMarkdown() {
+  const proj = document.getElementById('jb-project').value || 'Your Project';
+  let md = `# 🗺️ Contributor Journey Plan — ${proj}\n\n`;
+  md += `> Generated with the [No-Code Contribution Map](https://github.com) · ${new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}\n\n`;
+  md += `---\n\n`;
+  STAGE_META.forEach(s => {
+    const items = getPickedForStage(s.key);
+    const fieldId = s.fieldId;
+    const notes = document.getElementById(fieldId)?.value;
+    md += `## ${s.icon} ${s.label}\n\n`;
+    if (items.length) {
+      items.forEach(it => { md += `- ${it}\n`; });
+    } else {
+      md += `- *(no options selected)*\n`;
+    }
+    if (notes) md += `\n**Notes:** ${notes}\n`;
+    md += `\n`;
+  });
+  md += `---\n\n*Open source is for everyone who shows up.*\n`;
+  return md;
+}
+
+function openMarkdownModal() {
+  const md = generateMarkdown();
+  document.getElementById('md-output').textContent = md;
+  document.getElementById('md-modal').classList.add('open');
+}
+
+function closeMdModal() {
+  document.getElementById('md-modal').classList.remove('open');
+}
+
+function copyMarkdown() {
+  const text = document.getElementById('md-output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.md-modal-footer .btn-primary');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+
+function downloadMarkdown() {
+  const proj = document.getElementById('jb-project').value || 'contributor-journey';
+  const text = document.getElementById('md-output').textContent;
+  const blob = new Blob([text], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = proj.replace(/\s+/g,'-').toLowerCase() + '-journey.md'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('md-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeMdModal();
+});
 
 function updateProgress() {
   const fields = ['jb-project','jb-discovery','jb-orient','jb-first','jb-community','jb-recognition','jb-growth','jb-extra'];
