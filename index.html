@@ -3,675 +3,567 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>No-Code Contribution Map — Everyone Belongs to Open Source</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<title>No-Code Contribution Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --border: #1e1e2e;
-    --accent1: #7cffc4;
-    --accent2: #ff6b6b;
-    --accent3: #ffce47;
-    --accent4: #6b9fff;
-    --accent5: #d06bff;
-    --text: #e8e8f0;
-    --muted: #6b6b85;
-    --card: #161622;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* NOISE TEXTURE */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.5;
-  }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    padding: 3rem 4rem 2rem;
-    border-bottom: 1px solid var(--border);
-    overflow: hidden;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(124, 255, 196, 0.06) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(107, 159, 255, 0.07) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .event-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(124, 255, 196, 0.1);
-    border: 1px solid rgba(124, 255, 196, 0.3);
-    color: var(--accent1);
-    padding: 0.35rem 0.85rem;
-    border-radius: 2rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .event-tag::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--accent1);
-    border-radius: 50%;
-    animation: pulse 2s ease infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.5); }
-  }
-
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.2rem, 5vw, 4rem);
-    font-weight: 800;
-    line-height: 1.05;
-    max-width: 700px;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
-
-  .hero h1 em {
-    font-style: normal;
-    color: var(--accent1);
-  }
-
-  .hero-meta {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1.5rem;
-    font-size: 0.85rem;
-    color: var(--muted);
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
-
-  .hero-meta span { display: flex; align-items: center; gap: 0.4rem; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* NAV TABS */
-  .tabs {
-    display: flex;
-    gap: 0;
-    padding: 0 4rem;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-  }
-
-  .tab {
-    padding: 1rem 1.5rem;
-    font-size: 0.82rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    white-space: nowrap;
-    transition: all 0.2s;
-    background: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-  }
-
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--accent1); border-bottom-color: var(--accent1); }
-
-  /* CONTENT PANELS */
-  .panel { display: none; padding: 3rem 4rem; animation: fadeUp 0.4s ease; }
-  .panel.active { display: block; }
-
-  /* SECTION HEADERS */
-  .section-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.5rem;
-  }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  .section-desc {
-    color: var(--muted);
-    font-size: 0.9rem;
-    max-width: 600px;
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-  }
-
-  /* ===== PANEL 1: THE MAP ===== */
-  .map-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .contrib-category {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s;
-    cursor: pointer;
-  }
-
-  .contrib-category::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 12px 12px 0 0;
-  }
-
-  .contrib-category:hover {
-    transform: translateY(-3px);
-  }
-
-  .cat-writing::before { background: var(--accent1); }
-  .cat-design::before { background: var(--accent3); }
-  .cat-community::before { background: var(--accent2); }
-  .cat-accessibility::before { background: var(--accent4); }
-  .cat-outreach::before { background: var(--accent5); }
-  .cat-teaching::before { background: #ff9f47; }
-
-  .cat-icon {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-    display: block;
-  }
-
-  .cat-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  .cat-writing .cat-name { color: var(--accent1); }
-  .cat-design .cat-name { color: var(--accent3); }
-  .cat-community .cat-name { color: var(--accent2); }
-  .cat-accessibility .cat-name { color: var(--accent4); }
-  .cat-outreach .cat-name { color: var(--accent5); }
-  .cat-teaching .cat-name { color: #ff9f47; }
-
-  .cat-desc {
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .contrib-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .tag {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.6rem;
-    border-radius: 2rem;
-    border: 1px solid;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    user-select: none;
-  }
-
-  .tag:hover { opacity: 0.8; transform: scale(1.05); }
-  .tag.selected { opacity: 1; }
-  .tag:not(.selected) { opacity: 0.5; }
-
-  .cat-writing .tag { border-color: var(--accent1); color: var(--accent1); }
-  .cat-design .tag { border-color: var(--accent3); color: var(--accent3); }
-  .cat-community .tag { border-color: var(--accent2); color: var(--accent2); }
-  .cat-accessibility .tag { border-color: var(--accent4); color: var(--accent4); }
-  .cat-outreach .tag { border-color: var(--accent5); color: var(--accent5); }
-  .cat-teaching .tag { border-color: #ff9f47; color: #ff9f47; }
-
-  .tag.selected {
-    background: currentColor;
-    color: var(--bg) !important;
-  }
-
-  /* ===== PANEL 2: JOURNEY BUILDER ===== */
-  .journey-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: start;
-  }
-
-  .journey-stages {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .stage {
-    display: flex;
-    gap: 1.25rem;
-    align-items: flex-start;
-    position: relative;
-  }
-
-  .stage:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 19px;
-    top: 40px;
-    bottom: -20px;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--border), transparent);
-  }
-
-  .stage-num {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 0.85rem;
-    flex-shrink: 0;
-    margin-top: 0.25rem;
-    border: 2px solid;
-    transition: all 0.3s;
-  }
-
-  .stage-1 .stage-num { border-color: var(--accent1); color: var(--accent1); }
-  .stage-2 .stage-num { border-color: var(--accent3); color: var(--accent3); }
-  .stage-3 .stage-num { border-color: var(--accent4); color: var(--accent4); }
-  .stage-4 .stage-num { border-color: var(--accent5); color: var(--accent5); }
-
-  .stage-content {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.25rem;
-    flex: 1;
-    margin-bottom: 1.5rem;
-  }
-
-  .stage-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    margin-bottom: 0.35rem;
-  }
-  .stage-1 .stage-title { color: var(--accent1); }
-  .stage-2 .stage-title { color: var(--accent3); }
-  .stage-3 .stage-title { color: var(--accent4); }
-  .stage-4 .stage-title { color: var(--accent5); }
-
-  .stage-detail { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
-
-  .stage-examples {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.75rem;
-  }
-
-  .ex-badge {
-    font-size: 0.68rem;
-    padding: 0.2rem 0.55rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    color: var(--muted);
-  }
-
-  .journey-canvas {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 2rem;
-    position: sticky;
-    top: 2rem;
-  }
-
-  .journey-canvas h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 1.25rem;
-    color: var(--accent4);
-  }
-
-  .canvas-input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    resize: none;
-    margin-bottom: 0.75rem;
-    transition: border-color 0.2s;
-    outline: none;
-  }
-
-  .canvas-input:focus { border-color: var(--accent4); }
-  .canvas-input::placeholder { color: var(--muted); }
-
-  .canvas-label {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 0.4rem;
-    display: block;
-  }
-
-  .btn {
-    padding: 0.65rem 1.5rem;
-    border-radius: 6px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-  }
-
-  .btn-primary {
-    background: var(--accent1);
-    color: var(--bg);
-  }
-  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
-
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
-  .btn-outline:hover { border-color: var(--accent1); color: var(--accent1); }
-
-  /* ===== PANEL 3: RECOGNITION ===== */
-  .recognition-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 3rem;
-  }
-
-  .rec-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    transition: all 0.3s;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .rec-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .rec-card:hover::after { opacity: 1; }
-  .rec-card:hover { transform: translateY(-2px); }
-
-  .rec-card-1::after { background: radial-gradient(circle at 80% 20%, rgba(124,255,196,0.05), transparent 60%); }
-  .rec-card-2::after { background: radial-gradient(circle at 80% 20%, rgba(255,206,71,0.05), transparent 60%); }
-  .rec-card-3::after { background: radial-gradient(circle at 80% 20%, rgba(107,159,255,0.05), transparent 60%); }
-  .rec-card-4::after { background: radial-gradient(circle at 80% 20%, rgba(208,107,255,0.05), transparent 60%); }
-
-  .rec-icon { font-size: 1.75rem; margin-bottom: 0.75rem; display: block; position: relative; z-index: 1; }
-  .rec-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; position: relative; z-index: 1; }
-  .rec-body { font-size: 0.8rem; color: var(--muted); line-height: 1.65; position: relative; z-index: 1; }
-
-  .rec-card-1 .rec-title { color: var(--accent1); }
-  .rec-card-2 .rec-title { color: var(--accent3); }
-  .rec-card-3 .rec-title { color: var(--accent4); }
-  .rec-card-4 .rec-title { color: var(--accent5); }
-
-  /* ===== PANEL 4: WORKSHOP ACTIVITY ===== */
-  .activity-steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 3rem;
-  }
-
-  .act-step {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    position: relative;
-  }
-
-  .act-time {
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .act-time::before {
-    content: '';
-    width: 20px; height: 1px;
-    background: var(--border);
-  }
-
-  .act-num {
-    position: absolute;
-    top: 1.5rem; right: 1.5rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 3rem;
-    font-weight: 800;
-    color: rgba(255,255,255,0.03);
-    line-height: 1;
-    pointer-events: none;
-  }
-
-  .act-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  .act-body { font-size: 0.8rem; color: var(--muted); line-height: 1.65; }
-
-  .act-step:nth-child(1) .act-title { color: var(--accent1); }
-  .act-step:nth-child(2) .act-title { color: var(--accent3); }
-  .act-step:nth-child(3) .act-title { color: var(--accent4); }
-  .act-step:nth-child(4) .act-title { color: var(--accent2); }
-  .act-step:nth-child(5) .act-title { color: var(--accent5); }
-
-  /* SKILL SELF-ASSESSMENT */
-  .self-assess {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 2rem;
-  }
-
-  .self-assess h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent3);
-    margin-bottom: 0.5rem;
-  }
-
-  .self-assess p {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-
-  .skill-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.85rem;
-  }
-
-  .skill-name {
-    width: 160px;
-    flex-shrink: 0;
-    font-size: 0.8rem;
-    color: var(--text);
-  }
-
-  .skill-dots {
-    display: flex;
-    gap: 0.4rem;
-  }
-
-  .dot {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-  }
-
-  .dot:hover { border-color: var(--accent3); }
-  .dot.lit { background: var(--accent3); border-color: var(--accent3); }
-
-  .dot[data-level="3"].lit { background: var(--accent1); border-color: var(--accent1); }
-  .dot[data-level="4"].lit { background: var(--accent1); border-color: var(--accent1); }
-  .dot[data-level="5"].lit { background: var(--accent1); border-color: var(--accent1); }
-
-  .skill-label {
-    font-size: 0.7rem;
-    color: var(--muted);
-    flex: 1;
-  }
-
-  /* ===== SUMMARY BAR ===== */
-  .summary-bar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: rgba(10, 10, 15, 0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border);
-    padding: 1rem 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 100;
-  }
-
-  .summary-bar.visible { transform: translateY(0); }
-
-  .summary-text {
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-
-  .summary-text strong {
-    color: var(--accent1);
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-  }
-
-  .selected-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    max-width: 60%;
-  }
-
-  .pill {
-    font-size: 0.68rem;
-    padding: 0.2rem 0.7rem;
-    background: rgba(124, 255, 196, 0.1);
-    border: 1px solid rgba(124, 255, 196, 0.3);
-    color: var(--accent1);
-    border-radius: 2rem;
-  }
-
-  /* HORIZONTAL RULE */
-  hr {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 2.5rem 0;
-  }
-
-  /* FOOTER NOTE */
-  .footer-note {
-    padding: 2rem 4rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-
-  .footer-note strong { color: var(--accent1); font-family: 'Syne', sans-serif; }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .hero, .tabs, .panel, .footer-note { padding-left: 1.5rem; padding-right: 1.5rem; }
-    .journey-wrap { grid-template-columns: 1fr; }
-    .summary-bar { padding: 1rem 1.5rem; }
-    .selected-pills { max-width: 50%; }
-  }
-
-  /* SCROLL */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+:root {
+  --bg: #0a0a0f;
+  --border: #1e1e2e;
+  --accent1: #7cffc4;
+  --accent2: #ff6b6b;
+  --accent3: #ffce47;
+  --accent4: #6b9fff;
+  --accent5: #d06bff;
+  --accent6: #ff9f47;
+  --teal: #4dd9e0;
+  --pink: #e06b9f;
+  --text: #e8e8f0;
+  --muted: #6b6b85;
+  --card: #161622;
+  --card2: #12121e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.5;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  padding: 3.5rem 4rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 65% 90% at 90% 40%, rgba(124,255,196,0.055) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 60% at 0% 90%, rgba(107,159,255,0.065) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4.2vw, 3.5rem);
+  font-weight: 800; line-height: 1.06;
+  max-width: 760px;
+  animation: fadeUp 0.55s ease both;
+  position: relative;
+}
+.hero h1 em { font-style: normal; color: var(--accent1); }
+.hero-sub {
+  margin-top: 1.25rem;
+  max-width: 700px;
+  font-size: 0.92rem; color: var(--muted); line-height: 1.8;
+  animation: fadeUp 0.55s 0.1s ease both;
+  position: relative;
+}
+.hero-sub strong { color: var(--text); font-weight: 500; }
+.hero-pills {
+  display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1.6rem;
+  animation: fadeUp 0.55s 0.2s ease both;
+  position: relative;
+}
+.pill-badge {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.3rem 0.85rem; border-radius: 2rem;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+  border: 1px solid; cursor: pointer; transition: all 0.2s; text-decoration: none;
+  user-select: none;
+}
+.pill-badge:hover { transform: translateY(-2px); filter: brightness(1.25); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+.pb-green  { border-color: rgba(124,255,196,0.3); color: var(--accent1); background: rgba(124,255,196,0.06); }
+.pb-blue   { border-color: rgba(107,159,255,0.3); color: var(--accent4); background: rgba(107,159,255,0.06); }
+.pb-yellow { border-color: rgba(255,206,71,0.3);  color: var(--accent3); background: rgba(255,206,71,0.06); }
+.pb-purple { border-color: rgba(208,107,255,0.3); color: var(--accent5); background: rgba(208,107,255,0.06); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex; padding: 0 4rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; gap: 0;
+}
+.tab {
+  padding: 1rem 1.35rem;
+  font-size: 0.76rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--muted); cursor: pointer;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: all 0.2s;
+  background: none; border-top: none; border-left: none; border-right: none;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent1); border-bottom-color: var(--accent1); }
+
+/* ── PANELS ── */
+.panel { display: none; padding: 3rem 4rem 8rem; animation: fadeUp 0.35s ease; }
+.panel.active { display: block; }
+
+.sec-label { font-size: 0.67rem; letter-spacing: 0.17em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+.sec-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.55rem; }
+.sec-desc  { color: var(--muted); font-size: 0.875rem; max-width: 660px; line-height: 1.8; margin-bottom: 2.5rem; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 0.65rem 1.5rem; border-radius: 7px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-primary { background: var(--accent1); color: var(--bg); }
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,255,196,0.2); }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+.btn-outline:hover { border-color: var(--accent1); color: var(--accent1); }
+.btn-blue { background: var(--accent4); color: var(--bg); }
+.btn-blue:hover { opacity: 0.85; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(107,159,255,0.2); }
+.btn-purple { background: var(--accent5); color: var(--bg); }
+.btn-purple:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* ══════════════════════════════════════
+   PANEL 1 — CONTRIBUTOR MAP
+══════════════════════════════════════ */
+.map-intro-banner {
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent1);
+  border-radius: 10px; padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem; font-size: 0.85rem; line-height: 1.75; color: var(--muted);
+}
+.map-intro-banner strong { color: var(--accent1); }
+
+.map-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.4rem; }
+
+.cat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.6rem; position: relative; overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s;
+  cursor: default;
+}
+.cat-card:hover { transform: translateY(-2px); }
+.cat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: 14px 14px 0 0;
+}
+.cc-1::before { background: var(--accent1); }
+.cc-2::before { background: var(--accent3); }
+.cc-3::before { background: var(--accent2); }
+.cc-4::before { background: var(--accent4); }
+.cc-5::before { background: var(--accent5); }
+.cc-6::before { background: var(--accent6); }
+.cc-7::before { background: var(--teal); }
+.cc-8::before { background: var(--pink); }
+
+.cat-icon { font-size: 1.8rem; margin-bottom: 0.65rem; display: block; }
+.cat-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+.cc-1 .cat-name { color: var(--accent1); }
+.cc-2 .cat-name { color: var(--accent3); }
+.cc-3 .cat-name { color: var(--accent2); }
+.cc-4 .cat-name { color: var(--accent4); }
+.cc-5 .cat-name { color: var(--accent5); }
+.cc-6 .cat-name { color: var(--accent6); }
+.cc-7 .cat-name { color: var(--teal); }
+.cc-8 .cat-name { color: var(--pink); }
+
+.cat-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
+.contrib-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.tag {
+  font-size: 0.69rem; padding: 0.25rem 0.65rem;
+  border-radius: 2rem; border: 1px solid;
+  font-weight: 500; cursor: pointer;
+  transition: all 0.18s; user-select: none; opacity: 0.45;
+}
+.tag:hover { opacity: 0.75; transform: scale(1.04); }
+.tag.selected { opacity: 1; background: currentColor; color: var(--bg) !important; }
+
+.cc-1 .tag { border-color: var(--accent1); color: var(--accent1); }
+.cc-2 .tag { border-color: var(--accent3); color: var(--accent3); }
+.cc-3 .tag { border-color: var(--accent2); color: var(--accent2); }
+.cc-4 .tag { border-color: var(--accent4); color: var(--accent4); }
+.cc-5 .tag { border-color: var(--accent5); color: var(--accent5); }
+.cc-6 .tag { border-color: var(--accent6); color: var(--accent6); }
+.cc-7 .tag { border-color: var(--teal);    color: var(--teal); }
+.cc-8 .tag { border-color: var(--pink);    color: var(--pink); }
+
+.map-actions {
+  margin-top: 2.5rem;
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem 2rem;
+}
+.map-actions-text { flex: 1; }
+.map-actions-text h4 { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--accent1); margin-bottom: 0.25rem; }
+.map-actions-text p  { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+/* MAP PREVIEW MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,10,15,0.9); backdrop-filter: blur(8px);
+  z-index: 1000; display: none;
+  align-items: center; justify-content: center; padding: 2rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; width: 100%; max-width: 760px;
+  max-height: 90vh; overflow-y: auto;
+  padding: 2.5rem; position: relative;
+  animation: fadeUp 0.3s ease;
+}
+.modal-close {
+  position: absolute; top: 1.25rem; right: 1.25rem;
+  background: var(--border); border: none; color: var(--muted);
+  width: 32px; height: 32px; border-radius: 50%;
+  cursor: pointer; font-size: 1rem; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: var(--accent2); color: var(--bg); }
+.modal h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 0.35rem; }
+.modal-subtitle { font-size: 0.82rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+.map-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.mpg-cat { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.mpg-cat-name { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.6rem; }
+.mpg-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.mpg-tag { font-size: 0.65rem; padding: 0.2rem 0.55rem; border-radius: 2rem; background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+.modal-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+/* ══════════════════════════════════════
+   PANEL 2 — ORGANIZATION JOURNEY
+══════════════════════════════════════ */
+.org-layout { display: grid; grid-template-columns: 1fr 400px; gap: 3rem; align-items: start; }
+
+/* Journey stages */
+.stages-track { display: flex; flex-direction: column; }
+
+.journey-stage { display: flex; gap: 1.25rem; position: relative; }
+.journey-stage:not(:last-child)::after {
+  content: ''; position: absolute;
+  left: 19px; top: 42px; bottom: -2rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--border), transparent);
+}
+
+.stage-dot {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.8rem;
+  flex-shrink: 0; margin-top: 0.15rem; border: 2px solid;
+  transition: all 0.3s; cursor: pointer;
+}
+.js-1 .stage-dot { border-color: var(--accent1); color: var(--accent1); }
+.js-2 .stage-dot { border-color: var(--accent3); color: var(--accent3); }
+.js-3 .stage-dot { border-color: var(--accent4); color: var(--accent4); }
+.js-4 .stage-dot { border-color: var(--accent5); color: var(--accent5); }
+.js-5 .stage-dot { border-color: var(--accent2); color: var(--accent2); }
+.js-6 .stage-dot { border-color: var(--accent6); color: var(--accent6); }
+
+.stage-dot:hover { transform: scale(1.1); }
+.journey-stage.active .stage-dot { color: var(--bg); }
+.js-1.active .stage-dot { background: var(--accent1); box-shadow: 0 0 0 4px rgba(124,255,196,0.15); }
+.js-2.active .stage-dot { background: var(--accent3); box-shadow: 0 0 0 4px rgba(255,206,71,0.15); }
+.js-3.active .stage-dot { background: var(--accent4); box-shadow: 0 0 0 4px rgba(107,159,255,0.15); }
+.js-4.active .stage-dot { background: var(--accent5); box-shadow: 0 0 0 4px rgba(208,107,255,0.15); }
+.js-5.active .stage-dot { background: var(--accent2); box-shadow: 0 0 0 4px rgba(255,107,107,0.15); }
+.js-6.active .stage-dot { background: var(--accent6); box-shadow: 0 0 0 4px rgba(255,159,71,0.15); }
+
+.stage-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.35rem; flex: 1; margin-bottom: 1.75rem;
+  transition: border-color 0.25s;
+}
+.journey-stage.active .stage-card { border-color: rgba(255,255,255,0.1); }
+
+.js-1.active .stage-card { border-color: rgba(124,255,196,0.25); }
+.js-2.active .stage-card { border-color: rgba(255,206,71,0.25); }
+.js-3.active .stage-card { border-color: rgba(107,159,255,0.25); }
+.js-4.active .stage-card { border-color: rgba(208,107,255,0.25); }
+.js-5.active .stage-card { border-color: rgba(255,107,107,0.25); }
+.js-6.active .stage-card { border-color: rgba(255,159,71,0.25); }
+
+.stage-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+.js-1 .stage-title { color: var(--accent1); }
+.js-2 .stage-title { color: var(--accent3); }
+.js-3 .stage-title { color: var(--accent4); }
+.js-4 .stage-title { color: var(--accent5); }
+.js-5 .stage-title { color: var(--accent2); }
+.js-6 .stage-title { color: var(--accent6); }
+
+.stage-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.65; margin-bottom: 0.85rem; }
+
+.stage-options { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.85rem; }
+.stage-opt {
+  font-size: 0.68rem; padding: 0.22rem 0.6rem; border-radius: 2rem;
+  border: 1px solid var(--border); color: var(--muted);
+  cursor: pointer; transition: all 0.18s; user-select: none;
+}
+.stage-opt:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
+.stage-opt.picked { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+.stage-note { font-size: 0.75rem; color: var(--muted); font-style: italic; }
+
+/* Journey builder panel */
+.journey-builder {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.75rem;
+  position: sticky; top: 1.5rem;
+}
+.jb-header { margin-bottom: 1.5rem; }
+.jb-header h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent4); margin-bottom: 0.3rem; }
+.jb-header p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+.field-group { margin-bottom: 1rem; }
+.field-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; display: block; }
+.field-input {
+  width: 100%; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.65rem 0.9rem; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem;
+  resize: none; outline: none; transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--accent4); }
+.field-input::placeholder { color: var(--muted); }
+
+.jb-progress {
+  margin-bottom: 1.25rem;
+  background: var(--bg); border-radius: 8px;
+  padding: 0.85rem 1rem;
+}
+.jb-progress-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+.jb-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.jb-bar-fill { height: 100%; background: var(--accent4); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+
+.jb-actions { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+
+.saved-msg {
+  margin-top: 0.85rem; font-size: 0.75rem;
+  color: var(--accent1); display: none; align-items: center; gap: 0.4rem;
+}
+.saved-msg.show { display: flex; }
+
+/* Journey saved view */
+.saved-journey {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.25rem; margin-top: 1.5rem; display: none;
+}
+.saved-journey.show { display: block; }
+.sj-title { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--accent3); margin-bottom: 0.75rem; }
+.sj-row { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; line-height: 1.55; }
+.sj-row strong { color: var(--text); display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.15rem; }
+
+/* ══════════════════════════════════════
+   PANEL 3 — RECOGNITION
+══════════════════════════════════════ */
+.rec-intro { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent3); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; font-size: 0.85rem; color: var(--muted); line-height: 1.75; }
+.rec-intro strong { color: var(--accent3); }
+
+.rec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
+.rec-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 13px; padding: 1.5rem; position: relative; overflow: hidden;
+  transition: all 0.25s; cursor: pointer;
+}
+.rec-card:hover { transform: translateY(-2px); }
+.rec-card::after { content: ''; position: absolute; inset: 0; border-radius: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.rc-1::after { background: radial-gradient(circle at 85% 15%, rgba(124,255,196,0.06), transparent 60%); }
+.rc-2::after { background: radial-gradient(circle at 85% 15%, rgba(255,206,71,0.06), transparent 60%); }
+.rc-3::after { background: radial-gradient(circle at 85% 15%, rgba(107,159,255,0.06), transparent 60%); }
+.rc-4::after { background: radial-gradient(circle at 85% 15%, rgba(208,107,255,0.06), transparent 60%); }
+.rc-5::after { background: radial-gradient(circle at 85% 15%, rgba(255,107,107,0.06), transparent 60%); }
+.rc-6::after { background: radial-gradient(circle at 85% 15%, rgba(255,159,71,0.06), transparent 60%); }
+.rec-card:hover::after { opacity: 1; }
+.rec-icon { font-size: 1.75rem; margin-bottom: 0.7rem; display: block; position: relative; z-index: 1; }
+.rec-title { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; position: relative; z-index: 1; }
+.rec-body { font-size: 0.79rem; color: var(--muted); line-height: 1.68; position: relative; z-index: 1; }
+.rec-body ul { padding-left: 1.1rem; margin-top: 0.5rem; }
+.rec-body li { margin-bottom: 0.35rem; }
+.rc-1 .rec-title { color: var(--accent1); }
+.rc-2 .rec-title { color: var(--accent3); }
+.rc-3 .rec-title { color: var(--accent4); }
+.rc-4 .rec-title { color: var(--accent5); }
+.rc-5 .rec-title { color: var(--accent2); }
+.rc-6 .rec-title { color: var(--accent6); }
+
+.rec-expand-btn {
+  margin-top: 0.75rem; font-size: 0.7rem; color: var(--muted);
+  background: none; border: none; cursor: pointer; padding: 0;
+  text-decoration: underline; transition: color 0.2s;
+  position: relative; z-index: 1;
+}
+.rec-expand-btn:hover { color: var(--text); }
+.rec-extra { display: none; margin-top: 0.75rem; font-size: 0.78rem; color: var(--muted); line-height: 1.65; position: relative; z-index: 1; }
+.rec-extra.open { display: block; }
+
+.antipattern-section { background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 2rem; }
+.antipattern-section h3 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--accent2); margin-bottom: 0.4rem; }
+.antipattern-section > p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.65; }
+.ap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem; }
+.ap-item {
+  background: rgba(255,107,107,0.05); border: 1px solid rgba(255,107,107,0.18);
+  border-radius: 9px; padding: 1rem;
+}
+.ap-item strong { display: block; color: var(--accent2); font-size: 0.78rem; margin-bottom: 0.3rem; }
+.ap-item p { font-size: 0.76rem; color: var(--muted); line-height: 1.55; }
+
+/* ══════════════════════════════════════
+   PANEL 4 — SELF ASSESSMENT
+══════════════════════════════════════ */
+.assess-mode-toggle {
+  display: flex; gap: 0; margin-bottom: 2.5rem;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 0.4rem; width: fit-content;
+}
+.mode-btn {
+  padding: 0.6rem 1.5rem; border-radius: 8px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; border: none; background: none; color: var(--muted);
+  transition: all 0.2s;
+}
+.mode-btn.active { background: var(--accent1); color: var(--bg); }
+
+.assess-section { display: none; }
+.assess-section.active { display: block; animation: fadeUp 0.3s ease; }
+
+.assess-intro { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent4); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; font-size: 0.85rem; color: var(--muted); line-height: 1.75; }
+.assess-intro strong { color: var(--accent4); }
+.assess-intro.purple { border-left-color: var(--accent5); }
+.assess-intro.purple strong { color: var(--accent5); }
+
+.assess-group { margin-bottom: 2.5rem; }
+.assess-group-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+.assess-group-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.25rem; line-height: 1.6; }
+
+.assess-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 11px; padding: 1.25rem 1.5rem; margin-bottom: 0.85rem;
+  transition: border-color 0.25s;
+}
+.assess-item:hover { border-color: rgba(255,255,255,0.1); }
+.assess-item-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.65rem; }
+.assess-item-q { font-size: 0.87rem; font-weight: 500; line-height: 1.55; flex: 1; }
+.assess-item-hint { font-size: 0.76rem; color: var(--muted); line-height: 1.55; margin-top: 0.3rem; }
+
+.star-row { display: flex; gap: 0.3rem; flex-shrink: 0; }
+.star {
+  width: 28px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg); border: 1px solid var(--border);
+  cursor: pointer; font-size: 0.85rem; transition: all 0.18s;
+  user-select: none;
+}
+.star:hover { border-color: var(--accent3); background: rgba(255,206,71,0.08); }
+.star.lit { background: rgba(255,206,71,0.12); border-color: var(--accent3); }
+.star.lit::after { content: '★'; color: var(--accent3); }
+.star:not(.lit)::after { content: '☆'; color: var(--muted); }
+
+.assess-bar-wrap { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.65rem; }
+.assess-mini-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.assess-mini-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+.assess-score-label { font-size: 0.7rem; color: var(--muted); white-space: nowrap; min-width: 70px; text-align: right; }
+
+/* Score summary */
+.score-summary {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 2rem; margin-top: 2.5rem;
+}
+.score-summary h3 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 1.5rem; }
+.score-rings { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; }
+.score-ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.ring-label { font-size: 0.7rem; color: var(--muted); text-align: center; text-transform: uppercase; letter-spacing: 0.08em; max-width: 80px; }
+.ring-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; }
+.score-recommend {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 9px; padding: 1rem 1.25rem;
+  font-size: 0.82rem; color: var(--muted); line-height: 1.7; display: none;
+}
+.score-recommend.show { display: block; }
+.score-recommend strong { color: var(--accent1); }
+
+/* ── BOTTOM SUMMARY BAR ── */
+.summary-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(10,10,15,0.96); backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border);
+  padding: 0.9rem 4rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 200;
+}
+.summary-bar.up { transform: translateY(0); }
+.sb-count { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--accent1); white-space: nowrap; }
+.sb-label { font-size: 0.75rem; color: var(--muted); }
+.sb-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; flex: 1; }
+.sb-pill { font-size: 0.67rem; padding: 0.2rem 0.65rem; background: rgba(124,255,196,0.08); border: 1px solid rgba(124,255,196,0.25); color: var(--accent1); border-radius: 2rem; }
+.sb-actions { display: flex; gap: 0.65rem; flex-shrink: 0; }
+
+/* ── SHARE MODAL ── */
+.share-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,10,15,0.92); backdrop-filter: blur(10px);
+  z-index: 1100; display: none;
+  align-items: center; justify-content: center; padding: 2rem;
+}
+.share-modal-overlay.open { display: flex; }
+.share-modal {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; width: 100%; max-width: 500px;
+  padding: 2rem; position: relative;
+  animation: fadeUp 0.3s ease;
+}
+.share-modal h3 {
+  font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700;
+  margin-bottom: 0.35rem; color: var(--accent1);
+}
+.share-modal p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+.share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1.5rem; }
+.share-btn {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.8rem 1rem; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text); cursor: pointer; font-size: 0.82rem; font-weight: 500;
+  transition: all 0.2s; text-decoration: none;
+}
+.share-btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.2); }
+.share-btn .share-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.sb-twitter  .share-icon { background: #1da1f2; }
+.sb-linkedin .share-icon { background: #0077b5; }
+.sb-slack    .share-icon { background: #4a154b; }
+.sb-whatsapp .share-icon { background: #25d366; }
+.sb-email    .share-icon { background: #555; }
+.sb-copy     .share-icon { background: var(--border); }
+.share-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+.share-link-row { display: flex; gap: 0.5rem; }
+.share-link-input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.6rem 0.9rem; color: var(--muted); font-size: 0.78rem;
+  font-family: 'DM Sans', sans-serif; outline: none;
+}
+.share-copy-btn {
+  padding: 0.6rem 1rem; background: var(--accent1); color: var(--bg);
+  border: none; border-radius: 8px; cursor: pointer;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.75rem;
+  letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.2s;
+  white-space: nowrap;
+}
+.share-copy-btn:hover { opacity: 0.85; }
+.share-copied-msg { font-size: 0.75rem; color: var(--accent1); margin-top: 0.5rem; display: none; }
+.share-copied-msg.show { display: block; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero, .tabs, .panel { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .org-layout { grid-template-columns: 1fr; }
+  .summary-bar { padding: 0.9rem 1.5rem; flex-wrap: wrap; }
+}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -679,494 +571,1910 @@
 <!-- HERO -->
 <header class="hero">
   <div class="hero-bg"></div>
-  <div class="event-tag">Everyone Belongs to Open Source · 2026</div>
-  <h1>No-Code <em>Contribution</em><br>Map</h1>
-  <div class="hero-meta">
-    <span>📅 March 17 · 14:10–15:10</span>
-    <span>📍 Wintergarten</span>
-    <span>⏱ 60-min Workshop</span>
+  <h1>No-Code<br><em>Contribution Map</em></h1>
+  <p class="hero-sub">
+    Open source thrives when <strong>every skill has a home</strong>. This interactive map helps contributors discover where they belong and empowers organizations to design contributor journeys that are welcoming, structured, and sustainable — regardless of whether someone writes a single line of code.
+    <br><br>
+    Use the <strong>Contributor Map</strong> to explore and select your skills, the <strong>Organization Journey</strong> to design how your project attracts and retains contributors, the <strong>Recognition</strong> tab to learn how to value all contributions, and the <strong>Self-Assessment</strong> to measure where you or your project stands today.
+  </p>
+  <div class="hero-pills">
+    <span class="pill-badge pb-green"  onclick="showPanel('map',document.querySelectorAll('.tab')[0])">↗ For Contributors</span>
+    <span class="pill-badge pb-blue"   onclick="showPanel('org',document.querySelectorAll('.tab')[1])">↗ For Organizations</span>
+    <span class="pill-badge pb-yellow" onclick="showPanel('rec',document.querySelectorAll('.tab')[2])">↗ Recognition Frameworks</span>
+    <span class="pill-badge pb-purple" onclick="showPanel('assess',document.querySelectorAll('.tab')[3])">↗ Self-Assessment Tools</span>
   </div>
 </header>
 
 <!-- TABS -->
 <nav class="tabs">
-  <button class="tab active" onclick="showPanel('map', this)">The Map</button>
-  <button class="tab" onclick="showPanel('journey', this)">Contributor Journey</button>
-  <button class="tab" onclick="showPanel('recognition', this)">Recognition</button>
-  <button class="tab" onclick="showPanel('activity', this)">Workshop Activity</button>
+  <button class="tab active"  onclick="showPanel('map',this)">Contributor Map</button>
+  <button class="tab"         onclick="showPanel('org',this)">Organization Journey</button>
+  <button class="tab"         onclick="showPanel('rec',this)">Recognition</button>
+  <button class="tab"         onclick="showPanel('assess',this)">Self-Assessment</button>
 </nav>
 
-<!-- PANEL 1: THE MAP -->
+<!-- ════════════════════════════════════
+     PANEL 1 — CONTRIBUTOR MAP
+════════════════════════════════════ -->
 <section id="panel-map" class="panel active">
-  <div class="section-label">Step 1 of 4</div>
-  <h2 class="section-title">Explore the Contribution Map</h2>
-  <p class="section-desc">Open source is more than code. Click any contribution type to add it to your personal map. Explore the full range of skills that power thriving open source communities.</p>
+  <div class="sec-label">For Contributors</div>
+  <h2 class="sec-title">Explore Your Contribution Map</h2>
+  <p class="sec-desc">Open source is far bigger than code. Select every skill or contribution type that reflects what you bring — or what you'd like to grow into. Your selections will generate a personalized Contribution Map you can download and share.</p>
+
+  <div class="map-intro-banner">
+    <strong>How to use this map:</strong> Browse the eight contribution categories below. Click any skill tag to add it to your personal map. Tags you've already selected appear filled in. When you're ready, click <strong>"Preview My Map"</strong> to see your full contribution profile and download it.
+  </div>
 
   <div class="map-grid">
-    <!-- Writing -->
-    <div class="contrib-category cat-writing">
+
+    <!-- WRITING -->
+    <div class="cat-card cc-1">
       <span class="cat-icon">✍️</span>
-      <div class="cat-name">Technical Writing</div>
-      <div class="cat-desc">Documentation, tutorials, and guides that make projects understandable and accessible to all skill levels.</div>
+      <div class="cat-name">Technical Writing & Documentation</div>
+      <div class="cat-desc">Words that make projects understandable. Documentation is often a project's first impression and the single highest-impact non-code contribution.</div>
       <div class="contrib-tags">
-        <span class="tag selected" onclick="toggleTag(this)">README files</span>
-        <span class="tag selected" onclick="toggleTag(this)">How-to guides</span>
-        <span class="tag" onclick="toggleTag(this)">API docs</span>
-        <span class="tag" onclick="toggleTag(this)">Release notes</span>
-        <span class="tag" onclick="toggleTag(this)">Blog posts</span>
-        <span class="tag" onclick="toggleTag(this)">Changelogs</span>
-        <span class="tag" onclick="toggleTag(this)">Glossaries</span>
-        <span class="tag" onclick="toggleTag(this)">Translations</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">README files</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">How-to guides</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">API documentation</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Release notes</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Changelogs</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Glossaries</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Onboarding docs</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Translations</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Blog posts</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Case studies</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">FAQ pages</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Code comments</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Wiki pages</span>
+        <span class="tag" onclick="toggleTag(this,'Writing')">Style guides</span>
       </div>
     </div>
-    <!-- Design -->
-    <div class="contrib-category cat-design">
+
+    <!-- DESIGN -->
+    <div class="cat-card cc-2">
       <span class="cat-icon">🎨</span>
-      <div class="cat-name">Design & UX</div>
-      <div class="cat-desc">Visual communication, usability, and branding that helps projects make great first impressions and retain users.</div>
+      <div class="cat-name">Design & User Experience</div>
+      <div class="cat-desc">Visual communication, usability, and branding that gives projects credibility, clarity, and a welcoming first impression.</div>
       <div class="contrib-tags">
-        <span class="tag selected" onclick="toggleTag(this)">Logo & branding</span>
-        <span class="tag" onclick="toggleTag(this)">UI mockups</span>
-        <span class="tag" onclick="toggleTag(this)">Icon design</span>
-        <span class="tag" onclick="toggleTag(this)">UX research</span>
-        <span class="tag" onclick="toggleTag(this)">Illustrations</span>
-        <span class="tag" onclick="toggleTag(this)">Website design</span>
-        <span class="tag" onclick="toggleTag(this)">Infographics</span>
-        <span class="tag" onclick="toggleTag(this)">Social assets</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Logo & branding</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">UI mockups</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Icon sets</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">UX research</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Illustrations</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Website design</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Infographics</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Social media assets</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Presentation decks</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Wireframing</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Prototype testing</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Design systems</span>
+        <span class="tag" onclick="toggleTag(this,'Design')">Motion design</span>
       </div>
     </div>
-    <!-- Community -->
-    <div class="contrib-category cat-community">
+
+    <!-- COMMUNITY -->
+    <div class="cat-card cc-3">
       <span class="cat-icon">🤝</span>
-      <div class="cat-name">Community Building</div>
-      <div class="cat-desc">Organizing people, moderating spaces, and creating cultures where every contributor feels genuinely welcomed.</div>
+      <div class="cat-name">Community Building & Moderation</div>
+      <div class="cat-desc">Creating, nurturing, and protecting spaces where contributors feel psychologically safe and genuinely welcomed.</div>
       <div class="contrib-tags">
-        <span class="tag selected" onclick="toggleTag(this)">Event organizing</span>
-        <span class="tag" onclick="toggleTag(this)">Forum moderation</span>
-        <span class="tag" onclick="toggleTag(this)">Code of Conduct</span>
-        <span class="tag" onclick="toggleTag(this)">Onboarding</span>
-        <span class="tag" onclick="toggleTag(this)">Mentoring</span>
-        <span class="tag" onclick="toggleTag(this)">Welcoming newcomers</span>
-        <span class="tag" onclick="toggleTag(this)">Issue triage</span>
-        <span class="tag" onclick="toggleTag(this)">Q&amp;A support</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Event organizing</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Forum moderation</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Code of Conduct drafting</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Onboarding new members</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">1:1 mentoring</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Welcome calls</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Issue triage</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Community calls</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Q&A support</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Conflict resolution</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Newsletter curation</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Community metrics</span>
+        <span class="tag" onclick="toggleTag(this,'Community')">Slack/Discord management</span>
       </div>
     </div>
-    <!-- Accessibility -->
-    <div class="contrib-category cat-accessibility">
+
+    <!-- ACCESSIBILITY -->
+    <div class="cat-card cc-4">
       <span class="cat-icon">♿</span>
-      <div class="cat-name">Accessibility</div>
-      <div class="cat-desc">Advocating and implementing practices that ensure projects are usable by people of all abilities and backgrounds.</div>
+      <div class="cat-name">Accessibility & Inclusion</div>
+      <div class="cat-desc">Advocating, auditing, and implementing practices that ensure projects are usable by people of all abilities, backgrounds, and languages.</div>
       <div class="contrib-tags">
-        <span class="tag selected" onclick="toggleTag(this)">A11y auditing</span>
-        <span class="tag" onclick="toggleTag(this)">Alt text</span>
-        <span class="tag" onclick="toggleTag(this)">Screen reader testing</span>
-        <span class="tag" onclick="toggleTag(this)">Color contrast</span>
-        <span class="tag" onclick="toggleTag(this)">Plain language</span>
-        <span class="tag" onclick="toggleTag(this)">Keyboard nav</span>
-        <span class="tag" onclick="toggleTag(this)">Captions</span>
-        <span class="tag" onclick="toggleTag(this)">WCAG review</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">A11y auditing</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Alt text writing</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Screen reader testing</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Color contrast review</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Plain language editing</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Keyboard navigation</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Captions & transcripts</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">WCAG review</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Inclusive language</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Multilingual support</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">Localization</span>
+        <span class="tag" onclick="toggleTag(this,'Accessibility')">DEI policy writing</span>
       </div>
     </div>
-    <!-- Outreach -->
-    <div class="contrib-category cat-outreach">
+
+    <!-- OUTREACH -->
+    <div class="cat-card cc-5">
       <span class="cat-icon">📣</span>
-      <div class="cat-name">Outreach & Advocacy</div>
-      <div class="cat-desc">Promoting projects, speaking at events, and connecting open source to new audiences and underrepresented communities.</div>
+      <div class="cat-name">Outreach, Advocacy & Marketing</div>
+      <div class="cat-desc">Promoting projects, amplifying stories, and connecting open source to new and underrepresented communities who may not yet know they belong.</div>
       <div class="contrib-tags">
-        <span class="tag selected" onclick="toggleTag(this)">Conference talks</span>
-        <span class="tag" onclick="toggleTag(this)">Social media</span>
-        <span class="tag" onclick="toggleTag(this)">Newsletters</span>
-        <span class="tag" onclick="toggleTag(this)">Podcast appearances</span>
-        <span class="tag" onclick="toggleTag(this)">Partnership building</span>
-        <span class="tag" onclick="toggleTag(this)">DEI advocacy</span>
-        <span class="tag" onclick="toggleTag(this)">Case studies</span>
-        <span class="tag" onclick="toggleTag(this)">Demo videos</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Conference talks</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Social media management</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Newsletter writing</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Podcast appearances</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Partnership building</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">DEI advocacy</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Demo videos</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Press outreach</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Community ambassadors</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Hackathon organizing</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">Campus outreach</span>
+        <span class="tag" onclick="toggleTag(this,'Outreach')">LinkedIn presence</span>
       </div>
     </div>
-    <!-- Teaching -->
-    <div class="contrib-category cat-teaching">
+
+    <!-- TEACHING -->
+    <div class="cat-card cc-6">
       <span class="cat-icon">🎓</span>
       <div class="cat-name">Education & Mentorship</div>
-      <div class="cat-desc">Creating learning pathways and knowledge-sharing systems that reduce barriers and grow the contributor pipeline.</div>
+      <div class="cat-desc">Building learning pathways and reducing barriers to entry so anyone curious about contributing has a clear, supported route to get started.</div>
       <div class="contrib-tags">
-        <span class="tag selected" onclick="toggleTag(this)">Workshops</span>
-        <span class="tag" onclick="toggleTag(this)">Video tutorials</span>
-        <span class="tag" onclick="toggleTag(this)">Curriculum design</span>
-        <span class="tag" onclick="toggleTag(this)">Office hours</span>
-        <span class="tag" onclick="toggleTag(this)">Good first issues</span>
-        <span class="tag" onclick="toggleTag(this)">Pairing sessions</span>
-        <span class="tag" onclick="toggleTag(this)">Internship programs</span>
-        <span class="tag" onclick="toggleTag(this)">Study groups</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Workshops & webinars</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Video tutorials</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Curriculum design</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Office hours</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Good first issues</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Pair contributing</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Internship programs</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Study groups</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Explainer threads</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Mentorship matching</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Learning resources</span>
+        <span class="tag" onclick="toggleTag(this,'Education')">Skill assessments</span>
       </div>
     </div>
+
+    <!-- RESEARCH -->
+    <div class="cat-card cc-7">
+      <span class="cat-icon">🔬</span>
+      <div class="cat-name">Research & Strategy</div>
+      <div class="cat-desc">Generating insights that help projects make smarter decisions — about their users, their community, and their growth direction.</div>
+      <div class="contrib-tags">
+        <span class="tag" onclick="toggleTag(this,'Research')">User research</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Competitive analysis</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Survey design</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Data analysis</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Community health metrics</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Roadmap input</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Grant writing</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Impact reporting</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Funding research</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Policy research</span>
+        <span class="tag" onclick="toggleTag(this,'Research')">Sustainability planning</span>
+      </div>
+    </div>
+
+    <!-- TESTING -->
+    <div class="cat-card cc-8">
+      <span class="cat-icon">🧪</span>
+      <div class="cat-name">Testing, Feedback & Quality</div>
+      <div class="cat-desc">Hands-on evaluation and structured feedback that improves the reliability, clarity, and real-world experience of a project without writing code.</div>
+      <div class="contrib-tags">
+        <span class="tag" onclick="toggleTag(this,'Testing')">Manual testing</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Bug reporting</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Usability testing</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Documentation review</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Beta testing</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Issue verification</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Edge case testing</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Feature feedback</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Onboarding testing</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Cross-platform testing</span>
+        <span class="tag" onclick="toggleTag(this,'Testing')">Feedback synthesis</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="map-actions">
+    <div class="map-actions-text">
+      <h4 id="map-cta-title">Select your skills above to build your map</h4>
+      <p id="map-cta-desc">Click any tag to add it. Select across multiple categories — your map grows with you.</p>
+    </div>
+    <button class="btn btn-outline" onclick="selectAll()">Select All</button>
+    <button class="btn btn-outline" onclick="clearAll()">Clear All</button>
+    <button class="btn btn-primary" onclick="openMapModal()">Preview My Map →</button>
   </div>
 </section>
 
-<!-- PANEL 2: JOURNEY -->
-<section id="panel-journey" class="panel">
-  <div class="section-label">Step 2 of 4</div>
-  <h2 class="section-title">Contributor Journey</h2>
-  <p class="section-desc">Every contributor starts somewhere. Design pathways that meet people where they are — no code required to begin.</p>
 
-  <div class="journey-wrap">
-    <div class="journey-stages">
-      <div class="stage stage-1">
-        <div class="stage-num">1</div>
-        <div class="stage-content">
-          <div class="stage-title">Discover</div>
-          <div class="stage-detail">The first touch. How does someone find out your project exists and believes they could contribute?</div>
-          <div class="stage-examples">
-            <span class="ex-badge">Social media</span>
-            <span class="ex-badge">Conference talk</span>
-            <span class="ex-badge">Blog post</span>
-            <span class="ex-badge">Word of mouth</span>
-            <span class="ex-badge">Good first issue label</span>
+<!-- ════════════════════════════════════
+     PANEL 2 — ORGANIZATION JOURNEY
+════════════════════════════════════ -->
+<section id="panel-org" class="panel">
+  <div class="sec-label">For Organizations</div>
+  <h2 class="sec-title">Design Your Contributor Journey</h2>
+  <p class="sec-desc">A welcoming contributor journey doesn't happen by accident. Work through each stage below — click the option chips that reflect your project's current or planned approach — then use the builder on the right to capture your decisions and download your journey plan.</p>
+
+  <div class="org-layout">
+    <div class="stages-track">
+
+      <!-- STAGE 1: DISCOVERY -->
+      <div class="journey-stage js-1 active" onclick="activateStage(this)">
+        <div class="stage-dot">1</div>
+        <div class="stage-card">
+          <div class="stage-title">Discovery — How do people find you?</div>
+          <div class="stage-desc">Before anyone can contribute, they need to know your project exists and feel like someone like them could be involved. What channels bring contributors to your door?</div>
+          <div class="stage-options">
+            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Social media</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Conference talks</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Blog posts</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Word of mouth</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">GitHub trending</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Open source communities</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Hackathons</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">University programs</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Podcast features</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">DEI programs</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Newsletter features</span>
           </div>
+          <div class="stage-note">💡 Tip: Projects that show up in spaces where underrepresented communities already gather attract more diverse contributors.</div>
         </div>
       </div>
-      <div class="stage stage-2">
-        <div class="stage-num">2</div>
-        <div class="stage-content">
-          <div class="stage-title">Orient</div>
-          <div class="stage-detail">Can they quickly understand what the project does, who it's for, and what kinds of help are needed?</div>
-          <div class="stage-examples">
-            <span class="ex-badge">Clear README</span>
-            <span class="ex-badge">CONTRIBUTING.md</span>
-            <span class="ex-badge">Welcoming README</span>
-            <span class="ex-badge">Contributor types listed</span>
+
+      <!-- STAGE 2: ORIENTATION -->
+      <div class="journey-stage js-2" onclick="activateStage(this)">
+        <div class="stage-dot">2</div>
+        <div class="stage-card">
+          <div class="stage-title">Orientation — Can they understand and orient quickly?</div>
+          <div class="stage-desc">Within minutes of landing on your project, a potential contributor should understand what it does, who it's for, and what kind of help is needed — without having to ask.</div>
+          <div class="stage-options">
+            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Clear README</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Welcome README</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this)">CONTRIBUTING.md</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Contribution types listed</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Project roadmap</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Code of Conduct</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Good first issue labels</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Non-code tasks labeled</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Project website</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Video intro / demo</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">FAQ document</span>
           </div>
+          <div class="stage-note">💡 Tip: If your CONTRIBUTING.md only mentions code, it's implicitly excluding everyone else. Name every type of contribution explicitly.</div>
         </div>
       </div>
-      <div class="stage stage-3">
-        <div class="stage-num">3</div>
-        <div class="stage-content">
-          <div class="stage-title">Contribute</div>
-          <div class="stage-detail">A low-friction, high-impact first action. Something achievable without deep technical knowledge.</div>
-          <div class="stage-examples">
-            <span class="ex-badge">Fix a typo</span>
-            <span class="ex-badge">Improve a doc</span>
-            <span class="ex-badge">Translate a string</span>
-            <span class="ex-badge">Report an issue</span>
-            <span class="ex-badge">Test a feature</span>
+
+      <!-- STAGE 3: FIRST CONTRIBUTION -->
+      <div class="journey-stage js-3" onclick="activateStage(this)">
+        <div class="stage-dot">3</div>
+        <div class="stage-card">
+          <div class="stage-title">First Contribution — What's the easiest meaningful first step?</div>
+          <div class="stage-desc">The first contribution should be low-friction, low-stakes, and genuinely useful. It should be achievable without deep technical knowledge and give the contributor a feeling of real impact.</div>
+          <div class="stage-options">
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Fix a typo in docs</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Improve documentation</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Translate a page</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Report a bug</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Respond to an issue</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Test a new feature</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Share the project</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Write a blog post</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Add an example</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Review a pull request</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Answer a community question</span>
           </div>
+          <div class="stage-note">💡 Tip: Label non-code "good first issues" just like code ones. Visibility signals that non-code is a real contribution, not a consolation prize.</div>
         </div>
       </div>
-      <div class="stage stage-4">
-        <div class="stage-num">4</div>
-        <div class="stage-content">
-          <div class="stage-title">Belong</div>
-          <div class="stage-detail">They're recognized, welcomed back, and given a path to grow into a sustained community member.</div>
-          <div class="stage-examples">
-            <span class="ex-badge">Public thanks</span>
-            <span class="ex-badge">All-contributors badge</span>
-            <span class="ex-badge">Invited to meetings</span>
-            <span class="ex-badge">Mentorship offered</span>
-            <span class="ex-badge">Role & responsibilities</span>
+
+      <!-- STAGE 4: COMMUNITY & RETENTION -->
+      <div class="journey-stage js-4" onclick="activateStage(this)">
+        <div class="stage-dot">4</div>
+        <div class="stage-card">
+          <div class="stage-title">Retention — How do you keep contributors coming back?</div>
+          <div class="stage-desc">First-time contributors become regulars when they feel connected, valued, and clear on what to do next. What structures help people stay?</div>
+          <div class="stage-options">
+            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Community Slack/Discord</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">GitHub Discussions</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Regular community calls</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Office hours</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Welcome intro call</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Contributor newsletter</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Mentorship matching</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Contributor buddy system</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Regular check-ins</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Roadmap transparency</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Decision-making involvement</span>
           </div>
+          <div class="stage-note">💡 Tip: A single intro call or "welcome" message from a maintainer can double contributor retention. The human touch matters enormously.</div>
         </div>
       </div>
-    </div>
 
-    <div class="journey-canvas">
-      <h3>🗺 Design Your Project's Journey</h3>
-      
-      <label class="canvas-label">Your project name</label>
-      <input class="canvas-input" type="text" placeholder="e.g. My Open Source Project" id="proj-name">
+      <!-- STAGE 5: RECOGNITION -->
+      <div class="journey-stage js-5" onclick="activateStage(this)">
+        <div class="stage-dot">5</div>
+        <div class="stage-card">
+          <div class="stage-title">Recognition — How are contributions seen and celebrated?</div>
+          <div class="stage-desc">Recognition closes the loop. Without it, contributors feel invisible and eventually leave. What systems make contributions — especially non-code ones — publicly valued?</div>
+          <div class="stage-options">
+            <span class="stage-opt picked" onclick="toggleOpt(event,this)">All-Contributors bot</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Named in release notes</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Contributor spotlight posts</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Dedicated roles/titles</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Blog features</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Speaking opportunities</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Community awards</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Public thank-you threads</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Swag & badges</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Contribution tracking page</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Conference sponsorship</span>
+          </div>
+          <div class="stage-note">💡 Tip: Ask yourself — if a contributor's friends searched their name and your project, what would they find? Recognition should be visible beyond your community.</div>
+        </div>
+      </div>
 
-      <label class="canvas-label">How do new contributors discover you?</label>
-      <textarea class="canvas-input" rows="2" placeholder="e.g. Twitter, conference talks, GitHub trending..."></textarea>
+      <!-- STAGE 6: GROWTH -->
+      <div class="journey-stage js-6" onclick="activateStage(this)">
+        <div class="stage-dot">6</div>
+        <div class="stage-card">
+          <div class="stage-title">Growth — What paths exist beyond "contributor"?</div>
+          <div class="stage-desc">Sustainable communities need clear growth paths. When contributors can see a future for themselves in a project, they invest more deeply and stay longer.</div>
+          <div class="stage-options">
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Maintainer pathway</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Reviewer role</span>
+            <span class="stage-opt picked" onclick="toggleOpt(event,this)">Community manager role</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Documentation lead</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Accessibility advocate</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Event organizer role</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Governance participation</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Steering committee</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Mentoring newer contributors</span>
+            <span class="stage-opt" onclick="toggleOpt(event,this)">Ambassador program</span>
+          </div>
+          <div class="stage-note">💡 Tip: Non-code roles need explicit names and responsibilities. "Community Manager" is as real a role as "Core Maintainer." Make it visible.</div>
+        </div>
+      </div>
 
-      <label class="canvas-label">What's the easiest first contribution?</label>
-      <textarea class="canvas-input" rows="2" placeholder="e.g. Review our docs for confusing language..."></textarea>
+    </div><!-- /stages-track -->
 
-      <label class="canvas-label">How do you recognize non-code contributions?</label>
-      <textarea class="canvas-input" rows="2" placeholder="e.g. All-Contributors bot, shoutouts in releases..."></textarea>
+    <!-- JOURNEY BUILDER PANEL -->
+    <div class="journey-builder">
+      <div class="jb-header">
+        <h3>🗺 Build Your Journey Plan</h3>
+        <p>Fill in the fields below as you work through each stage. Your answers will generate a downloadable journey plan.</p>
+      </div>
 
-      <div style="display:flex; gap:0.75rem; margin-top: 0.5rem;">
-        <button class="btn btn-primary" onclick="saveJourney()">Save Journey</button>
+      <div class="jb-progress">
+        <div class="jb-progress-label">
+          <span>Journey completion</span>
+          <span id="jb-pct">0%</span>
+        </div>
+        <div class="jb-bar"><div class="jb-bar-fill" id="jb-fill"></div></div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Project name</label>
+        <input class="field-input" type="text" id="jb-project" placeholder="e.g. OpenDocs, AccessKit…" oninput="updateProgress()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Primary discovery channels</label>
+        <textarea class="field-input" rows="2" id="jb-discovery" placeholder="How do people find you today? What could you add?" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Orientation: What does a newcomer find first?</label>
+        <textarea class="field-input" rows="2" id="jb-orient" placeholder="README quality, contribution guide, first labels…" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Easiest first contribution (non-code)</label>
+        <textarea class="field-input" rows="2" id="jb-first" placeholder="e.g. Translate a doc, test a feature, improve the FAQ…" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Community channels & retention mechanisms</label>
+        <textarea class="field-input" rows="2" id="jb-community" placeholder="Slack, GitHub Discussions, office hours, welcome calls…" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">How are non-code contributors recognized?</label>
+        <textarea class="field-input" rows="2" id="jb-recognition" placeholder="All-Contributors, release mentions, spotlight posts…" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Growth paths available (non-code roles)</label>
+        <textarea class="field-input" rows="2" id="jb-growth" placeholder="Community Manager, Docs Lead, Accessibility Advocate…" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Anything else you want to capture</label>
+        <textarea class="field-input" rows="2" id="jb-extra" placeholder="Local contributor recognition, special programs…" oninput="updateProgress()"></textarea>
+      </div>
+
+      <div class="jb-actions">
+        <button class="btn btn-blue" onclick="saveJourney()">Save Journey</button>
+        <button class="btn btn-purple" onclick="downloadJourneyPDF()">Download Plan (PDF)</button>
         <button class="btn btn-outline" onclick="clearJourney()">Clear</button>
       </div>
 
-      <div id="saved-note" style="margin-top:1rem; font-size:0.75rem; color:var(--accent1); display:none;">
-        ✓ Journey saved! Share with your team.
+      <div class="saved-msg" id="jb-saved">✓ Journey saved — <span style="text-decoration:underline;cursor:pointer;color:var(--accent1);" onclick="openShareModal('journey')">Share with your team →</span></div>
+
+      <div class="saved-journey" id="saved-journey-preview">
+        <div class="sj-title">📋 Saved Journey Preview</div>
+        <div id="sj-content"></div>
+        <button class="btn btn-outline" style="margin-top:1rem;font-size:0.72rem;" onclick="openShareModal('journey')">🔗 Share this journey</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PANEL 3: RECOGNITION -->
-<section id="panel-recognition" class="panel">
-  <div class="section-label">Step 3 of 4</div>
-  <h2 class="section-title">Recognition Systems</h2>
-  <p class="section-desc">What gets recognized gets repeated. These practices ensure non-code contributors feel their work matters as much as any pull request.</p>
 
-  <div class="recognition-grid">
-    <div class="rec-card rec-card-1">
+<!-- ════════════════════════════════════
+     PANEL 3 — RECOGNITION
+════════════════════════════════════ -->
+<section id="panel-rec" class="panel">
+  <div class="sec-label">Recognition Frameworks</div>
+  <h2 class="sec-title">How Recognition Works</h2>
+  <p class="sec-desc">Recognition is not a nice-to-have — it is infrastructure. When contributions go unseen, contributors leave. These are the proven patterns that make every type of contribution visible, valued, and repeatable.</p>
+
+  <div class="rec-intro">
+    <strong>The recognition principle:</strong> What gets seen gets repeated. What gets celebrated gets scaled. Design your recognition systems so that a person who writes documentation, organizes an event, or moderates a forum feels as valued as someone who merges a pull request.
+  </div>
+
+  <div class="rec-grid">
+
+    <div class="rec-card rc-1">
       <span class="rec-icon">🤖</span>
-      <div class="rec-title">All-Contributors</div>
-      <div class="rec-body">A bot and spec that adds every contributor to your README — not just code authors. Recognizes docs, design, talks, translations, and more with emoji-coded contribution types.</div>
+      <div class="rec-title">All-Contributors Specification</div>
+      <div class="rec-body">A GitHub bot and open spec that adds every contributor to your README — docs, design, translation, talks, accessibility, and more — using emoji-coded contribution types.
+        <ul>
+          <li>Works with a simple comment in any PR or issue</li>
+          <li>Generates a visible contributors table in your README</li>
+          <li>Over 30 contribution types recognized out of the box</li>
+          <li>Signals inclusivity to prospective contributors instantly</li>
+        </ul>
+      </div>
+      <button class="rec-expand-btn" onclick="toggleExpand(this)">Show implementation tips ↓</button>
+      <div class="rec-extra">Add the All-Contributors bot to your repo and define which contribution types matter to you. During onboarding, tell new contributors they will be added after their first contribution — this alone increases follow-through. Review and update the table with each release cycle.</div>
     </div>
-    <div class="rec-card rec-card-2">
+
+    <div class="rec-card rc-2">
       <span class="rec-icon">📣</span>
       <div class="rec-title">Release Shoutouts</div>
-      <div class="rec-body">Name non-code contributors in every release announcement. When someone fixes a typo that unblocked 200 users, say so publicly in the changelog.</div>
+      <div class="rec-body">Every release announcement names non-code contributors explicitly. When someone's documentation fix unblocked 300 users, say it publicly.
+        <ul>
+          <li>Include a "Community Contributions" section in every changelog</li>
+          <li>Call out specific impact, not just names</li>
+          <li>Post across all project channels — not just GitHub</li>
+          <li>Normalize equal treatment of code and non-code contributions</li>
+        </ul>
+      </div>
+      <button class="rec-expand-btn" onclick="toggleExpand(this)">Show implementation tips ↓</button>
+      <div class="rec-extra">Create a changelog template that includes a dedicated non-code section. Ask maintainers to tag non-code contributions during the cycle so nothing is forgotten. Even a single sentence — "Thanks to @name for rewriting our onboarding guide" — makes an enormous difference to the person named.</div>
     </div>
-    <div class="rec-card rec-card-3">
+
+    <div class="rec-card rc-3">
       <span class="rec-icon">🏷️</span>
-      <div class="rec-title">Contributor Roles</div>
-      <div class="rec-body">Create explicit roles like Community Manager, Documentation Lead, or Accessibility Advocate. These titles are visible, meaningful, and give contributors a home.</div>
+      <div class="rec-title">Formal Contributor Roles</div>
+      <div class="rec-body">Create explicit named roles for non-code contributors. These titles are public, meaningful, and give contributors an identity within the project.
+        <ul>
+          <li>Community Manager, Documentation Lead, Accessibility Advocate</li>
+          <li>Event Organizer, Outreach Coordinator, Translation Lead</li>
+          <li>List roles in your README and governance documents</li>
+          <li>Assign responsibilities and decision-making authority to each role</li>
+        </ul>
+      </div>
+      <button class="rec-expand-btn" onclick="toggleExpand(this)">Show implementation tips ↓</button>
+      <div class="rec-extra">Start with one or two roles based on current community needs. Write a short role description: what the person does, what authority they have, and how they can grow from that role. Post it publicly and invite applications or nominations from existing contributors.</div>
     </div>
-    <div class="rec-card rec-card-4">
+
+    <div class="rec-card rc-4">
       <span class="rec-icon">🎤</span>
-      <div class="rec-title">Platform Access</div>
-      <div class="rec-body">Invite non-code contributors to speak at project events, write for the blog, or co-host office hours. Giving voice is recognition in action.</div>
+      <div class="rec-title">Platform Access & Voice</div>
+      <div class="rec-body">Invite non-code contributors to speak, write, and represent the project publicly. Giving voice is the most powerful form of recognition.
+        <ul>
+          <li>Co-present at conferences with community contributors</li>
+          <li>Feature contributor bylines on the project blog</li>
+          <li>Invite regulars to co-host office hours or community calls</li>
+          <li>Share contributor stories on social media channels</li>
+        </ul>
+      </div>
+      <button class="rec-expand-btn" onclick="toggleExpand(this)">Show implementation tips ↓</button>
+      <div class="rec-extra">Many contributors have never been asked to speak publicly. A direct invitation — "Would you share what you've built here at our next community call?" — is transformational. Provide speaking coaching and support for those who need it.</div>
     </div>
-    <div class="rec-card rec-card-1">
+
+    <div class="rec-card rc-5">
       <span class="rec-icon">🌱</span>
-      <div class="rec-title">Mentorship Pathways</div>
-      <div class="rec-body">Pair newcomers with an existing contributor for their first few months. A mentor's investment is recognition that says "you belong here and we'll invest in you."</div>
+      <div class="rec-title">Structured Mentorship Pathways</div>
+      <div class="rec-body">A mentor's investment is recognition that says "your future here is worth our time." Mentorship turns one-time contributors into long-term community members.
+        <ul>
+          <li>Pair new non-code contributors with experienced members</li>
+          <li>Run 30/60/90-day onboarding check-ins</li>
+          <li>Create clear growth milestones for non-code pathways</li>
+          <li>Document mentorship expectations for both sides</li>
+        </ul>
+      </div>
+      <button class="rec-expand-btn" onclick="toggleExpand(this)">Show implementation tips ↓</button>
+      <div class="rec-extra">A lightweight mentorship program needs just three things: a willing mentor, a 30-minute intro call, and a shared list of first tasks. Consider a buddy system where existing contributors volunteer to guide one newcomer per quarter.</div>
     </div>
-    <div class="rec-card rec-card-2">
-      <span class="rec-icon">📋</span>
-      <div class="rec-title">Contribution Tracking</div>
-      <div class="rec-body">Maintain a public record of impact — event attendees reached, docs improved, issues responded to. Data makes invisible work visible.</div>
+
+    <div class="rec-card rc-6">
+      <span class="rec-icon">📊</span>
+      <div class="rec-title">Contribution Tracking & Impact Reporting</div>
+      <div class="rec-body">Data makes invisible work visible. Tracking non-code contributions creates evidence of their value for contributors, maintainers, and funders alike.
+        <ul>
+          <li>Maintain a public contribution log beyond commit history</li>
+          <li>Track events organized, docs improved, issues triaged</li>
+          <li>Include non-code metrics in project health reports</li>
+          <li>Share impact stats with the full community regularly</li>
+        </ul>
+      </div>
+      <button class="rec-expand-btn" onclick="toggleExpand(this)">Show implementation tips ↓</button>
+      <div class="rec-extra">Build a simple spreadsheet or GitHub project board that tracks non-code contributions quarterly. Share a "Community Impact" summary with every major release: X events hosted, X pages translated, X new contributors welcomed. This normalizes non-code work as part of the project's core output.</div>
     </div>
+
   </div>
 
   <hr>
 
-  <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2rem;">
-    <h3 style="font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; color:var(--accent2); margin-bottom:0.5rem;">⚠️ Anti-Patterns to Avoid</h3>
-    <p style="font-size:0.82rem; color:var(--muted); line-height:1.7; margin-bottom:1rem;">These common mistakes actively discourage non-code contributors from staying:</p>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0.75rem;">
-      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
-        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">Code-only changelogs</strong>
-        Only listing PRs erases the documentation, design, and community work that shipped alongside them.
+  <div class="antipattern-section">
+    <h3>⚠️ Anti-Patterns That Drive Contributors Away</h3>
+    <p>These common mistakes actively signal to non-code contributors that they don't fully belong — even when that's not the intention.</p>
+    <div class="ap-grid">
+      <div class="ap-item">
+        <strong>Code-only changelogs</strong>
+        <p>Listing only PRs and commits erases documentation, design, community, and accessibility work that shipped alongside them. Every release touch-point should reflect the full team.</p>
       </div>
-      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
-        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">No contribution guide</strong>
-        If someone has to ask "can I help with X?", there's no guide. Silence reads as "non-coders not welcome."
+      <div class="ap-item">
+        <strong>No non-code pathways</strong>
+        <p>If someone has to ask "can I help with X?", you have no guide. Silence reads as "non-coders not welcome." Name every contribution type explicitly in writing.</p>
       </div>
-      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
-        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">Code of Conduct theater</strong>
-        Having a CoC that's never enforced is worse than none — it signals safety, then betrays it.
+      <div class="ap-item">
+        <strong>Code of Conduct theater</strong>
+        <p>A CoC that exists but is never enforced is worse than none — it promises safety and then breaks that promise. Assign a real point of contact and enforce it consistently.</p>
       </div>
-      <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:8px; padding:0.9rem; font-size:0.78rem; color:var(--muted); line-height:1.55;">
-        <strong style="color:var(--accent2); display:block; margin-bottom:0.3rem;">Gatekeeping by default</strong>
-        "If you want to help, open a PR" assumes coding fluency. Inclusive projects define multiple doors.
+      <div class="ap-item">
+        <strong>Gatekeeping by default</strong>
+        <p>"If you want to help, open a PR" assumes coding fluency. Inclusive projects define multiple doors in, not just one — and make each door clearly visible.</p>
+      </div>
+      <div class="ap-item">
+        <strong>Recognition asymmetry</strong>
+        <p>Thanking code contributors publicly while silently accepting non-code contributions teaches the whole community which work is valued. Symmetry matters.</p>
+      </div>
+      <div class="ap-item">
+        <strong>No growth for non-coders</strong>
+        <p>If the only way to gain trust, authority, or a "maintainer" badge is through code, your community structure excludes most of the people who keep it alive.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PANEL 4: ACTIVITY -->
-<section id="panel-activity" class="panel">
-  <div class="section-label">Step 4 of 4</div>
-  <h2 class="section-title">Workshop Activities</h2>
-  <p class="section-desc">60 minutes. Five activities. One goal: leave with a real plan for making your project more inclusive.</p>
 
-  <div class="activity-steps">
-    <div class="act-step">
-      <div class="act-time">0–5 min</div>
-      <div class="act-num">01</div>
-      <div class="act-title">Warm-Up: Skills Inventory</div>
-      <div class="act-body">Each person lists 3 skills they bring outside of coding. Share with a neighbor. Notice the diversity already in the room.</div>
-    </div>
-    <div class="act-step">
-      <div class="act-time">5–20 min</div>
-      <div class="act-num">02</div>
-      <div class="act-title">Map Exploration</div>
-      <div class="act-body">In pairs, explore the Contribution Map. Mark which categories your project currently supports. Circle the gaps. What's missing?</div>
-    </div>
-    <div class="act-step">
-      <div class="act-time">20–40 min</div>
-      <div class="act-num">03</div>
-      <div class="act-title">Journey Design Sprint</div>
-      <div class="act-body">Groups of 3–4 design a contributor journey for a fictional (or real) project. Define Discover → Orient → Contribute → Belong for one non-code role.</div>
-    </div>
-    <div class="act-step">
-      <div class="act-time">40–55 min</div>
-      <div class="act-num">04</div>
-      <div class="act-title">Gallery Walk & Critique</div>
-      <div class="act-body">Groups post their maps. Everyone walks, adds sticky notes with "⭐ strengths" and "❓ questions." Presenter answers in 90 seconds.</div>
-    </div>
-    <div class="act-step">
-      <div class="act-time">55–60 min</div>
-      <div class="act-num">05</div>
-      <div class="act-title">One Commitment</div>
-      <div class="act-body">Each person writes one thing they'll change in their project this week. Shared aloud or posted to the group channel.</div>
-    </div>
+<!-- ════════════════════════════════════
+     PANEL 4 — SELF ASSESSMENT
+════════════════════════════════════ -->
+<section id="panel-assess" class="panel">
+  <div class="sec-label">Self-Assessment</div>
+  <h2 class="sec-title">Where Do You Stand?</h2>
+  <p class="sec-desc">Use the assessment below to honestly evaluate where you or your project stands today. Rate each question from 1 (not at all) to 5 (fully in place). Your scores will generate a summary with personalized recommendations.</p>
+
+  <div class="assess-mode-toggle">
+    <button class="mode-btn active" onclick="setMode('contributor',this)">For Contributors</button>
+    <button class="mode-btn"        onclick="setMode('project',this)">For Projects</button>
   </div>
 
-  <div class="self-assess">
-    <h3>🔍 Self-Assessment: Rate Your Project</h3>
-    <p>How well does your project currently support non-code contributors? Click to rate 1–5 stars.</p>
+  <!-- CONTRIBUTOR ASSESSMENT -->
+  <div class="assess-section active" id="assess-contributor">
 
-    <div class="skill-row">
-      <div class="skill-name">Contribution Guide</div>
-      <div class="skill-dots" id="dots-0">
-        <div class="dot lit" data-level="1" onclick="rateDot(0,1)"></div>
-        <div class="dot lit" data-level="2" onclick="rateDot(0,2)"></div>
-        <div class="dot" data-level="3" onclick="rateDot(0,3)"></div>
-        <div class="dot" data-level="4" onclick="rateDot(0,4)"></div>
-        <div class="dot" data-level="5" onclick="rateDot(0,5)"></div>
-      </div>
-      <div class="skill-label">Does your CONTRIBUTING.md mention non-code roles?</div>
+    <div class="assess-intro">
+      <strong>For Contributors:</strong> This assessment helps you understand your current open source contribution profile — what skills you're already bringing, where you might grow, and what barriers you may be facing. There are no wrong answers. Be honest with yourself; the goal is clarity, not perfection.
     </div>
-    <div class="skill-row">
-      <div class="skill-name">Recognition System</div>
-      <div class="skill-dots" id="dots-1">
-        <div class="dot lit" data-level="1" onclick="rateDot(1,1)"></div>
-        <div class="dot" data-level="2" onclick="rateDot(1,2)"></div>
-        <div class="dot" data-level="3" onclick="rateDot(1,3)"></div>
-        <div class="dot" data-level="4" onclick="rateDot(1,4)"></div>
-        <div class="dot" data-level="5" onclick="rateDot(1,5)"></div>
+
+    <!-- GROUP A: SKILLS & READINESS -->
+    <div class="assess-group">
+      <div class="assess-group-title">A — Skills & Contribution Readiness</div>
+      <div class="assess-group-desc">How ready do you feel to start or grow your open source contributions right now?</div>
+
+      <div class="assess-item" data-group="c-skills">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I can clearly name at least three non-code skills I bring to a project (e.g. writing, organizing, designing, translating, researching).</div>
+            <div class="assess-item-hint">Think broadly — skills from work, volunteering, or personal projects all count.</div>
+          </div>
+          <div class="star-row" data-id="c1" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent1)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
       </div>
-      <div class="skill-label">Are non-code contributions publicly credited?</div>
-    </div>
-    <div class="skill-row">
-      <div class="skill-name">Onboarding Clarity</div>
-      <div class="skill-dots" id="dots-2">
-        <div class="dot" data-level="1" onclick="rateDot(2,1)"></div>
-        <div class="dot" data-level="2" onclick="rateDot(2,2)"></div>
-        <div class="dot" data-level="3" onclick="rateDot(2,3)"></div>
-        <div class="dot" data-level="4" onclick="rateDot(2,4)"></div>
-        <div class="dot" data-level="5" onclick="rateDot(2,5)"></div>
+
+      <div class="assess-item" data-group="c-skills">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I understand the difference between code and non-code contributions, and I believe both are equally valuable.</div>
+            <div class="assess-item-hint">Confidence in the value of non-code work matters — imposter syndrome is real in open source.</div>
+          </div>
+          <div class="star-row" data-id="c2" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent1)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
       </div>
-      <div class="skill-label">Can a non-technical person figure out how to start?</div>
-    </div>
-    <div class="skill-row">
-      <div class="skill-name">Accessibility</div>
-      <div class="skill-dots" id="dots-3">
-        <div class="dot lit" data-level="1" onclick="rateDot(3,1)"></div>
-        <div class="dot lit" data-level="2" onclick="rateDot(3,2)"></div>
-        <div class="dot lit" data-level="3" onclick="rateDot(3,3)"></div>
-        <div class="dot" data-level="4" onclick="rateDot(3,4)"></div>
-        <div class="dot" data-level="5" onclick="rateDot(3,5)"></div>
+
+      <div class="assess-item" data-group="c-skills">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I know which open source projects or communities align with my interests and skill set.</div>
+            <div class="assess-item-hint">Being a good match for a project makes contribution more sustainable and enjoyable.</div>
+          </div>
+          <div class="star-row" data-id="c3" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent1)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
       </div>
-      <div class="skill-label">Is your project usable by people with disabilities?</div>
-    </div>
-    <div class="skill-row">
-      <div class="skill-name">Community Safety</div>
-      <div class="skill-dots" id="dots-4">
-        <div class="dot lit" data-level="1" onclick="rateDot(4,1)"></div>
-        <div class="dot lit" data-level="2" onclick="rateDot(4,2)"></div>
-        <div class="dot" data-level="3" onclick="rateDot(4,3)"></div>
-        <div class="dot" data-level="4" onclick="rateDot(4,4)"></div>
-        <div class="dot" data-level="5" onclick="rateDot(4,5)"></div>
+
+      <div class="assess-item" data-group="c-skills">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I am aware of at least two places I could make a first non-code contribution right now (e.g. a project with documentation needs, a translation task, a community question I could answer).</div>
+            <div class="assess-item-hint">Awareness of specific opportunities is often the difference between "someday" and "today."</div>
+          </div>
+          <div class="star-row" data-id="c4" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent1)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
       </div>
-      <div class="skill-label">Is your CoC enforced and your community genuinely safe?</div>
     </div>
-  </div>
+
+    <!-- GROUP B: BARRIERS & CONFIDENCE -->
+    <div class="assess-group">
+      <div class="assess-group-title">B — Confidence & Barriers</div>
+      <div class="assess-group-desc">What's holding you back — or what's already cleared out of your way?</div>
+
+      <div class="assess-item" data-group="c-barriers">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I feel confident that I won't be judged or dismissed for contributing without coding skills.</div>
+            <div class="assess-item-hint">Fear of judgment is one of the top barriers for non-code contributors. Be honest about where you are.</div>
+          </div>
+          <div class="star-row" data-id="c5" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent3)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="c-barriers">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I understand what tools or platforms are typically used in open source communities (GitHub, Discord, Slack, Figma, etc.) well enough to get started.</div>
+            <div class="assess-item-hint">Technical tooling can feel like a barrier — even for non-code contributors.</div>
+          </div>
+          <div class="star-row" data-id="c6" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent3)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="c-barriers">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I have enough time or flexibility to make at least one meaningful contribution per month, even if small.</div>
+            <div class="assess-item-hint">Sustainability matters — unrealistic time expectations lead to burnout. Honest assessment helps you find the right level.</div>
+          </div>
+          <div class="star-row" data-id="c7" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent3)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP C: GROWTH -->
+    <div class="assess-group">
+      <div class="assess-group-title">C — Growth & Sustaining Contribution</div>
+      <div class="assess-group-desc">Can you see a path forward — beyond just a first contribution?</div>
+
+      <div class="assess-item" data-group="c-growth">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I can imagine a 6-month contribution journey for myself — not just a one-off contribution, but a sustained involvement.</div>
+            <div class="assess-item-hint">Visualizing growth makes it more likely to happen.</div>
+          </div>
+          <div class="star-row" data-id="c8" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent4)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="c-growth">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I know how I would like to be recognized for my contributions — and I'm comfortable asking for that recognition if it doesn't happen automatically.</div>
+            <div class="assess-item-hint">Knowing your recognition preferences helps you find communities that match your needs.</div>
+          </div>
+          <div class="star-row" data-id="c9" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent4)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="c-growth">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">I feel like I belong in open source — that it is a space for people like me, with my background and skills.</div>
+            <div class="assess-item-hint">Sense of belonging is the most powerful predictor of long-term contribution. This is what we're building toward.</div>
+          </div>
+          <div class="star-row" data-id="c10" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent4)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-summary" id="contributor-summary">
+      <h3>📊 Your Assessment Summary</h3>
+      <div class="score-rings" id="c-score-rings">
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="c-score-skills" style="color:var(--accent1)">–/20</div>
+          <div class="ring-label">Skills & Readiness</div>
+        </div>
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="c-score-barriers" style="color:var(--accent3)">–/15</div>
+          <div class="ring-label">Confidence & Barriers</div>
+        </div>
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="c-score-growth" style="color:var(--accent4)">–/15</div>
+          <div class="ring-label">Growth & Belonging</div>
+        </div>
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="c-score-total" style="color:var(--text); font-size:1.4rem;">–/50</div>
+          <div class="ring-label">Total Score</div>
+        </div>
+      </div>
+      <div class="score-recommend" id="c-recommend"></div>
+      <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="downloadContributorAssessmentPDF()">Download My Results (PDF)</button>
+        <button class="btn btn-outline" onclick="openShareModal('c-assess')">🔗 Share Results</button>
+        <button class="btn btn-outline" onclick="resetContributorAssessment()">Reset</button>
+      </div>
+    </div>
+
+  </div><!-- /assess-contributor -->
+
+  <!-- PROJECT ASSESSMENT -->
+  <div class="assess-section" id="assess-project">
+
+    <div class="assess-intro purple">
+      <strong>For Projects:</strong> This assessment helps maintainers and community managers evaluate how inclusive, welcoming, and structured their project is for non-code contributors. Rate honestly — the gaps you identify are your highest-value improvement opportunities.
+    </div>
+
+    <!-- GROUP A: DISCOVERABILITY -->
+    <div class="assess-group">
+      <div class="assess-group-title">A — Discoverability & First Impressions</div>
+      <div class="assess-group-desc">Can potential non-code contributors find your project and immediately understand they're welcome?</div>
+
+      <div class="assess-item" data-group="p-discover">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">Our project is actively promoted in spaces where non-technical communities gather (social media, events, newsletters, DEI spaces).</div>
+            <div class="assess-item-hint">Discoverability for non-coders requires presence in places they already are.</div>
+          </div>
+          <div class="star-row" data-id="p1" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent5)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="p-discover">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">Our README explicitly welcomes non-code contributors and describes at least three ways they can contribute that don't involve writing code.</div>
+            <div class="assess-item-hint">The README is often the first and last thing a potential contributor sees. It sets the tone entirely.</div>
+          </div>
+          <div class="star-row" data-id="p2" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent5)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="p-discover">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">We use labels like "good first issue (non-code)" or equivalent to make non-code entry points as visible as code entry points.</div>
+            <div class="assess-item-hint">Visibility of non-code tasks in the issue tracker is one of the highest-impact, lowest-effort changes a project can make.</div>
+          </div>
+          <div class="star-row" data-id="p3" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent5)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP B: ONBOARDING -->
+    <div class="assess-group">
+      <div class="assess-group-title">B — Onboarding & Orientation Quality</div>
+      <div class="assess-group-desc">When a non-code contributor arrives, how clearly and quickly can they figure out how to help?</div>
+
+      <div class="assess-item" data-group="p-onboard">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">Our CONTRIBUTING.md includes specific guidance for non-code contributors — not just developers.</div>
+            <div class="assess-item-hint">A CONTRIBUTING.md that only describes how to submit code PRs tells non-coders they don't belong here.</div>
+          </div>
+          <div class="star-row" data-id="p4" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent2)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="p-onboard">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">A first-time contributor can make a meaningful non-code contribution within one hour of discovering our project, without needing to ask for help.</div>
+            <div class="assess-item-hint">This is the "1-hour test." If your answer is no, your onboarding has friction that is losing contributors.</div>
+          </div>
+          <div class="star-row" data-id="p5" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent2)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="p-onboard">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">We have a functional, welcoming community channel (Slack, Discord, GitHub Discussions) where new contributors can introduce themselves and get a warm response.</div>
+            <div class="assess-item-hint">A channel that exists but isn't actively tended is worse than none — it creates the feeling of walking into an empty room.</div>
+          </div>
+          <div class="star-row" data-id="p6" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent2)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP C: RECOGNITION & RETENTION -->
+    <div class="assess-group">
+      <div class="assess-group-title">C — Recognition, Retention & Community Safety</div>
+      <div class="assess-group-desc">Do contributors feel seen, safe, and motivated to stay?</div>
+
+      <div class="assess-item" data-group="p-recog">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">Non-code contributions are publicly credited in release notes, changelogs, or community announcements — not just code contributions.</div>
+            <div class="assess-item-hint">Asymmetric recognition teaches the community which work matters. Symmetry is essential.</div>
+          </div>
+          <div class="star-row" data-id="p7" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent6)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="p-recog">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">We have formal named roles for non-code contributors (e.g. Community Manager, Docs Lead, Accessibility Advocate) with defined responsibilities.</div>
+            <div class="assess-item-hint">Named roles are signals that non-code contributors have a real and permanent place in the project structure.</div>
+          </div>
+          <div class="star-row" data-id="p8" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent6)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="p-recog">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">Our Code of Conduct is actively enforced, with a named contact person and a clear, trusted process for reporting issues.</div>
+            <div class="assess-item-hint">A CoC without enforcement is the most common form of false safety signaling in open source communities.</div>
+          </div>
+          <div class="star-row" data-id="p9" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent6)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+
+      <div class="assess-item" data-group="p-recog">
+        <div class="assess-item-header">
+          <div>
+            <div class="assess-item-q">We have clear growth pathways for non-code contributors — they can see how to move from first contribution to a named role or leadership position over time.</div>
+            <div class="assess-item-hint">Without visible growth paths, contributors plateau and leave. Defining ladders retains people and builds leadership depth.</div>
+          </div>
+          <div class="star-row" data-id="p10" onmouseleave="previewStars(this,0)">
+            <div class="star" onmouseenter="previewStars(this.parentNode,1)" onclick="rateItem(this.parentNode,1)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,2)" onclick="rateItem(this.parentNode,2)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,3)" onclick="rateItem(this.parentNode,3)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,4)" onclick="rateItem(this.parentNode,4)"></div>
+            <div class="star" onmouseenter="previewStars(this.parentNode,5)" onclick="rateItem(this.parentNode,5)"></div>
+          </div>
+        </div>
+        <div class="assess-bar-wrap">
+          <div class="assess-mini-bar"><div class="assess-mini-fill" style="background:var(--accent6)"></div></div>
+          <div class="assess-score-label">Not rated</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-summary" id="project-summary">
+      <h3>📊 Your Project Assessment Summary</h3>
+      <div class="score-rings">
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="p-score-discover" style="color:var(--accent5)">–/15</div>
+          <div class="ring-label">Discoverability</div>
+        </div>
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="p-score-onboard" style="color:var(--accent2)">–/15</div>
+          <div class="ring-label">Onboarding</div>
+        </div>
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="p-score-recog" style="color:var(--accent6)">–/20</div>
+          <div class="ring-label">Recognition & Safety</div>
+        </div>
+        <div class="score-ring-wrap">
+          <div class="ring-val" id="p-score-total" style="color:var(--text); font-size:1.4rem;">–/50</div>
+          <div class="ring-label">Total Score</div>
+        </div>
+      </div>
+      <div class="score-recommend" id="p-recommend"></div>
+      <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="downloadProjectAssessmentPDF()">Download Results (PDF)</button>
+        <button class="btn btn-outline" onclick="openShareModal('p-assess')">🔗 Share Results</button>
+        <button class="btn btn-outline" onclick="resetProjectAssessment()">Reset</button>
+      </div>
+    </div>
+
+  </div><!-- /assess-project -->
 </section>
 
-<!-- SUMMARY BAR -->
-<div class="summary-bar" id="summary-bar">
-  <div class="summary-text">
-    <strong id="selected-count">0</strong> contributions selected for your map
+
+<!-- MAP PREVIEW MODAL -->
+<div class="modal-overlay" id="map-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeMapModal()">✕</button>
+    <h2>🗺 Your Contribution Map</h2>
+    <p class="modal-subtitle" id="modal-count-text">Here are the contribution skills you've selected. This is your personal open source map — share it, build on it, and own it.</p>
+    <div class="map-preview-grid" id="modal-grid"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="downloadMapPDF()">Download My Map (PDF)</button>
+      <button class="btn btn-outline" onclick="openShareModal('map')">🔗 Share My Map</button>
+      <button class="btn btn-outline" onclick="closeMapModal()">Close</button>
+    </div>
   </div>
-  <div class="selected-pills" id="selected-pills"></div>
-  <button class="btn btn-primary" onclick="exportMap()">Export My Map</button>
 </div>
 
-<!-- FOOTER -->
-<footer class="footer-note">
-  <span>No-Code Contribution Map · <strong>Everyone Belongs to Open Source</strong></span>
-  <span>March 17, 2026 · Wintergarten · 14:10–15:10</span>
-</footer>
+<!-- BOTTOM SUMMARY BAR -->
+<div class="summary-bar" id="summary-bar">
+  <div>
+    <div class="sb-count" id="sb-count">0 selected</div>
+    <div class="sb-label">contribution skills in your map</div>
+  </div>
+  <div class="sb-pills" id="sb-pills"></div>
+  <div class="sb-actions">
+    <button class="btn btn-outline" onclick="openMapModal()">Preview Map</button>
+    <button class="btn btn-primary" onclick="downloadMapPDF()">Download PDF</button>
+  </div>
+</div>
+
 
 <script>
-  // Tab switching
-  function showPanel(id, btn) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('panel-' + id).classList.add('active');
-    btn.classList.add('active');
-  }
+// ── STATE ──────────────────────────────────────────────
+const state = {
+  selected: {},   // { category: [tag, tag…] }
+  ratings: {},    // { id: value }
+  journey: {},
+};
 
-  // Tag selection
-  function toggleTag(el) {
-    el.classList.toggle('selected');
-    updateSummary();
-  }
+// ── TABS ──────────────────────────────────────────────
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
 
-  function updateSummary() {
-    const selected = document.querySelectorAll('.tag.selected');
-    const bar = document.getElementById('summary-bar');
-    const count = document.getElementById('selected-count');
-    const pills = document.getElementById('selected-pills');
-    
-    count.textContent = selected.length;
-    pills.innerHTML = '';
-    
-    const texts = Array.from(selected).map(t => t.textContent);
-    texts.slice(0, 8).forEach(txt => {
-      const pill = document.createElement('span');
-      pill.className = 'pill';
-      pill.textContent = txt;
-      pills.appendChild(pill);
-    });
-    if (texts.length > 8) {
-      const pill = document.createElement('span');
-      pill.className = 'pill';
-      pill.textContent = '+' + (texts.length - 8) + ' more';
-      pills.appendChild(pill);
+// ── CONTRIBUTOR MAP ────────────────────────────────────
+function toggleTag(el, category) {
+  const text = el.textContent.trim();
+  el.classList.toggle('selected');
+  if (!state.selected[category]) state.selected[category] = [];
+  if (el.classList.contains('selected')) {
+    if (!state.selected[category].includes(text)) state.selected[category].push(text);
+  } else {
+    state.selected[category] = state.selected[category].filter(t => t !== text);
+    if (!state.selected[category].length) delete state.selected[category];
+  }
+  updateSummaryBar();
+}
+
+function selectAll() {
+  document.querySelectorAll('.tag').forEach(el => {
+    if (!el.classList.contains('selected')) {
+      const cat = el.closest('.cat-card');
+      const catName = cat ? cat.querySelector('.cat-name').textContent.trim().split('&')[0].trim() : 'Other';
+      el.classList.add('selected');
+      const text = el.textContent.trim();
+      const key = catName;
+      if (!state.selected[key]) state.selected[key] = [];
+      if (!state.selected[key].includes(text)) state.selected[key].push(text);
     }
+  });
+  updateSummaryBar();
+}
 
-    if (selected.length > 0) {
-      bar.classList.add('visible');
-    } else {
-      bar.classList.remove('visible');
+function clearAll() {
+  document.querySelectorAll('.tag.selected').forEach(el => el.classList.remove('selected'));
+  state.selected = {};
+  updateSummaryBar();
+}
+
+function updateSummaryBar() {
+  const all = Object.values(state.selected).flat();
+  const bar = document.getElementById('summary-bar');
+  const count = document.getElementById('sb-count');
+  const pills = document.getElementById('sb-pills');
+  const ctaTitle = document.getElementById('map-cta-title');
+  const ctaDesc = document.getElementById('map-cta-desc');
+
+  count.textContent = all.length + ' selected';
+  pills.innerHTML = '';
+  all.slice(0, 10).forEach(t => {
+    const p = document.createElement('span');
+    p.className = 'sb-pill'; p.textContent = t;
+    pills.appendChild(p);
+  });
+  if (all.length > 10) {
+    const p = document.createElement('span');
+    p.className = 'sb-pill'; p.textContent = '+' + (all.length - 10) + ' more';
+    pills.appendChild(p);
+  }
+
+  if (all.length > 0) {
+    bar.classList.add('up');
+    ctaTitle.textContent = all.length + ' skills selected — your map is taking shape';
+    ctaDesc.textContent = 'Keep selecting or click Preview My Map to see your full contribution profile.';
+  } else {
+    bar.classList.remove('up');
+    ctaTitle.textContent = 'Select your skills above to build your map';
+    ctaDesc.textContent = 'Click any tag to add it. Select across multiple categories — your map grows with you.';
+  }
+}
+
+function openMapModal() {
+  const all = Object.values(state.selected).flat();
+  if (all.length === 0) { alert('Select at least one skill to preview your map.'); return; }
+  const grid = document.getElementById('modal-grid');
+  const countText = document.getElementById('modal-count-text');
+  countText.textContent = `You've selected ${all.length} contribution skill${all.length>1?'s':''} across ${Object.keys(state.selected).length} categor${Object.keys(state.selected).length>1?'ies':'y'}. This is your open source identity — own it.`;
+  grid.innerHTML = '';
+  for (const [cat, tags] of Object.entries(state.selected)) {
+    if (!tags.length) continue;
+    const div = document.createElement('div');
+    div.className = 'mpg-cat';
+    div.innerHTML = `<div class="mpg-cat-name">${cat}</div><div class="mpg-tags">${tags.map(t=>`<span class="mpg-tag">${t}</span>`).join('')}</div>`;
+    grid.appendChild(div);
+  }
+  document.getElementById('map-modal').classList.add('open');
+}
+
+function closeMapModal() {
+  document.getElementById('map-modal').classList.remove('open');
+}
+
+function downloadMap() {
+  const all = Object.values(state.selected).flat();
+  if (!all.length) { alert('Select at least one skill first.'); return; }
+  let txt = 'MY NO-CODE CONTRIBUTION MAP\n';
+  txt += '═'.repeat(40) + '\n';
+  txt += `Generated: ${new Date().toLocaleDateString()}\n`;
+  txt += `Total skills selected: ${all.length}\n\n`;
+  for (const [cat, tags] of Object.entries(state.selected)) {
+    if (!tags.length) continue;
+    txt += `${cat.toUpperCase()}\n`;
+    txt += '─'.repeat(30) + '\n';
+    tags.forEach(t => txt += `  ✓ ${t}\n`);
+    txt += '\n';
+  }
+  txt += '═'.repeat(40) + '\n';
+  txt += 'No-Code Contribution Map\n';
+  txt += 'Open source is for everyone who shows up.\n';
+  downloadFile('my-contribution-map.txt', txt);
+}
+
+// ── ORGANIZATION JOURNEY ──────────────────────────────
+function activateStage(el) {
+  document.querySelectorAll('.journey-stage').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleOpt(event, el) {
+  event.stopPropagation();
+  el.classList.toggle('picked');
+}
+
+function updateProgress() {
+  const fields = ['jb-project','jb-discovery','jb-orient','jb-first','jb-community','jb-recognition','jb-growth','jb-extra'];
+  const filled = fields.filter(id => document.getElementById(id).value.trim().length > 2).length;
+  const pct = Math.round((filled / fields.length) * 100);
+  document.getElementById('jb-fill').style.width = pct + '%';
+  document.getElementById('jb-pct').textContent = pct + '%';
+}
+
+function saveJourney() {
+  const fields = {
+    project: document.getElementById('jb-project').value,
+    discovery: document.getElementById('jb-discovery').value,
+    orient: document.getElementById('jb-orient').value,
+    first: document.getElementById('jb-first').value,
+    community: document.getElementById('jb-community').value,
+    recognition: document.getElementById('jb-recognition').value,
+    growth: document.getElementById('jb-growth').value,
+    extra: document.getElementById('jb-extra').value,
+  };
+  state.journey = fields;
+  const preview = document.getElementById('saved-journey-preview');
+  const content = document.getElementById('sj-content');
+  const labels = {
+    project: 'Project', discovery: 'Discovery Channels',
+    orient: 'Orientation Setup', first: 'First Contribution',
+    community: 'Community & Retention', recognition: 'Recognition System',
+    growth: 'Growth Pathways', extra: 'Additional Notes'
+  };
+  content.innerHTML = Object.entries(fields).filter(([,v])=>v.trim()).map(([k,v]) =>
+    `<div class="sj-row"><strong>${labels[k]}</strong>${v}</div>`
+  ).join('');
+  preview.classList.add('show');
+  const msg = document.getElementById('jb-saved');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 3000);
+}
+
+function downloadJourney() {
+  const fields = {
+    'Project': document.getElementById('jb-project').value || '(unnamed)',
+    'Discovery Channels': document.getElementById('jb-discovery').value,
+    'Orientation Setup': document.getElementById('jb-orient').value,
+    'First Contribution Pathway': document.getElementById('jb-first').value,
+    'Community & Retention': document.getElementById('jb-community').value,
+    'Recognition System': document.getElementById('jb-recognition').value,
+    'Growth Pathways': document.getElementById('jb-growth').value,
+    'Additional Notes': document.getElementById('jb-extra').value,
+  };
+  let txt = 'CONTRIBUTOR JOURNEY PLAN\n';
+  txt += '═'.repeat(40) + '\n';
+  txt += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+  for (const [label, val] of Object.entries(fields)) {
+    if (!val.trim()) continue;
+    txt += `${label.toUpperCase()}\n${'─'.repeat(label.length)}\n${val}\n\n`;
+  }
+  txt += '═'.repeat(40) + '\n';
+  txt += 'No-Code Contribution Map · Contributor Journey Builder\n';
+  downloadFile(`contributor-journey-${fields['Project'].replace(/\s+/g,'-').toLowerCase()}.txt`, txt);
+}
+
+function clearJourney() {
+  ['jb-project','jb-discovery','jb-orient','jb-first','jb-community','jb-recognition','jb-growth','jb-extra']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('jb-fill').style.width = '0%';
+  document.getElementById('jb-pct').textContent = '0%';
+  document.getElementById('saved-journey-preview').classList.remove('show');
+  updateProgress();
+}
+
+// ── RECOGNITION EXPAND ────────────────────────────────
+function toggleExpand(btn) {
+  const extra = btn.nextElementSibling;
+  extra.classList.toggle('open');
+  btn.textContent = extra.classList.contains('open') ? 'Hide tips ↑' : 'Show implementation tips ↓';
+}
+
+// ── SELF ASSESSMENT ────────────────────────────────────
+function setMode(mode, btn) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.assess-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('assess-' + mode).classList.add('active');
+}
+
+function previewStars(row, level) {
+  const stars = row.querySelectorAll('.star');
+  const id = row.dataset.id;
+  const rated = state.ratings[id] || 0;
+  stars.forEach((s, i) => {
+    if (level > 0) s.classList.toggle('lit', i < level);
+    else s.classList.toggle('lit', i < rated);
+  });
+}
+
+function rateItem(row, level) {
+  const id = row.dataset.id;
+  state.ratings[id] = level;
+  const stars = row.querySelectorAll('.star');
+  stars.forEach((s,i) => s.classList.toggle('lit', i < level));
+  // Update mini bar
+  const item = row.closest('.assess-item');
+  const fill = item.querySelector('.assess-mini-fill');
+  const label = item.querySelector('.assess-score-label');
+  fill.style.width = (level / 5 * 100) + '%';
+  const labels5 = ['','Not yet','Rarely','Sometimes','Mostly','Fully'];
+  label.textContent = labels5[level] + ' (' + level + '/5)';
+  updateAssessmentScores();
+}
+
+function updateAssessmentScores() {
+  // Contributor scores
+  const cGroups = {
+    skills:   ['c1','c2','c3','c4'],
+    barriers: ['c5','c6','c7'],
+    growth:   ['c8','c9','c10'],
+  };
+  const cMax = { skills: 20, barriers: 15, growth: 15 };
+  let cTotals = { skills: 0, barriers: 0, growth: 0 };
+  let cRated = { skills: 0, barriers: 0, growth: 0 };
+  for (const [g, ids] of Object.entries(cGroups)) {
+    ids.forEach(id => { if (state.ratings[id]) { cTotals[g] += state.ratings[id]; cRated[g]++; } });
+  }
+  if (cRated.skills)   document.getElementById('c-score-skills').textContent   = cTotals.skills   + '/' + cMax.skills;
+  if (cRated.barriers) document.getElementById('c-score-barriers').textContent = cTotals.barriers + '/' + cMax.barriers;
+  if (cRated.growth)   document.getElementById('c-score-growth').textContent   = cTotals.growth   + '/' + cMax.growth;
+  const cTotal = cTotals.skills + cTotals.barriers + cTotals.growth;
+  const cRatedTotal = cRated.skills + cRated.barriers + cRated.growth;
+  if (cRatedTotal > 0) {
+    document.getElementById('c-score-total').textContent = cTotal + '/50';
+    showContributorRecommend(cTotal, cRatedTotal);
+  }
+
+  // Project scores
+  const pGroups = {
+    discover: ['p1','p2','p3'],
+    onboard:  ['p4','p5','p6'],
+    recog:    ['p7','p8','p9','p10'],
+  };
+  const pMax = { discover: 15, onboard: 15, recog: 20 };
+  let pTotals = { discover: 0, onboard: 0, recog: 0 };
+  let pRated  = { discover: 0, onboard: 0, recog: 0 };
+  for (const [g, ids] of Object.entries(pGroups)) {
+    ids.forEach(id => { if (state.ratings[id]) { pTotals[g] += state.ratings[id]; pRated[g]++; } });
+  }
+  if (pRated.discover) document.getElementById('p-score-discover').textContent = pTotals.discover + '/' + pMax.discover;
+  if (pRated.onboard)  document.getElementById('p-score-onboard').textContent  = pTotals.onboard  + '/' + pMax.onboard;
+  if (pRated.recog)    document.getElementById('p-score-recog').textContent    = pTotals.recog    + '/' + pMax.recog;
+  const pTotal = pTotals.discover + pTotals.onboard + pTotals.recog;
+  const pRatedTotal = pRated.discover + pRated.onboard + pRated.recog;
+  if (pRatedTotal > 0) {
+    document.getElementById('p-score-total').textContent = pTotal + '/50';
+    showProjectRecommend(pTotal, pRatedTotal);
+  }
+}
+
+function showContributorRecommend(total, rated) {
+  const el = document.getElementById('c-recommend');
+  el.classList.add('show');
+  if (rated < 10) { el.innerHTML = 'Complete all questions for full recommendations.'; return; }
+  if (total >= 42) el.innerHTML = '<strong>You\'re ready.</strong> You have strong self-awareness, clear skills, and a growth mindset. Jump in — find a project that needs what you bring and make your first contribution this week.';
+  else if (total >= 30) el.innerHTML = '<strong>You\'re close.</strong> You have real skills and readiness. Focus on finding a project that explicitly welcomes non-code contributors. Look for "good first issues" labeled for docs, design, or community. Your confidence will grow fast once you start.';
+  else if (total >= 18) el.innerHTML = '<strong>You\'re building.</strong> You may still be working through what open source means for someone with your skills. That\'s okay. Spend time on the Contributor Map tab — select your skills, see them reflected back at you, and look for projects that name those roles explicitly.';
+  else el.innerHTML = '<strong>Start here.</strong> Open source can feel exclusive — but it doesn\'t have to. Your skills are needed, even if no one has told you yet. Start by browsing the Contribution Map and naming what you bring. Then find one project with an active community channel and introduce yourself. That\'s the whole first step.';
+}
+
+function showProjectRecommend(total, rated) {
+  const el = document.getElementById('p-recommend');
+  el.classList.add('show');
+  if (rated < 10) { el.innerHTML = 'Complete all questions for full recommendations.'; return; }
+  if (total >= 42) el.innerHTML = '<strong>Your project is a model.</strong> You have strong infrastructure for non-code contributors. Your next step is to document what you\'ve built and share it with the broader open source community — your practices are worth spreading.';
+  else if (total >= 30) el.innerHTML = '<strong>Good foundation, clear gaps.</strong> You\'ve built real infrastructure but there are likely 2–3 high-impact areas that need work. Audit your lowest-scoring sections — especially onboarding and recognition — and prioritize one improvement this sprint.';
+  else if (total >= 18) el.innerHTML = '<strong>Significant work needed.</strong> Your project is likely losing non-code contributors before they ever make their first contribution. Start with the highest-impact, lowest-effort fix: update your README to explicitly name non-code contribution types. Then work through the Organization Journey builder.';
+  else el.innerHTML = '<strong>Rebuild from the ground up.</strong> Most of the infrastructure for welcoming non-code contributors is missing. This isn\'t a criticism — it\'s a common starting point. Use the Organization Journey tab to design your contributor pathway from scratch. Each stage you complete will have immediate, visible impact.';
+}
+
+function resetContributorAssessment() {
+  ['c1','c2','c3','c4','c5','c6','c7','c8','c9','c10'].forEach(id => {
+    delete state.ratings[id];
+    const rows = document.querySelectorAll(`[data-id="${id}"]`);
+    rows.forEach(row => {
+      row.querySelectorAll('.star').forEach(s => s.classList.remove('lit'));
+      const item = row.closest('.assess-item');
+      if (item) {
+        const fill = item.querySelector('.assess-mini-fill');
+        const label = item.querySelector('.assess-score-label');
+        if (fill) fill.style.width = '0%';
+        if (label) label.textContent = 'Not rated';
+      }
+    });
+  });
+  document.getElementById('c-score-skills').textContent = '–/20';
+  document.getElementById('c-score-barriers').textContent = '–/15';
+  document.getElementById('c-score-growth').textContent = '–/15';
+  document.getElementById('c-score-total').textContent = '–/50';
+  document.getElementById('c-recommend').classList.remove('show');
+}
+
+function resetProjectAssessment() {
+  ['p1','p2','p3','p4','p5','p6','p7','p8','p9','p10'].forEach(id => {
+    delete state.ratings[id];
+    const rows = document.querySelectorAll(`[data-id="${id}"]`);
+    rows.forEach(row => {
+      row.querySelectorAll('.star').forEach(s => s.classList.remove('lit'));
+      const item = row.closest('.assess-item');
+      if (item) {
+        const fill = item.querySelector('.assess-mini-fill');
+        const label = item.querySelector('.assess-score-label');
+        if (fill) fill.style.width = '0%';
+        if (label) label.textContent = 'Not rated';
+      }
+    });
+  });
+  document.getElementById('p-score-discover').textContent = '–/15';
+  document.getElementById('p-score-onboard').textContent = '–/15';
+  document.getElementById('p-score-recog').textContent = '–/20';
+  document.getElementById('p-score-total').textContent = '–/50';
+  document.getElementById('p-recommend').classList.remove('show');
+}
+
+function downloadContributorAssessment() {
+  const groups = {
+    'Skills & Readiness': ['c1','c2','c3','c4'],
+    'Confidence & Barriers': ['c5','c6','c7'],
+    'Growth & Belonging': ['c8','c9','c10'],
+  };
+  let txt = 'CONTRIBUTOR SELF-ASSESSMENT RESULTS\n' + '═'.repeat(40) + '\n';
+  txt += `Date: ${new Date().toLocaleDateString()}\n\n`;
+  for (const [g, ids] of Object.entries(groups)) {
+    txt += g.toUpperCase() + '\n' + '─'.repeat(g.length) + '\n';
+    ids.forEach(id => { txt += `  Question ${id.toUpperCase()}: ${state.ratings[id]||'Not rated'}/5\n`; });
+    txt += '\n';
+  }
+  const total = Object.entries(state.ratings).filter(([k])=>k.startsWith('c')).reduce((s,[,v])=>s+v,0);
+  txt += `TOTAL SCORE: ${total}/50\n\n`;
+  txt += document.getElementById('c-recommend').textContent + '\n';
+  downloadFile('contributor-assessment.txt', txt);
+}
+
+function downloadProjectAssessment() {
+  const groups = {
+    'Discoverability': ['p1','p2','p3'],
+    'Onboarding Quality': ['p4','p5','p6'],
+    'Recognition & Safety': ['p7','p8','p9','p10'],
+  };
+  let txt = 'PROJECT SELF-ASSESSMENT RESULTS\n' + '═'.repeat(40) + '\n';
+  txt += `Date: ${new Date().toLocaleDateString()}\n\n`;
+  for (const [g, ids] of Object.entries(groups)) {
+    txt += g.toUpperCase() + '\n' + '─'.repeat(g.length) + '\n';
+    ids.forEach(id => { txt += `  Question ${id.toUpperCase()}: ${state.ratings[id]||'Not rated'}/5\n`; });
+    txt += '\n';
+  }
+  const total = Object.entries(state.ratings).filter(([k])=>k.startsWith('p')).reduce((s,[,v])=>s+v,0);
+  txt += `TOTAL SCORE: ${total}/50\n\n`;
+  txt += document.getElementById('p-recommend').textContent + '\n';
+  downloadFile('project-assessment.txt', txt);
+}
+
+// ── UTILITIES ──────────────────────────────────────────
+function downloadFile(filename, content) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Close modal on overlay click
+document.getElementById('map-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeMapModal();
+});
+</script>
+
+<!-- SHARE MODAL -->
+<div class="share-modal-overlay" id="share-modal">
+  <div class="share-modal">
+    <button class="modal-close" onclick="closeShareModal()">✕</button>
+    <h3>🔗 Share This</h3>
+    <p id="share-modal-desc">Share your contribution journey with your team or community.</p>
+    <div class="share-grid">
+      <a class="share-btn sb-twitter"  id="share-twitter"  href="#" target="_blank" rel="noopener">
+        <div class="share-icon">𝕏</div><span>Post on X / Twitter</span>
+      </a>
+      <a class="share-btn sb-linkedin" id="share-linkedin" href="#" target="_blank" rel="noopener">
+        <div class="share-icon" style="font-size:0.8rem;font-weight:800;">in</div><span>Share on LinkedIn</span>
+      </a>
+      <a class="share-btn sb-whatsapp" id="share-whatsapp" href="#" target="_blank" rel="noopener">
+        <div class="share-icon">💬</div><span>Send via WhatsApp</span>
+      </a>
+      <a class="share-btn sb-email"    id="share-email"    href="#">
+        <div class="share-icon">✉️</div><span>Send via Email</span>
+      </a>
+      <a class="share-btn sb-slack"    id="share-slack"    href="#" target="_blank" rel="noopener">
+        <div class="share-icon" style="font-size:0.75rem;font-weight:800;color:#fff;">S!</div><span>Copy for Slack</span>
+      </a>
+      <button class="share-btn sb-copy" onclick="copyShareLink()">
+        <div class="share-icon">📋</div><span>Copy link</span>
+      </button>
+    </div>
+    <hr class="share-divider">
+    <div class="share-link-row">
+      <input class="share-link-input" id="share-link-input" readonly value="">
+      <button class="share-copy-btn" onclick="copyShareLink()">Copy</button>
+    </div>
+    <div class="share-copied-msg" id="share-copied">✓ Link copied to clipboard!</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// ── jsPDF helpers ────────────────────────────────────────
+const BRAND_C  = [124, 255, 196];
+const DARK_BG  = [22, 22, 34];
+const LT_TEXT  = [232, 232, 240];
+const MT_TEXT  = [107, 107, 133];
+const PW = 210; const PH = 297; const MG = 18;
+
+function makePDF() { return new window.jspdf.jsPDF({ unit:'mm', format:'a4' }); }
+
+function pdfHeader(doc, title, subtitle) {
+  doc.setFillColor(...DARK_BG);
+  doc.rect(0, 0, PW, 44, 'F');
+  doc.setFillColor(...BRAND_C);
+  doc.rect(0, 0, 4, 44, 'F');
+  doc.setTextColor(...BRAND_C);
+  doc.setFontSize(20); doc.setFont('helvetica','bold');
+  doc.text(title, MG, 19);
+  doc.setTextColor(...MT_TEXT);
+  doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.text(subtitle, MG, 29);
+  doc.setFontSize(8);
+  doc.text('Generated: ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), MG, 38);
+  return 54;
+}
+
+function pdfSect(doc, y, label, content, col) {
+  if (!content || !content.toString().trim()) return y;
+  col = col || BRAND_C;
+  if (y > PH - 40) { doc.addPage(); y = MG; }
+  doc.setFillColor(...col);
+  doc.roundedRect(MG, y, 3, 10, 1, 1, 'F');
+  doc.setTextColor(...col);
+  doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+  doc.text(label.toUpperCase(), MG + 7, y + 7);
+  y += 14;
+  doc.setTextColor(...LT_TEXT);
+  doc.setFontSize(9.5); doc.setFont('helvetica','normal');
+  const lines = doc.splitTextToSize(content.toString(), PW - MG * 2);
+  lines.forEach(line => {
+    if (y > PH - 18) { doc.addPage(); y = MG + 4; }
+    doc.text(line, MG, y); y += 6;
+  });
+  return y + 4;
+}
+
+function pdfFooter(doc) {
+  const total = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= total; i++) {
+    doc.setPage(i);
+    doc.setFillColor(14, 14, 20);
+    doc.rect(0, PH - 11, PW, 11, 'F');
+    doc.setTextColor(...MT_TEXT);
+    doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+    doc.text('No-Code Contribution Map · Open source is for everyone who shows up.', MG, PH - 4.5);
+    doc.text('Page ' + i + ' of ' + total, PW - MG, PH - 4.5, {align:'right'});
+  }
+}
+
+// ── PDF: My Contribution Map ─────────────────────────────
+function downloadMapPDF() {
+  const all = Object.values(state.selected).flat();
+  if (!all.length) { alert('Select at least one skill first.'); return; }
+  const doc = makePDF();
+  let y = pdfHeader(doc, 'My No-Code Contribution Map', 'Your personal open source contribution profile');
+
+  doc.setFillColor(...DARK_BG);
+  doc.roundedRect(MG, y, PW - MG*2, 14, 2, 2, 'F');
+  doc.setTextColor(...BRAND_C);
+  doc.setFontSize(10); doc.setFont('helvetica','bold');
+  doc.text(all.length + ' skills across ' + Object.keys(state.selected).length + ' categories', MG + 5, y + 9);
+  y += 22;
+
+  const catCols = {
+    'Technical Writing': [124,255,196], 'Design': [255,206,71],
+    'Community': [255,107,107], 'Accessibility': [107,159,255],
+    'Outreach': [208,107,255], 'Education': [255,159,71],
+    'Research': [77,217,224], 'Testing': [224,107,159],
+  };
+
+  for (const [cat, tags] of Object.entries(state.selected)) {
+    if (!tags.length) continue;
+    if (y > PH - 45) { doc.addPage(); y = MG; }
+    const colKey = Object.keys(catCols).find(k => cat.includes(k)) || 'Technical Writing';
+    const col = catCols[colKey];
+    doc.setFillColor(...col);
+    doc.roundedRect(MG, y, PW - MG*2, 10, 2, 2, 'F');
+    doc.setTextColor(10,10,15);
+    doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(cat, MG + 5, y + 7);
+    y += 14;
+
+    let x = MG;
+    doc.setFontSize(8); doc.setFont('helvetica','normal');
+    tags.forEach(tag => {
+      const tw = doc.getTextWidth(tag) + 10;
+      if (x + tw > PW - MG) { x = MG; y += 10; }
+      if (y > PH - 18) { doc.addPage(); y = MG + 4; x = MG; }
+      doc.setFillColor(30, 30, 46);
+      doc.roundedRect(x, y - 5.5, tw, 8, 2, 2, 'F');
+      doc.setTextColor(...col);
+      doc.text(tag, x + 4, y);
+      x += tw + 4;
+    });
+    y += 14;
+  }
+
+  pdfFooter(doc);
+  doc.save('my-contribution-map.pdf');
+  closeMapModal();
+}
+
+// ── PDF: Journey Plan ────────────────────────────────────
+function downloadJourneyPDF() {
+  const proj = document.getElementById('jb-project').value || 'Unnamed Project';
+  const doc = makePDF();
+  let y = pdfHeader(doc, 'Contributor Journey Plan', proj + ' · Built with No-Code Contribution Map');
+
+  const sections = [
+    ['Project Name',              document.getElementById('jb-project').value,     [124,255,196]],
+    ['Discovery Channels',        document.getElementById('jb-discovery').value,    [255,206,71]],
+    ['Orientation Setup',         document.getElementById('jb-orient').value,       [107,159,255]],
+    ['First Contribution Pathway',document.getElementById('jb-first').value,        [77,217,224]],
+    ['Community & Retention',     document.getElementById('jb-community').value,    [208,107,255]],
+    ['Recognition System',        document.getElementById('jb-recognition').value,  [255,159,71]],
+    ['Growth Pathways',           document.getElementById('jb-growth').value,       [255,107,107]],
+    ['Additional Notes',          document.getElementById('jb-extra').value,        [224,107,159]],
+  ];
+  sections.forEach(([l,v,c]) => { y = pdfSect(doc, y, l, v, c); });
+
+  if (y > PH - 55) { doc.addPage(); y = MG; }
+  doc.setFillColor(...DARK_BG);
+  doc.roundedRect(MG, y, PW - MG*2, 10, 2, 2, 'F');
+  doc.setTextColor(...BRAND_C);
+  doc.setFontSize(9); doc.setFont('helvetica','bold');
+  doc.text('STAGE OPTIONS SELECTED', MG + 5, y + 7);
+  y += 14;
+
+  document.querySelectorAll('.journey-stage').forEach(stage => {
+    const titleEl = stage.querySelector('.stage-title');
+    const picked = [...stage.querySelectorAll('.stage-opt.picked')].map(o => o.textContent.trim());
+    if (picked.length && titleEl) {
+      if (y > PH - 28) { doc.addPage(); y = MG; }
+      doc.setTextColor(...BRAND_C);
+      doc.setFontSize(8.5); doc.setFont('helvetica','bold');
+      doc.text(titleEl.textContent.split('—')[0].trim(), MG, y); y += 6;
+      doc.setTextColor(...MT_TEXT);
+      doc.setFontSize(8); doc.setFont('helvetica','normal');
+      const line = doc.splitTextToSize('✓ ' + picked.join('  ·  '), PW - MG*2);
+      line.forEach(l => { doc.text(l, MG + 3, y); y += 5.5; });
+      y += 5;
     }
-  }
+  });
 
-  // Journey save
-  function saveJourney() {
-    const note = document.getElementById('saved-note');
-    note.style.display = 'block';
-    setTimeout(() => { note.style.display = 'none'; }, 3000);
-  }
+  pdfFooter(doc);
+  doc.save('contributor-journey-' + proj.replace(/\s+/g,'-').toLowerCase() + '.pdf');
+}
 
-  function clearJourney() {
-    document.querySelectorAll('#panel-journey .canvas-input').forEach(i => {
-      if (i.tagName === 'TEXTAREA') i.value = '';
-      if (i.tagName === 'INPUT') i.value = '';
+// ── PDF: Contributor Assessment ──────────────────────────
+function downloadContributorAssessmentPDF() {
+  const doc = makePDF();
+  let y = pdfHeader(doc, 'Contributor Self-Assessment', 'No-Code Contribution Map · Personal Results');
+
+  const S5 = ['','Not yet','Rarely','Sometimes','Mostly','Fully'];
+  const grps = [
+    { t:'A — Skills & Contribution Readiness', c:[124,255,196], ids:['c1','c2','c3','c4'],
+      qs:['I can name 3+ non-code skills I bring to open source','I believe non-code contributions are equally valuable','I know which projects align with my interests','I know of 2+ places I could contribute right now'] },
+    { t:'B — Confidence & Barriers', c:[255,206,71], ids:['c5','c6','c7'],
+      qs:['I feel confident I won\'t be judged for non-code contributions','I understand the tools used in open source communities','I have time for at least one meaningful contribution per month'] },
+    { t:'C — Growth & Belonging', c:[107,159,255], ids:['c8','c9','c10'],
+      qs:['I can envision a 6-month sustained contribution journey','I know how I\'d like to be recognized and can ask for it','I feel I belong in open source spaces'] },
+  ];
+
+  let totals = {}; let grand = 0;
+  grps.forEach(g => {
+    if (y > PH - 50) { doc.addPage(); y = MG; }
+    doc.setFillColor(...g.c);
+    doc.roundedRect(MG, y, PW - MG*2, 10, 2, 2, 'F');
+    doc.setTextColor(10,10,15); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(g.t, MG + 5, y + 7); y += 14;
+    let gt = 0;
+    g.ids.forEach((id, i) => {
+      if (y > PH - 24) { doc.addPage(); y = MG; }
+      const v = state.ratings[id] || 0; gt += v;
+      const lines = doc.splitTextToSize((i+1)+'. '+g.qs[i], PW-MG*2-10);
+      doc.setTextColor(...LT_TEXT); doc.setFontSize(8.5); doc.setFont('helvetica','normal');
+      lines.forEach(l => { doc.text(l, MG+3, y); y += 5.5; });
+      doc.setTextColor(...g.c); doc.setFontSize(9); doc.setFont('helvetica','bold');
+      doc.text('★'.repeat(v)+'☆'.repeat(5-v)+'  '+v+'/5  ·  '+(S5[v]||'Not rated'), MG+3, y); y += 9;
     });
-  }
+    totals[g.t] = { t: gt, m: g.ids.length * 5 }; grand += gt; y += 3;
+  });
 
-  // Rating dots
-  function rateDot(skillIndex, level) {
-    const container = document.getElementById('dots-' + skillIndex);
-    const dots = container.querySelectorAll('.dot');
-    dots.forEach(dot => {
-      const dotLevel = parseInt(dot.dataset.level);
-      dot.classList.toggle('lit', dotLevel <= level);
+  if (y > PH - 55) { doc.addPage(); y = MG; }
+  doc.setFillColor(...DARK_BG);
+  doc.roundedRect(MG, y, PW-MG*2, 48, 3, 3, 'F');
+  doc.setFillColor(...BRAND_C); doc.roundedRect(MG, y, 3, 48, 1, 1, 'F');
+  doc.setTextColor(...BRAND_C); doc.setFontSize(10); doc.setFont('helvetica','bold');
+  doc.text('SCORE SUMMARY', MG+8, y+10);
+  let sy = y+19;
+  Object.entries(totals).forEach(([t,v]) => {
+    doc.setTextColor(...MT_TEXT); doc.setFontSize(8); doc.setFont('helvetica','normal');
+    doc.text(t.split('—')[1]?.trim()||t, MG+8, sy);
+    doc.setTextColor(...LT_TEXT); doc.setFont('helvetica','bold');
+    doc.text(v.t+'/'+v.m, PW-MG-5, sy, {align:'right'});
+    sy += 9;
+  });
+  doc.setTextColor(...BRAND_C); doc.setFontSize(11); doc.setFont('helvetica','bold');
+  doc.text('TOTAL: '+grand+'/50', MG+8, sy+2);
+  y += 55;
+
+  const rec = document.getElementById('c-recommend')?.textContent;
+  if (rec && rec.length > 10) y = pdfSect(doc, y+4, 'Recommendation', rec, BRAND_C);
+  pdfFooter(doc);
+  doc.save('contributor-assessment-results.pdf');
+}
+
+// ── PDF: Project Assessment ──────────────────────────────
+function downloadProjectAssessmentPDF() {
+  const doc = makePDF();
+  let y = pdfHeader(doc, 'Project Self-Assessment', 'No-Code Contribution Map · Project Inclusion Audit');
+
+  const S5 = ['','Not yet','Rarely','Sometimes','Mostly','Fully'];
+  const grps = [
+    { t:'A — Discoverability & First Impressions', c:[208,107,255], ids:['p1','p2','p3'],
+      qs:['Project is promoted where non-technical communities gather','README explicitly welcomes non-code contributors with 3+ options','We use visible "good first issue (non-code)" labels'] },
+    { t:'B — Onboarding & Orientation Quality', c:[255,107,107], ids:['p4','p5','p6'],
+      qs:['CONTRIBUTING.md includes non-code contributor guidance','A newcomer can contribute meaningfully in 1 hour without asking','We have a welcoming, actively-tended community channel'] },
+    { t:'C — Recognition, Retention & Safety', c:[255,159,71], ids:['p7','p8','p9','p10'],
+      qs:['Non-code contributions are publicly credited in releases','We have formal named roles for non-code contributors','Code of Conduct is enforced with a named contact','Clear growth pathways exist for non-code contributors'] },
+  ];
+
+  let totals = {}; let grand = 0;
+  grps.forEach(g => {
+    if (y > PH - 50) { doc.addPage(); y = MG; }
+    doc.setFillColor(...g.c);
+    doc.roundedRect(MG, y, PW-MG*2, 10, 2, 2, 'F');
+    doc.setTextColor(10,10,15); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(g.t, MG+5, y+7); y += 14;
+    let gt = 0;
+    g.ids.forEach((id,i) => {
+      if (y > PH - 24) { doc.addPage(); y = MG; }
+      const v = state.ratings[id]||0; gt += v;
+      const lines = doc.splitTextToSize((i+1)+'. '+g.qs[i], PW-MG*2-10);
+      doc.setTextColor(...LT_TEXT); doc.setFontSize(8.5); doc.setFont('helvetica','normal');
+      lines.forEach(l => { doc.text(l, MG+3, y); y += 5.5; });
+      doc.setTextColor(...g.c); doc.setFontSize(9); doc.setFont('helvetica','bold');
+      doc.text('★'.repeat(v)+'☆'.repeat(5-v)+'  '+v+'/5  ·  '+(S5[v]||'Not rated'), MG+3, y); y += 9;
     });
-  }
+    totals[g.t] = { t:gt, m:g.ids.length*5 }; grand += gt; y += 3;
+  });
 
-  // Export
-  function exportMap() {
-    const selected = Array.from(document.querySelectorAll('.tag.selected')).map(t => t.textContent);
-    const projName = document.getElementById('proj-name').value || 'My Project';
-    
-    let content = `NO-CODE CONTRIBUTION MAP\n`;
-    content += `${projName}\n`;
-    content += `Generated: ${new Date().toLocaleDateString()}\n\n`;
-    content += `SELECTED CONTRIBUTIONS (${selected.length}):\n`;
-    selected.forEach(s => content += `  ✓ ${s}\n`);
-    content += `\nEVERYONE BELONGS TO OPEN SOURCE\nMarch 17, 2026 · Wintergarten Workshop`;
+  if (y > PH - 55) { doc.addPage(); y = MG; }
+  doc.setFillColor(...DARK_BG);
+  doc.roundedRect(MG, y, PW-MG*2, 48, 3, 3, 'F');
+  doc.setFillColor(...BRAND_C); doc.roundedRect(MG, y, 3, 48, 1, 1, 'F');
+  doc.setTextColor(...BRAND_C); doc.setFontSize(10); doc.setFont('helvetica','bold');
+  doc.text('SCORE SUMMARY', MG+8, y+10);
+  let sy = y+19;
+  Object.entries(totals).forEach(([t,v]) => {
+    doc.setTextColor(...MT_TEXT); doc.setFontSize(8); doc.setFont('helvetica','normal');
+    doc.text(t.split('—')[1]?.trim()||t, MG+8, sy);
+    doc.setTextColor(...LT_TEXT); doc.setFont('helvetica','bold');
+    doc.text(v.t+'/'+v.m, PW-MG-5, sy, {align:'right'});
+    sy += 9;
+  });
+  doc.setTextColor(...BRAND_C); doc.setFontSize(11); doc.setFont('helvetica','bold');
+  doc.text('TOTAL: '+grand+'/50', MG+8, sy+2);
+  y += 55;
 
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'nocode-contribution-map.txt';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+  const rec = document.getElementById('p-recommend')?.textContent;
+  if (rec && rec.length > 10) y = pdfSect(doc, y+4, 'Recommendation', rec, [255,159,71]);
+  pdfFooter(doc);
+  doc.save('project-assessment-results.pdf');
+}
 
-  // Init
-  updateSummary();
+// ── SHARE MODAL ──────────────────────────────────────────
+const SHARE_MSGS = {
+  map:      { title:'My No-Code Contribution Map',   text:'I just mapped my open source contribution skills — writing, design, community, accessibility & more. Check out the No-Code Contribution Map 🗺️' },
+  journey:  { title:'Our Contributor Journey Plan',  text:'We just designed our contributor journey for open source — from discovery to recognition to growth. Built with the No-Code Contribution Map 🌱' },
+  'c-assess':{ title:'My Contributor Self-Assessment',text:'I just completed a self-assessment on my open source contribution readiness. Open source is for everyone 💚' },
+  'p-assess':{ title:'Our Project Inclusion Audit',  text:'We just audited our project for non-code contributor readiness and inclusion. Built with the No-Code Contribution Map 🔍' },
+};
+
+function openShareModal(context) {
+  const msg = SHARE_MSGS[context] || SHARE_MSGS.map;
+  const url = window.location.href.split('#')[0];
+  const enc = encodeURIComponent(msg.text + ' ' + url);
+  const encT = encodeURIComponent(msg.title);
+  const encU = encodeURIComponent(url);
+
+  document.getElementById('share-modal-desc').textContent = msg.text;
+  document.getElementById('share-link-input').value = url;
+  document.getElementById('share-twitter').href  = `https://twitter.com/intent/tweet?text=${enc}`;
+  document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encU}&summary=${enc}&title=${encT}`;
+  document.getElementById('share-whatsapp').href = `https://wa.me/?text=${enc}`;
+  document.getElementById('share-email').href    = `mailto:?subject=${encT}&body=${encodeURIComponent(msg.text+'\n\n'+url)}`;
+  // Slack: copy to clipboard with a Slack-friendly format, then link to slack.com
+  document.getElementById('share-slack').onclick = function(e) {
+    e.preventDefault();
+    navigator.clipboard.writeText(msg.text + '\n' + url).then(() => {
+      document.getElementById('share-copied').textContent = '✓ Copied! Paste it into any Slack channel.';
+      document.getElementById('share-copied').classList.add('show');
+      setTimeout(() => { document.getElementById('share-copied').classList.remove('show'); document.getElementById('share-copied').textContent = '✓ Link copied to clipboard!'; }, 3000);
+    });
+  };
+
+  document.getElementById('share-copied').classList.remove('show');
+  document.getElementById('share-modal').classList.add('open');
+}
+
+function closeShareModal() { document.getElementById('share-modal').classList.remove('open'); }
+
+function copyShareLink() {
+  const val = document.getElementById('share-link-input').value;
+  navigator.clipboard.writeText(val).then(() => {
+    document.getElementById('share-copied').textContent = '✓ Link copied to clipboard!';
+    document.getElementById('share-copied').classList.add('show');
+    setTimeout(() => document.getElementById('share-copied').classList.remove('show'), 2500);
+  }).catch(() => {
+    const inp = document.getElementById('share-link-input');
+    inp.select(); document.execCommand('copy');
+    document.getElementById('share-copied').classList.add('show');
+    setTimeout(() => document.getElementById('share-copied').classList.remove('show'), 2500);
+  });
+}
+
+document.getElementById('share-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeShareModal();
+});
 </script>
 </body>
 </html>
