@@ -394,13 +394,69 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 .fn-6 .flow-label { color: var(--accent6); }
 
 /* Blueprint list view */
-.blueprint-list { padding: 1.5rem 2rem; }
-.bp-stage { margin-bottom: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; }
-.bp-stage-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
-.bp-stage-body { flex: 1; }
-.bp-stage-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem; }
-.bp-stage-tags  { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.bp-tag { font-size: 0.68rem; padding: 0.18rem 0.55rem; border-radius: 2rem; border: 1px solid var(--border); color: var(--muted); }
+.blueprint-list { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+.bp-stage {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.bp-stage-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 1rem 1.25rem; cursor: pointer;
+  border-bottom: 1px solid transparent; transition: border-color 0.2s;
+}
+.bp-stage.open .bp-stage-header { border-bottom-color: var(--border); }
+.bp-stage-icon { font-size: 1.3rem; flex-shrink: 0; }
+.bp-stage-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; flex: 1; }
+.bp-stage-picked { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-left: auto; }
+.bp-tag { font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 2rem; border: 1px solid var(--border); color: var(--muted); }
+.bp-toggle { font-size: 0.65rem; color: var(--muted); margin-left: 0.5rem; flex-shrink: 0; transition: transform 0.2s; }
+.bp-stage.open .bp-toggle { transform: rotate(180deg); }
+.bp-stage-detail {
+  display: none; padding: 1.25rem 1.25rem 1.5rem;
+}
+.bp-stage.open .bp-stage-detail { display: block; animation: fadeUp 0.25s ease; }
+.bp-detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+}
+@media (max-width:700px) { .bp-detail-grid { grid-template-columns: 1fr; } }
+.bp-detail-block { margin-bottom: 0; }
+.bp-detail-block.full { grid-column: 1 / -1; }
+.bp-detail-label {
+  font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--muted); margin-bottom: 0.4rem; font-weight: 600;
+}
+.bp-detail-desc { font-size: 0.82rem; color: var(--text); line-height: 1.7; }
+.bp-detail-list { list-style: none; padding: 0; margin: 0; }
+.bp-detail-list li {
+  font-size: 0.8rem; color: var(--muted); padding: 0.2rem 0; line-height: 1.55;
+  padding-left: 1rem; position: relative;
+}
+.bp-detail-list li::before { content: '→'; position: absolute; left: 0; color: inherit; opacity: 0.6; }
+.bp-milestone-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.bp-milestone {
+  font-size: 0.72rem; padding: 0.25rem 0.65rem; border-radius: 5px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  color: var(--text);
+}
+.bp-milestone::before { content: '✓ '; opacity: 0.5; }
+.bp-next-step {
+  margin-top: 1rem; padding: 0.65rem 1rem;
+  border-radius: 7px; font-size: 0.78rem; color: var(--muted);
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.bp-next-step::before { content: '→'; font-size: 1rem; }
+
+/* Connector message between stages and blueprint */
+.blueprint-connector {
+  margin: 2.5rem 0 0;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(124,255,196,0.04); border: 1px solid rgba(124,255,196,0.15);
+  border-radius: 9px; font-size: 0.8rem; color: var(--muted); line-height: 1.6;
+}
+.blueprint-connector::before { content: '↓'; font-size: 1.25rem; color: var(--accent1); flex-shrink: 0; }
+.blueprint-connector strong { color: var(--accent1); }
 
 /* Warnings banner */
 .warnings-banner {
@@ -693,12 +749,46 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 .share-copied-msg { font-size: 0.75rem; color: var(--accent1); margin-top: 0.5rem; display: none; }
 .share-copied-msg.show { display: block; }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .hero, .tabs, .panel { padding-left: 1.5rem; padding-right: 1.5rem; }
-  .org-layout { grid-template-columns: 1fr; }
-  .summary-bar { padding: 0.9rem 1.5rem; flex-wrap: wrap; }
+/* ── MY CONTRIBUTOR ROADMAP ── */
+.rm-chip-group {
+  display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.5rem;
 }
+.rm-chip {
+  padding: 0.35rem 0.85rem; border-radius: 2rem;
+  border: 1px solid var(--border); color: var(--muted);
+  font-size: 0.76rem; cursor: pointer; transition: all 0.18s;
+  user-select: none; background: var(--bg);
+}
+.rm-chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.rm-chip.selected { background: rgba(124,255,196,0.1); border-color: var(--accent1); color: var(--accent1); }
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 2rem; margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+}
+.rm-section:hover { border-color: rgba(255,255,255,0.1); }
+.rm-section-header {
+  display: flex; gap: 1rem; align-items: flex-start;
+  margin-bottom: 1.5rem; padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  border-left: 3px solid; padding-left: 1rem; margin-left: -1rem;
+}
+.rm-section-icon { font-size: 1.6rem; flex-shrink: 0; }
+.rm-section-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+.rm-section-desc  { font-size: 0.8rem; color: var(--muted); line-height: 1.65; }
+.rm-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+@media (max-width: 700px) { .rm-fields { grid-template-columns: 1fr; } }
+
+/* Roadmap output sections */
+.rm-out-section {
+  border-left: 3px solid; padding: 1.5rem 0 1.5rem 1.5rem;
+  margin-top: 2rem; border-bottom: 1px solid var(--border);
+}
+.rm-out-section:last-child { border-bottom: none; }
+.rm-out-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 0.3rem; }
+.rm-out-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+.rm-out-item { margin-bottom: 0.75rem; }
+.rm-out-item-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 0.2rem; }
+.rm-out-item-value { font-size: 0.88rem; color: var(--text); line-height: 1.65; }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -720,6 +810,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
     <span class="pill-badge pb-blue"   onclick="showPanel('org',document.querySelectorAll('.tab')[1])">↗ For Organizations</span>
     <span class="pill-badge pb-yellow" onclick="showPanel('rec',document.querySelectorAll('.tab')[2])">↗ Recognition Frameworks</span>
     <span class="pill-badge pb-purple" onclick="showPanel('assess',document.querySelectorAll('.tab')[3])">↗ Self-Assessment Tools</span>
+    <span class="pill-badge pb-green"  style="border-color:rgba(77,217,224,0.3);color:var(--teal);background:rgba(77,217,224,0.06);" onclick="showPanel('roadmap',document.querySelectorAll('.tab')[4])">↗ My Roadmap</span>
   </div>
 </header>
 
@@ -729,6 +820,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
   <button class="tab"         onclick="showPanel('org',this)">Organization Journey</button>
   <button class="tab"         onclick="showPanel('rec',this)">Recognition</button>
   <button class="tab"         onclick="showPanel('assess',this)">Self-Assessment</button>
+  <button class="tab"         onclick="showPanel('roadmap',this)" style="color:var(--teal);">🗺 My Roadmap</button>
 </nav>
 
 <!-- ════════════════════════════════════
@@ -935,10 +1027,29 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 <section id="panel-org" class="panel">
   <div class="sec-label">For Organizations</div>
   <h2 class="sec-title">Design Your Contributor Journey</h2>
-  <p class="sec-desc">A welcoming contributor journey doesn't happen by accident. Work through each stage below — click the option chips that reflect your project's current or planned approach — then use the builder on the right to capture your decisions and download your journey plan.</p>
 
-  <div class="org-layout">
-    <div class="stages-track">
+  <!-- Step indicator -->
+  <div style="display:flex;gap:0;margin-bottom:2rem;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(124,255,196,0.08);border:1px solid rgba(124,255,196,0.25);border-radius:7px 0 0 7px;font-size:0.72rem;color:var(--accent1);font-weight:600;">
+      <span style="background:var(--accent1);color:var(--bg);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.65rem;flex-shrink:0;">1</span> Design Your Journey
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(107,159,255,0.05);border:1px solid var(--border);border-left:none;font-size:0.72rem;color:var(--muted);font-weight:600;">
+      <span style="background:var(--border);color:var(--muted);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.65rem;flex-shrink:0;">2</span> Generate Blueprint
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(107,159,255,0.05);border:1px solid var(--border);border-left:none;border-radius:0 7px 7px 0;font-size:0.72rem;color:var(--muted);font-weight:600;">
+      <span style="background:var(--border);color:var(--muted);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.65rem;flex-shrink:0;">3</span> Download &amp; Share
+    </div>
+  </div>
+
+  <p class="sec-desc">A welcoming contributor journey doesn't happen by accident. Work through each stage below — click the option chips that reflect your project's current or planned approach — then click <strong>Build Blueprint</strong> to generate your full detailed journey plan.</p>
+
+  <div style="margin-bottom:2rem; display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+    <button class="btn btn-primary" onclick="buildBlueprint()" style="font-size:0.85rem;padding:0.75rem 2rem;">Build Blueprint →</button>
+    <button class="btn btn-outline" style="font-size:0.8rem;" onclick="buildBlueprint()">Regenerate Blueprint</button>
+    <span style="font-size:0.78rem;color:var(--muted);">Select options in each stage, fill in project details below, then generate.</span>
+  </div>
+
+  <div class="stages-track" id="org-stages-track">
 
       <!-- STAGE 1: DISCOVERY -->
       <div class="journey-stage js-1 active" onclick="activateStage(this)">
@@ -1097,71 +1208,83 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
     </div><!-- /stages-track -->
 
-    <!-- JOURNEY BUILDER PANEL -->
-    <div class="journey-builder">
-      <div class="jb-header">
-        <h3>🗺 Build Your Journey Plan</h3>
-        <p>Fill in the fields below as you work through each stage. Your answers will generate a downloadable journey plan.</p>
-      </div>
-
-      <div class="jb-progress">
-        <div class="jb-progress-label">
-          <span>Journey completion</span>
-          <span id="jb-pct">0%</span>
-        </div>
-        <div class="jb-bar"><div class="jb-bar-fill" id="jb-fill"></div></div>
-      </div>
-
+  <!-- Project details (full width, below stages) -->
+  <div style="margin-top:2.5rem; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:2rem;">
+    <h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--accent4);margin-bottom:0.4rem;">Project Details</h3>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Fill in these fields to make your blueprint more specific and actionable. The more detail you add, the richer your exported plan will be.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
       <div class="field-group">
-        <label class="field-label">Project name</label>
-        <input class="field-input" type="text" id="jb-project" placeholder="e.g. OpenDocs, AccessKit…" oninput="updateProgress()">
+        <label class="field-label">Project name *</label>
+        <input class="field-input" type="text" id="jb-project" placeholder="e.g. OpenDocs, AccessKit, MyLib…" oninput="updateProgress()">
       </div>
       <div class="field-group">
-        <label class="field-label">Primary discovery channels</label>
-        <textarea class="field-input" rows="2" id="jb-discovery" placeholder="How do people find you today? What could you add?" oninput="updateProgress()"></textarea>
+        <label class="field-label">Project URL / GitHub repo</label>
+        <input class="field-input" type="text" id="jb-url" placeholder="https://github.com/org/project" oninput="updateProgress()">
       </div>
       <div class="field-group">
-        <label class="field-label">Orientation: What does a newcomer find first?</label>
-        <textarea class="field-input" rows="2" id="jb-orient" placeholder="README quality, contribution guide, first labels…" oninput="updateProgress()"></textarea>
+        <label class="field-label">Project type</label>
+        <input class="field-input" type="text" id="jb-type" placeholder="e.g. Developer tool, library, community project…" oninput="updateProgress()">
       </div>
       <div class="field-group">
-        <label class="field-label">Easiest first contribution (non-code)</label>
-        <textarea class="field-input" rows="2" id="jb-first" placeholder="e.g. Translate a doc, test a feature, improve the FAQ…" oninput="updateProgress()"></textarea>
+        <label class="field-label">Current contributor count</label>
+        <input class="field-input" type="text" id="jb-count" placeholder="e.g. 5 active contributors, just starting out…" oninput="updateProgress()">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:0.25rem;">
+      <div class="field-group">
+        <label class="field-label">Your biggest discovery challenge</label>
+        <textarea class="field-input" rows="2" id="jb-discovery" placeholder="e.g. We're mostly known in developer circles but rarely reach designers or writers…" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Current orientation: what a newcomer sees first</label>
+        <textarea class="field-input" rows="2" id="jb-orient" placeholder="e.g. Our README is technical. We have a CONTRIBUTING.md but it only describes code…" oninput="updateProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Your easiest non-code first contribution today</label>
+        <textarea class="field-input" rows="2" id="jb-first" placeholder="e.g. Currently there isn't one. We want to create doc-improvement issues labeled 'good first issue'…" oninput="updateProgress()"></textarea>
       </div>
       <div class="field-group">
         <label class="field-label">Community channels & retention mechanisms</label>
-        <textarea class="field-input" rows="2" id="jb-community" placeholder="Slack, GitHub Discussions, office hours, welcome calls…" oninput="updateProgress()"></textarea>
+        <textarea class="field-input" rows="2" id="jb-community" placeholder="e.g. We have a Discord but no scheduled office hours. Planning monthly contributor calls…" oninput="updateProgress()"></textarea>
       </div>
       <div class="field-group">
-        <label class="field-label">How are non-code contributors recognized?</label>
-        <textarea class="field-input" rows="2" id="jb-recognition" placeholder="All-Contributors, release mentions, spotlight posts…" oninput="updateProgress()"></textarea>
+        <label class="field-label">How non-code contributors are recognized today</label>
+        <textarea class="field-input" rows="2" id="jb-recognition" placeholder="e.g. We use All-Contributors but haven't been consistent. No spotlight posts yet…" oninput="updateProgress()"></textarea>
       </div>
       <div class="field-group">
-        <label class="field-label">Growth paths available (non-code roles)</label>
-        <textarea class="field-input" rows="2" id="jb-growth" placeholder="Community Manager, Docs Lead, Accessibility Advocate…" oninput="updateProgress()"></textarea>
+        <label class="field-label">Named non-code roles & growth paths</label>
+        <textarea class="field-input" rows="2" id="jb-growth" placeholder="e.g. We want to create a Community Manager role and a Docs Lead position…" oninput="updateProgress()"></textarea>
       </div>
-      <div class="field-group">
-        <label class="field-label">Anything else you want to capture</label>
-        <textarea class="field-input" rows="2" id="jb-extra" placeholder="Local contributor recognition, special programs…" oninput="updateProgress()"></textarea>
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label">Immediate next actions (what you'll do first)</label>
+        <textarea class="field-input" rows="3" id="jb-next" placeholder="e.g. 1. Update CONTRIBUTING.md to include docs and design tasks. 2. Add 'good first issue (non-code)' label. 3. Set up monthly community call…" oninput="updateProgress()"></textarea>
       </div>
-
-      <div class="jb-actions">
-        <button class="btn btn-blue" onclick="saveJourney()">Save Journey</button>
-        <button class="btn btn-purple" onclick="buildBlueprint()">Build Blueprint →</button>
-        <button class="btn btn-outline" onclick="clearJourney()">Clear</button>
-      </div>
-
-      <div class="saved-msg" id="jb-saved">✓ Journey saved — <span style="text-decoration:underline;cursor:pointer;color:var(--accent1);" onclick="openShareModal('journey')">Share with your team →</span></div>
-
-      <div class="saved-journey" id="saved-journey-preview">
-        <div class="sj-title">📋 Saved Journey Preview</div>
-        <div id="sj-content"></div>
-        <button class="btn btn-outline" style="margin-top:1rem;font-size:0.72rem;" onclick="openShareModal('journey')">🔗 Share this journey</button>
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label">Additional notes</label>
+        <textarea class="field-input" rows="2" id="jb-extra" placeholder="Anything else you want captured in your blueprint…" oninput="updateProgress()"></textarea>
       </div>
     </div>
+
+    <div style="margin-top:1.5rem; background:var(--bg); border-radius:8px; padding:0.85rem 1rem; margin-bottom:1.5rem;">
+      <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.4rem;display:flex;justify-content:space-between;">
+        <span>Blueprint completion</span><span id="jb-pct">0%</span>
+      </div>
+      <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
+        <div id="jb-fill" style="height:100%;background:var(--accent4);border-radius:2px;transition:width 0.4s ease;width:0%;"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="buildBlueprint()" style="font-size:0.85rem;padding:0.75rem 2rem;">Build Blueprint →</button>
+      <button class="btn btn-outline" onclick="clearJourney()">Clear All</button>
+    </div>
+    <div class="saved-msg" id="jb-saved" style="margin-top:0.85rem;">✓ Blueprint built — <span style="text-decoration:underline;cursor:pointer;color:var(--accent1);" onclick="openShareModal('journey')">Share with your team →</span></div>
   </div>
 
   <!-- ── BLUEPRINT OUTPUT ── -->
+  <div class="blueprint-connector" id="blueprint-connector" style="display:none;">
+    <span><strong>Based on your selections above, here is your Contributor Journey Blueprint.</strong> Each stage below is fully expanded with the actions, skills, milestones, and outcomes your team should expect at that point in the contributor lifecycle.</span>
+  </div>
   <div class="blueprint-wrap" id="blueprint-wrap">
 
     <div class="blueprint-header">
@@ -1196,7 +1319,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
       <div class="flow-track" id="flow-track"></div>
     </div>
 
-    <!-- Stage-by-stage list -->
+    <!-- Detailed stage breakdown -->
     <div class="blueprint-list" id="blueprint-list"></div>
 
   </div>
@@ -1888,6 +2011,327 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 </section>
 
 
+<!-- ════════════════════════════════════
+     PANEL 5 — MY CONTRIBUTOR ROADMAP
+════════════════════════════════════ -->
+<section id="panel-roadmap" class="panel">
+  <div class="sec-label">For Contributors</div>
+  <h2 class="sec-title">🗺 Build Your Journey Plan</h2>
+  <p class="sec-desc">This is your personal roadmap builder. It is separate from the Contributor Journey Blueprint above — that one is for organisations designing their contributor pipeline. <strong>This one is for you</strong>, the individual contributor. Work through each section to build a plan based on where you are right now, what you want to learn, and where you want to go. Your name will appear on the downloadable PDF.</p>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:10px;padding:1.1rem 1.5rem;margin-bottom:2.5rem;font-size:0.83rem;color:var(--muted);line-height:1.75;">
+    <strong style="color:var(--teal);">How to use this:</strong> Fill in every section as honestly as you can. Skim-reading and leaving things blank will produce a generic output. The more specific you are, the more useful your roadmap becomes. Click <strong style="color:var(--text);">Generate My Roadmap</strong> at the bottom when you're ready.
+  </div>
+
+  <!-- SECTION 1: PERSONAL INFORMATION -->
+  <div class="rm-section">
+    <div class="rm-section-header" style="border-color:var(--teal);">
+      <span class="rm-section-icon">👤</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--teal);">Personal Information</div>
+        <div class="rm-section-desc">Your name will appear as the title of your downloadable roadmap: <em>"[Your Name]'s Contributor Journey Roadmap"</em>. This makes it yours.</div>
+      </div>
+    </div>
+    <div class="rm-fields">
+      <div class="field-group">
+        <label class="field-label">Full name <span style="color:var(--accent2)">*</span></label>
+        <input class="field-input" type="text" id="rm-name" placeholder="e.g. Amara Osei" oninput="updateRoadmapProgress()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Current role / title</label>
+        <input class="field-input" type="text" id="rm-role" placeholder="e.g. UX Designer, Technical Writer, Student, Community Manager…" oninput="updateRoadmapProgress()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Experience level in open source</label>
+        <select class="field-input" id="rm-experience" onchange="updateRoadmapProgress()">
+          <option value="">Select your level…</option>
+          <option value="Complete beginner — I've never contributed to open source before">Complete beginner — I've never contributed before</option>
+          <option value="Curious — I've read about it but never taken action">Curious — I've read about it but not acted yet</option>
+          <option value="Early explorer — I've made 1–2 contributions">Early explorer — 1–2 contributions so far</option>
+          <option value="Growing contributor — I contribute occasionally but inconsistently">Growing — I contribute occasionally but not consistently</option>
+          <option value="Active contributor — I contribute regularly to one or more projects">Active — I contribute regularly to one or more projects</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">GitHub / portfolio URL</label>
+        <input class="field-input" type="text" id="rm-url" placeholder="https://github.com/yourhandle or your website" oninput="updateRoadmapProgress()">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: CURRENT SKILLS ASSESSMENT -->
+  <div class="rm-section">
+    <div class="rm-section-header" style="border-color:var(--accent1);">
+      <span class="rm-section-icon">💡</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--accent1);">Current Skills Assessment</div>
+        <div class="rm-section-desc">Select every skill you already have — these are your assets. Don't undersell yourself. Writing, research, empathy, and organisation are all powerful open source contributions.</div>
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:1.25rem;">
+      <label class="field-label">Select your existing skills (click all that apply)</label>
+      <div class="rm-chip-group" id="chips-skills">
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">✍️ Writing</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">📖 Documentation</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🎨 Design (UI/UX)</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🎨 Graphic design</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🔬 Research</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">📊 Data analysis</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🤝 Community support</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">📣 Social media</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🗣️ Public speaking</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🌍 Translation</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">♿ Accessibility</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🧪 Testing / QA</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">💻 Programming</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🔧 DevOps / infra</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">📋 Project management</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🎓 Teaching / mentoring</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">📸 Photography / video</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🗂️ Organisation</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">💬 Facilitation</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-skills')">🏷️ Fundraising</span>
+      </div>
+      <textarea class="field-input" rows="2" id="rm-skills" placeholder="Add any other skills not listed above…" style="margin-top:0.75rem;" oninput="updateRoadmapProgress()"></textarea>
+    </div>
+
+    <div class="rm-fields">
+      <div class="field-group">
+        <label class="field-label">Tools and platforms you're already comfortable with</label>
+        <textarea class="field-input" rows="2" id="rm-tools" placeholder="e.g. Figma, Notion, GitHub (issues/PRs but not code), Slack, Canva, Google Analytics, Airtable, VS Code…" oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Your area of greatest confidence right now</label>
+        <textarea class="field-input" rows="2" id="rm-confidence" placeholder="e.g. I'm most confident in written communication and community facilitation. I've run meetups for 3 years and I'm good at making people feel welcome…" oninput="updateRoadmapProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: SKILLS TO DEVELOP -->
+  <div class="rm-section">
+    <div class="rm-section-header" style="border-color:var(--accent3);">
+      <span class="rm-section-icon">📈</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--accent3);">Skills to Develop</div>
+        <div class="rm-section-desc">Open source is one of the best places to learn. What do you want to get better at? Be honest about gaps — they're not weaknesses, they're your roadmap.</div>
+      </div>
+    </div>
+    <div class="field-group" style="margin-bottom:1.25rem;">
+      <label class="field-label">Skills you want to learn or improve (click all that apply)</label>
+      <div class="rm-chip-group" id="chips-learn">
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Git &amp; GitHub workflows</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Technical writing</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Open source governance</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Community management</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Accessibility auditing</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">User research</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Content strategy</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Public speaking</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Mentoring others</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Issue triaging</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Project roadmapping</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Translation tools</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Design systems</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Code review</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-learn')">Event organising</span>
+      </div>
+      <textarea class="field-input" rows="2" id="rm-learn" placeholder="Add skills not listed above, or describe what level you want to reach…" style="margin-top:0.75rem;" oninput="updateRoadmapProgress()"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Skills required for your target contribution level</label>
+      <textarea class="field-input" rows="2" id="rm-target-skills" placeholder="e.g. To become a Docs Lead I'll need: advanced Markdown, understanding of information architecture, familiarity with Docusaurus or similar tools…" oninput="updateRoadmapProgress()"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 4: CONTRIBUTION INTERESTS -->
+  <div class="rm-section">
+    <div class="rm-section-header" style="border-color:var(--accent4);">
+      <span class="rm-section-icon">🎯</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--accent4);">Contribution Interests</div>
+        <div class="rm-section-desc">Choose the areas you want to contribute to. You can pick more than one — but start with the one that excites you most.</div>
+      </div>
+    </div>
+    <div class="field-group" style="margin-bottom:1.25rem;">
+      <label class="field-label">Areas you want to contribute to (select all that interest you)</label>
+      <div class="rm-chip-group" id="chips-interests">
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">✍️ Writing &amp; documentation</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🔬 Research &amp; analysis</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🤝 Community support</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">💻 Technical work (code)</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🎨 Design (product / UX)</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🌍 Translation &amp; localisation</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">♿ Accessibility</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">📣 Advocacy &amp; outreach</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🧪 Testing &amp; QA</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🎓 Education &amp; mentoring</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">📋 Project &amp; product contributions</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🎤 Events &amp; speaking</span>
+        <span class="rm-chip" onclick="toggleChip(this,'rm-interests')">🖼️ Visual / multimedia</span>
+      </div>
+      <textarea class="field-input" rows="2" id="rm-interests" placeholder="Describe where you most want to contribute, or why you selected these areas…" style="margin-top:0.75rem;" oninput="updateRoadmapProgress()"></textarea>
+    </div>
+    <div class="rm-fields">
+      <div class="field-group">
+        <label class="field-label">What kind of projects interest you?</label>
+        <textarea class="field-input" rows="2" id="rm-interest" placeholder="e.g. Developer tools I use daily, social impact tech, African language NLP, accessibility tooling, education platforms…" oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Specific projects or communities on your radar</label>
+        <textarea class="field-input" rows="2" id="rm-projects" placeholder="e.g. I use VS Code daily and want to help with their docs. I follow Outreachy. I want to contribute to CHAOSS community metrics…" oninput="updateRoadmapProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: TIME COMMITMENT -->
+  <div class="rm-section">
+    <div class="rm-section-header" style="border-color:var(--accent5);">
+      <span class="rm-section-icon">⏱️</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--accent5);">Time Commitment</div>
+        <div class="rm-section-desc">Honest time planning prevents burnout. A small but consistent commitment beats a big burst that burns out in two weeks.</div>
+      </div>
+    </div>
+    <div class="rm-fields">
+      <div class="field-group">
+        <label class="field-label">Hours available per week</label>
+        <select class="field-input" id="rm-time" onchange="updateRoadmapProgress()">
+          <option value="">Select availability…</option>
+          <option value="Less than 1 hour per week — very limited availability">Less than 1 hour / week</option>
+          <option value="1–2 hours per week — light engagement">1–2 hours / week</option>
+          <option value="3–5 hours per week — regular part-time involvement">3–5 hours / week</option>
+          <option value="6–10 hours per week — committed contributor">6–10 hours / week</option>
+          <option value="10+ hours per week — deep engagement">10+ hours / week</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Preferred pace of learning</label>
+        <select class="field-input" id="rm-pace" onchange="updateRoadmapProgress()">
+          <option value="">Select pace…</option>
+          <option value="Slow and steady — I like to fully understand before moving on">Slow and steady — understand fully before moving on</option>
+          <option value="Moderate — balanced between learning and doing">Moderate — balanced learning and doing</option>
+          <option value="Fast — I learn best by jumping in and figuring it out">Fast — learn by jumping in and figuring it out</option>
+          <option value="Deadline-driven — I work best with set goals and dates">Deadline-driven — I need set goals and dates</option>
+        </select>
+      </div>
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label">When do you plan to contribute? (days/times)</label>
+        <input class="field-input" type="text" id="rm-when" placeholder="e.g. Weekend mornings, Tuesday/Thursday evenings, whenever I have a free hour at lunch…" oninput="updateRoadmapProgress()">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: 90-DAY CONTRIBUTION PLAN -->
+  <div class="rm-section">
+    <div class="rm-section-header" style="border-color:var(--accent4);">
+      <span class="rm-section-icon">🗓️</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--accent4);">90-Day Contribution Plan</div>
+        <div class="rm-section-desc">A 90-day plan turns intent into action. Be specific. Vague goals like "contribute more" don't stick — specific plans like "submit one doc fix by the 15th" do.</div>
+      </div>
+    </div>
+    <div class="rm-fields">
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label">Your planned first contribution (be as specific as possible)</label>
+        <textarea class="field-input" rows="3" id="rm-first" placeholder="e.g. Find a project with a 'good first issue (docs)' label and improve their getting-started guide. Target: complete by [date]." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Month 1 — Learning goal</label>
+        <textarea class="field-input" rows="2" id="rm-m1-learn" placeholder="e.g. Learn how to fork a repo, create a branch, and submit a PR. Complete the first-contributions tutorial." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Month 1 — Contribution goal</label>
+        <textarea class="field-input" rows="2" id="rm-month1" placeholder="e.g. Submit one documentation fix or improvement to any project with a 'good first issue' label." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Month 2 — Learning goal</label>
+        <textarea class="field-input" rows="2" id="rm-m2-learn" placeholder="e.g. Understand the project's conventions and review process. Read 5 merged PRs in my area." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Month 2 — Contribution goal</label>
+        <textarea class="field-input" rows="2" id="rm-month2" placeholder="e.g. Make a second, slightly more complex contribution to the same project. Introduce myself in the community channel." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Month 3 — Learning goal</label>
+        <textarea class="field-input" rows="2" id="rm-m3-learn" placeholder="e.g. Learn about the project's roadmap, open discussions, and governance. Identify a role I could grow into." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Month 3 — Contribution goal</label>
+        <textarea class="field-input" rows="2" id="rm-month3" placeholder="e.g. Make a third contribution. Ask the maintainer if there's a need for someone with my specific skill set." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label">90-Day milestones — what does success look like at Day 30, 60, and 90?</label>
+        <textarea class="field-input" rows="3" id="rm-milestones" placeholder="Day 30: First contribution submitted and under review. Day 60: Second contribution accepted. Day 90: Active community member, known by at least 2 maintainers by name." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: LONG-TERM GOALS -->
+  <div class="rm-section">
+    <div class="rm-section-header" style="border-color:var(--accent2);">
+      <span class="rm-section-icon">🌱</span>
+      <div>
+        <div class="rm-section-title" style="color:var(--accent2);">Long-Term Goals</div>
+        <div class="rm-section-desc">Where do you want this to lead? Six months from now? A year? Career change, named role, portfolio building, or simply belonging — all are valid goals.</div>
+      </div>
+    </div>
+    <div class="rm-fields">
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label">What impact do you want to make in open source?</label>
+        <textarea class="field-input" rows="2" id="rm-impact" placeholder="e.g. I want to make documentation in African language tech more accessible. Or: I want to be a named maintainer for a tool I use daily. Or: I want to build a portfolio of open source work that shows my design skills." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Where do you want to be in 6 months?</label>
+        <textarea class="field-input" rows="2" id="rm-goal-6m" placeholder="e.g. Regular contributor to at least one project. Have 5+ accepted contributions. Active in the community channel." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Where do you want to be in 12 months?</label>
+        <textarea class="field-input" rows="2" id="rm-goal-12m" placeholder="e.g. Named contributor role. Mentoring at least one newer contributor. Representing the project at a community event." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">How do you want to be recognised for your contributions?</label>
+        <textarea class="field-input" rows="2" id="rm-recognition" placeholder="e.g. Named in release notes, All-Contributors, a portfolio piece, a named role I can add to LinkedIn, a reference from a maintainer." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">What blockers do you need to overcome?</label>
+        <textarea class="field-input" rows="2" id="rm-blockers" placeholder="e.g. Imposter syndrome, not knowing where to find projects, fear of rejection, not understanding GitHub workflows." oninput="updateRoadmapProgress()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress + Generate -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;margin-top:1.5rem;">
+    <div style="margin-bottom:1.25rem;">
+      <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.4rem;display:flex;justify-content:space-between;">
+        <span>Roadmap completion</span><span id="rm-pct">0%</span>
+      </div>
+      <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden;">
+        <div id="rm-fill" style="height:100%;background:var(--teal);border-radius:3px;transition:width 0.4s ease;width:0%;"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="generateRoadmap()" style="background:var(--teal);color:var(--bg);font-size:0.85rem;padding:0.75rem 2rem;">Generate My Roadmap →</button>
+      <button class="btn btn-outline" onclick="clearRoadmap()">Clear All</button>
+    </div>
+  </div>
+
+  <!-- Roadmap Output -->
+  <div id="roadmap-output" style="display:none;margin-top:3rem;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+    <div style="background:rgba(77,217,224,0.06);border-bottom:1px solid var(--border);padding:2rem;">
+      <div style="font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem;">Personal Open Source Contribution Roadmap</div>
+      <h2 id="rm-output-name" style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:0.35rem;"></h2>
+      <div id="rm-output-meta" style="font-size:0.85rem;color:var(--muted);margin-top:0.25rem;"></div>
+    </div>
+    <div id="roadmap-sections" style="padding:0 2rem 2rem;"></div>
+    <div style="padding:1.5rem 2rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="downloadRoadmapPDF()" style="background:var(--teal);color:var(--bg);">Download My Roadmap (PDF)</button>
+      <button class="btn btn-outline" onclick="openShareModal('roadmap')">🔗 Share My Roadmap</button>
+    </div>
+  </div>
+</section>
+
+
 <!-- MAP PREVIEW MODAL -->
 <div class="modal-overlay" id="map-modal">
   <div class="modal">
@@ -2155,12 +2599,15 @@ function getPickedForStage(key) {
 function buildBlueprint() {
   saveJourney();
 
-  const projName = document.getElementById('jb-project').value || 'Your Project';
-  document.getElementById('blueprint-subtitle').textContent = projName + ' — Contributor Journey Plan';
+  const projName = document.getElementById('jb-project')?.value.trim() || 'Your Project';
+  document.getElementById('blueprint-subtitle').textContent = projName + ' — Full Contributor Journey Blueprint';
 
   renderFlow();
   renderBlueprintList();
   renderWarnings();
+
+  const connector = document.getElementById('blueprint-connector');
+  if (connector) connector.style.display = 'flex';
 
   const wrap = document.getElementById('blueprint-wrap');
   wrap.classList.add('show');
@@ -2192,35 +2639,159 @@ function renderFlow(persona) {
 function renderBlueprintList(persona) {
   const list = document.getElementById('blueprint-list');
   list.innerHTML = '';
-  const fields = {
-    jb_discovery: document.getElementById('jb-discovery').value,
-    jb_orient:    document.getElementById('jb-orient').value,
-    jb_first:     document.getElementById('jb-first').value,
-    jb_community: document.getElementById('jb-community').value,
-    jb_recognition: document.getElementById('jb-recognition').value,
-    jb_growth:    document.getElementById('jb-growth').value,
+
+  // Full stage content library
+  const STAGE_DETAIL = {
+    discovery: {
+      description: 'Discovery is how potential contributors first learn your project exists and feel that someone like them could be involved. Without intentional discovery, you only reach people who already look like your current team.',
+      actions: ['Publish regular project updates on social media','Submit talks to community conferences and meetups','Write blog posts explaining what your project does and who it needs','List your project in open source directories (GitHub Explore, CHAOSS, OSCA)','Partner with DEI and inclusion programs in your ecosystem'],
+      techSkills: ['GitHub repository setup and documentation','SEO basics for project discoverability','Social media scheduling tools'],
+      softSkills: ['Clear and inclusive communication','Storytelling — describing the project for non-technical audiences','Community relationship building'],
+      resources: ['CHAOSS Community Metrics Guide','GitHub\'s Open Source Guide to Building Communities','DEI-focused outreach frameworks (OpenUK, All-In)'],
+      examples: ['Tweet about a non-code contribution opportunity','Write a "Who can contribute?" page on your project site','Post a community spotlight in a developer forum'],
+      milestones: ['First non-developer contributor arrives via a new channel','3+ discovery channels actively maintained','Project listed in 2+ community directories'],
+      outcomes: ['Broader, more diverse pool of potential contributors','Increased GitHub stars and watch count','Word-of-mouth referrals from non-technical communities'],
+      metrics: ['Number of discovery channels in use','Monthly new contributor inquiries','Referral source breakdown for new contributors'],
+      next: 'Orientation — once people find you, they need a welcoming entry point.',
+    },
+    orientation: {
+      description: 'Orientation is the experience a first-time visitor has in the first 10 minutes of finding your project. It determines whether they stay or leave — and whether they believe they are welcome.',
+      actions: ['Rewrite your CONTRIBUTING.md to explicitly name every contribution type, not just code','Add a "Who can contribute?" section to your README','Label non-code issues clearly in your issue tracker','Create a "Start Here" page or section for new contributors','Publish a short welcome video or screen recording of the project'],
+      techSkills: ['GitHub issue labeling and project boards','README and Markdown authoring','Basic web publishing for a project site'],
+      softSkills: ['Empathy — imagining the newcomer\'s perspective','Plain-language writing','Inclusive design thinking'],
+      resources: ['The "Inclusive Documentation" guide by GNOME','GitHub\'s Contributor Onboarding Templates','The first-impressions checklist from opensource.guide'],
+      examples: ['Redesign CONTRIBUTING.md to include docs, design, and community tasks','Add "good first issue (non-code)" as a label to open issues','Write a "FAQ for new contributors" document'],
+      milestones: ['CONTRIBUTING.md updated to include non-code roles','At least 5 issues labeled for non-code contributors','README reviewed and updated for clarity by a non-developer'],
+      outcomes: ['First-time contributors able to find a task without asking','Reduction in "How can I help?" questions in community channels','Increased diversity of first contribution types'],
+      metrics: ['Time-to-first-contribution for newcomers','Number of labeled non-code issues','Ratio of non-code to code first contributions'],
+      next: 'First Contribution — now that they\'re oriented, guide them to their first meaningful action.',
+    },
+    firstcontrib: {
+      description: 'The first contribution is a critical moment. A good first contribution builds confidence and creates the habit of contributing. A confusing or poorly supported first experience is usually the last.',
+      actions: ['Curate a set of "good first issues" that require no codebase knowledge','Publish a step-by-step guide for each contribution type','Assign a friendly reviewer to every first-time contributor\'s submission','Acknowledge every first contribution publicly, regardless of size','Create contribution templates so newcomers don\'t start from a blank page'],
+      techSkills: ['Git basics (fork, branch, commit, pull request)','Markdown for documentation contributions','Figma or equivalent for design contributions'],
+      softSkills: ['Asking for help clearly and specifically','Reading existing project conventions','Persistence and patience in unfamiliar workflows'],
+      resources: ['First Contributions repository (github.com/firstcontributions)','The Documentation Starter Kit by Write the Docs','Open Source Design beginner resources'],
+      examples: ['Fix a typo or broken link in docs','Improve a section of the getting-started guide','Translate one page into another language','Answer a question in the community forum','Add missing alt text to project images'],
+      milestones: ['First contribution submitted','First PR or issue reviewed with feedback','First contribution merged or accepted'],
+      outcomes: ['Contributor has established a working relationship with maintainers','Contributor understands the project\'s conventions and culture','Contributor is likely to return for a second contribution'],
+      metrics: ['First-contribution acceptance rate','Time from submission to first reviewer response','% of first contributions that are non-code'],
+      next: 'Retention — after a successful first contribution, the project needs to keep them coming back.',
+    },
+    retention: {
+      description: 'Retention is what happens after the first contribution. Most contributors never make a second one — not because they lost interest, but because no one reached out. Retention is active, not passive.',
+      actions: ['Send a personal welcome message after a first contribution','Host regular community calls with open agendas','Create a contributor newsletter to keep people in the loop','Set up a dedicated #contributors channel in your community space','Share the project roadmap so contributors can see where they fit'],
+      techSkills: ['Community platform management (Discord, Slack, Discourse)','Newsletter or digest tooling (Substack, Mailchimp)','Meeting facilitation and async communication'],
+      softSkills: ['Consistent follow-through on commitments','Creating psychological safety in community spaces','Recognising when contributors need support vs. autonomy'],
+      resources: ['Community Health for Open Source (CHAOSS Metrics)','The Orbit Model for community engagement','Building Welcoming Communities — GitHub Guide'],
+      examples: ['Monthly contributor spotlight in the community channel','"What are you working on?" async check-in thread','Contributor buddy system pairing newcomers with veterans','Project roadmap update posted each sprint'],
+      milestones: ['Contributor makes a second contribution within 60 days','Community channel has active, regular participation','Monthly call or async update has consistent attendance/views'],
+      outcomes: ['Stable contributor base with regular returning contributors','Reduced contributor dropout between first and second contribution','Stronger community identity and belonging'],
+      metrics: ['Contributor return rate (% who contribute again within 90 days)','Community channel activity and response times','Monthly active contributor count'],
+      next: 'Recognition — retained contributors need to feel their work is seen and valued.',
+    },
+    recognition: {
+      description: 'Recognition is not a reward — it is infrastructure. Contributions that go unseen feel worthless. Named, visible recognition is the single highest-impact action a project can take to sustain and grow its contributor base.',
+      actions: ['Implement the All-Contributors bot or equivalent to credit every contribution type','Name every contributor in release notes — code and non-code','Create a public Contributions page on your project website','Share contributor spotlight posts on social media','Invite contributors to speak at events or represent the project'],
+      techSkills: ['All-Contributors configuration','Release notes authoring','Social media content creation'],
+      softSkills: ['Noticing and naming work that often goes invisible','Writing in ways that make contributors feel genuinely valued','Consistent follow-through on recognition commitments'],
+      resources: ['All-Contributors Specification (allcontributors.org)','The Thank You Economy — community recognition frameworks','OSCA Community Recognition Guide'],
+      examples: ['Monthly "Contributor of the Month" social post','Release notes with named contributor acknowledgements','A public "Wall of Contributors" page on the project site','Sending a handwritten note to a long-term contributor'],
+      milestones: ['All-Contributors (or equivalent) set up and active','Non-code contributions named in at least one release','First contributor spotlight post published'],
+      outcomes: ['Contributors can show evidence of their work to employers and peers','Increased contributor satisfaction and likelihood of continued contribution','Word-of-mouth recruitment from contributors who feel valued'],
+      metrics: ['% of contributions publicly credited','Contributor satisfaction score (if surveyed)','Number of non-code contributions recognised per release'],
+      next: 'Growth — recognised contributors are ready for deeper roles and responsibilities.',
+    },
+    growth: {
+      description: 'Growth is what allows a contributor to become a stakeholder. When contributors can see a future for themselves in the project — with named roles, responsibilities, and pathways — they invest more deeply and stay longer.',
+      actions: ['Define and publish named non-code roles (Docs Lead, Community Manager, Accessibility Advocate)','Create a written pathway to maintainership for non-code contributors','Invite long-term contributors into governance conversations','Set up a formal mentoring programme for contributors who want to grow','Celebrate contributor promotions publicly'],
+      techSkills: ['Open source governance models','Mentoring and coaching fundamentals','Project management and roadmap planning'],
+      softSkills: ['Leadership and ownership thinking','Mentoring newer contributors','Navigating project politics and decision-making'],
+      resources: ['The Open Source Way — governance and community structure','Contributor Ladder frameworks (CNCF, Apache)','Mozilla\'s Open Leadership Framework'],
+      examples: ['Publishing a "Contributor Ladder" with named levels','Creating a "Community Manager" role with documented responsibilities','Running a "Path to Maintainership" workshop for active contributors','Ambassador programme with named representatives per region'],
+      milestones: ['At least one named non-code role filled and credited','Contributor ladder or pathway documented and published','First non-code contributor invited into a governance role'],
+      outcomes: ['Distributed leadership and project resilience','Contributors who see open source as a career pathway, not just a hobby','Reduced dependency on a small core team'],
+      metrics: ['Number of named non-code roles filled','% of governance participants who are non-code contributors','Year-over-year contributor retention rate'],
+      next: 'Continue iterating on all stages. A healthy contributor journey is never finished — it evolves.',
+    },
   };
 
-  STAGE_META.forEach(s => {
+  STAGE_META.forEach((s, idx) => {
     let items = getPickedForStage(s.key);
     if (persona && PERSONA_FILTERS[persona]) {
       const pf = PERSONA_FILTERS[persona][s.key] || [];
       items = items.filter(it => pf.some(p => it.toLowerCase().includes(p.toLowerCase())));
       if (!items.length) items = pf.slice(0, 3);
     }
-    const fieldVal = fields['jb_' + (s.key === 'firstcontrib' ? 'first' : s.key === 'orientation' ? 'orient' : s.key === 'retention' ? 'community' : s.key)];
 
-    const row = document.createElement('div');
-    row.className = 'bp-stage';
-    row.innerHTML = `
-      <div class="bp-stage-icon">${s.icon}</div>
-      <div class="bp-stage-body">
-        <div class="bp-stage-title" style="color:${s.cssColor}">${s.label}</div>
-        <div class="bp-stage-tags">${items.map(t=>`<span class="bp-tag">${t}</span>`).join('')}</div>
-        ${fieldVal ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;line-height:1.6;">${fieldVal}</div>` : ''}
+    const detail = STAGE_DETAIL[s.key];
+    const fieldMap = { discovery:'jb-discovery', orientation:'jb-orient', firstcontrib:'jb-first', retention:'jb-community', recognition:'jb-recognition', growth:'jb-growth' };
+    const notes = document.getElementById(fieldMap[s.key])?.value || '';
+
+    const stage = document.createElement('div');
+    stage.className = 'bp-stage' + (idx === 0 ? ' open' : '');
+    stage.innerHTML = `
+      <div class="bp-stage-header" onclick="toggleBpStage(this.parentElement)">
+        <span class="bp-stage-icon">${s.icon}</span>
+        <span class="bp-stage-title" style="color:${s.cssColor}">Stage ${idx+1}: ${s.label}</span>
+        <div class="bp-stage-picked">${items.slice(0,5).map(t=>`<span class="bp-tag">${t}</span>`).join('')}${items.length>5?`<span class="bp-tag">+${items.length-5}</span>`:''}</div>
+        <span class="bp-toggle">▼</span>
+      </div>
+      <div class="bp-stage-detail">
+        <div class="bp-detail-block full" style="margin-bottom:1rem;">
+          <div class="bp-detail-label">Description</div>
+          <div class="bp-detail-desc">${detail.description}</div>
+        </div>
+        <div class="bp-detail-grid">
+          <div class="bp-detail-block">
+            <div class="bp-detail-label" style="color:${s.cssColor}">Key Actions</div>
+            <ul class="bp-detail-list">${detail.actions.map(a=>`<li style="color:var(--text)">${a}</li>`).join('')}</ul>
+          </div>
+          <div class="bp-detail-block">
+            <div class="bp-detail-label">Technical Skills</div>
+            <ul class="bp-detail-list">${detail.techSkills.map(a=>`<li>${a}</li>`).join('')}</ul>
+            <div class="bp-detail-label" style="margin-top:0.75rem;">Soft Skills</div>
+            <ul class="bp-detail-list">${detail.softSkills.map(a=>`<li>${a}</li>`).join('')}</ul>
+          </div>
+          <div class="bp-detail-block">
+            <div class="bp-detail-label">Contribution Examples</div>
+            <ul class="bp-detail-list">${detail.examples.map(a=>`<li>${a}</li>`).join('')}</ul>
+          </div>
+          <div class="bp-detail-block">
+            <div class="bp-detail-label">Learning Resources</div>
+            <ul class="bp-detail-list">${detail.resources.map(a=>`<li>${a}</li>`).join('')}</ul>
+          </div>
+          <div class="bp-detail-block full">
+            <div class="bp-detail-label">Milestones</div>
+            <div class="bp-milestone-list">${detail.milestones.map(m=>`<span class="bp-milestone">${m}</span>`).join('')}</div>
+          </div>
+          <div class="bp-detail-block">
+            <div class="bp-detail-label">Expected Outcomes</div>
+            <ul class="bp-detail-list">${detail.outcomes.map(a=>`<li>${a}</li>`).join('')}</ul>
+          </div>
+          <div class="bp-detail-block">
+            <div class="bp-detail-label">Success Metrics</div>
+            <ul class="bp-detail-list">${detail.metrics.map(a=>`<li>${a}</li>`).join('')}</ul>
+          </div>
+          ${items.length ? `
+          <div class="bp-detail-block full">
+            <div class="bp-detail-label" style="color:${s.cssColor}">Your Selected Approaches (${items.length})</div>
+            <div class="bp-stage-picked" style="display:flex;flex-wrap:wrap;gap:0.4rem;">${items.map(t=>`<span class="bp-tag" style="border-color:${s.cssColor};color:${s.cssColor}">${t}</span>`).join('')}</div>
+          </div>` : ''}
+          ${notes ? `
+          <div class="bp-detail-block full">
+            <div class="bp-detail-label">Your Project Notes</div>
+            <div class="bp-detail-desc" style="color:var(--muted)">${notes}</div>
+          </div>` : ''}
+        </div>
+        <div class="bp-next-step"><strong>Next stage:&nbsp;</strong>${detail.next}</div>
       </div>`;
-    list.appendChild(row);
+    list.appendChild(stage);
   });
+}
+
+function toggleBpStage(el) {
+  el.classList.toggle('open');
 }
 
 function renderWarnings() {
@@ -2304,72 +2875,21 @@ document.getElementById('md-modal').addEventListener('click', function(e) {
   if (e.target === this) closeMdModal();
 });
 
-function updateProgress() {
-  const fields = ['jb-project','jb-discovery','jb-orient','jb-first','jb-community','jb-recognition','jb-growth','jb-extra'];
-  const filled = fields.filter(id => document.getElementById(id).value.trim().length > 2).length;
-  const pct = Math.round((filled / fields.length) * 100);
-  document.getElementById('jb-fill').style.width = pct + '%';
-  document.getElementById('jb-pct').textContent = pct + '%';
-}
 
 function saveJourney() {
-  const fields = {
-    project: document.getElementById('jb-project').value,
-    discovery: document.getElementById('jb-discovery').value,
-    orient: document.getElementById('jb-orient').value,
-    first: document.getElementById('jb-first').value,
-    community: document.getElementById('jb-community').value,
-    recognition: document.getElementById('jb-recognition').value,
-    growth: document.getElementById('jb-growth').value,
-    extra: document.getElementById('jb-extra').value,
-  };
-  state.journey = fields;
-  const preview = document.getElementById('saved-journey-preview');
-  const content = document.getElementById('sj-content');
-  const labels = {
-    project: 'Project', discovery: 'Discovery Channels',
-    orient: 'Orientation Setup', first: 'First Contribution',
-    community: 'Community & Retention', recognition: 'Recognition System',
-    growth: 'Growth Pathways', extra: 'Additional Notes'
-  };
-  content.innerHTML = Object.entries(fields).filter(([,v])=>v.trim()).map(([k,v]) =>
-    `<div class="sj-row"><strong>${labels[k]}</strong>${v}</div>`
-  ).join('');
-  preview.classList.add('show');
+  state.journey = { project: document.getElementById('jb-project')?.value || '' };
   const msg = document.getElementById('jb-saved');
-  msg.classList.add('show');
-  setTimeout(() => msg.classList.remove('show'), 3000);
-}
-
-function downloadJourney() {
-  const fields = {
-    'Project': document.getElementById('jb-project').value || '(unnamed)',
-    'Discovery Channels': document.getElementById('jb-discovery').value,
-    'Orientation Setup': document.getElementById('jb-orient').value,
-    'First Contribution Pathway': document.getElementById('jb-first').value,
-    'Community & Retention': document.getElementById('jb-community').value,
-    'Recognition System': document.getElementById('jb-recognition').value,
-    'Growth Pathways': document.getElementById('jb-growth').value,
-    'Additional Notes': document.getElementById('jb-extra').value,
-  };
-  let txt = 'CONTRIBUTOR JOURNEY PLAN\n';
-  txt += '═'.repeat(40) + '\n';
-  txt += `Generated: ${new Date().toLocaleDateString()}\n\n`;
-  for (const [label, val] of Object.entries(fields)) {
-    if (!val.trim()) continue;
-    txt += `${label.toUpperCase()}\n${'─'.repeat(label.length)}\n${val}\n\n`;
-  }
-  txt += '═'.repeat(40) + '\n';
-  txt += 'No-Code Contribution Map · Contributor Journey Builder\n';
-  downloadFile(`contributor-journey-${fields['Project'].replace(/\s+/g,'-').toLowerCase()}.txt`, txt);
+  if (msg) { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 4000); }
 }
 
 function clearJourney() {
-  ['jb-project','jb-discovery','jb-orient','jb-first','jb-community','jb-recognition','jb-growth','jb-extra']
-    .forEach(id => document.getElementById(id).value = '');
-  document.getElementById('jb-fill').style.width = '0%';
-  document.getElementById('jb-pct').textContent = '0%';
-  document.getElementById('saved-journey-preview').classList.remove('show');
+  ['jb-project','jb-url','jb-type','jb-count','jb-discovery','jb-orient','jb-first','jb-community','jb-recognition','jb-growth','jb-next','jb-extra']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  const fill = document.getElementById('jb-fill');
+  const pct = document.getElementById('jb-pct');
+  if (fill) fill.style.width = '0%';
+  if (pct) pct.textContent = '0%';
+  document.getElementById('blueprint-wrap')?.classList.remove('show');
   updateProgress();
 }
 
@@ -2724,49 +3244,103 @@ function downloadMapPDF() {
   closeMapModal();
 }
 
-// ── PDF: Journey Plan ────────────────────────────────────
+// ── PDF: Journey Plan (plain) ────────────────────────────
 function downloadJourneyPDF() {
-  const proj = document.getElementById('jb-project').value || 'Unnamed Project';
+  const proj = document.getElementById('jb-project')?.value.trim() || 'Unnamed Project';
+  const get = id => document.getElementById(id)?.value.trim() || '';
   const doc = makePDF();
-  let y = pdfHeader(doc, 'Contributor Journey Plan', proj + ' · Built with No-Code Contribution Map');
+  const W = 210; const H = 297; const MG = 20;
+
+  // Simple header
+  doc.setFillColor(22, 22, 34);
+  doc.rect(0, 0, W, 3, 'F');
+  doc.setTextColor(20, 20, 35);
+  doc.setFontSize(18); doc.setFont('helvetica','bold');
+  doc.setTextColor(30, 30, 50);
+
+  doc.setTextColor(50, 50, 80);
+  doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.setTextColor(150, 150, 170);
+  doc.text('CONTRIBUTOR JOURNEY BLUEPRINT', MG, 18);
+  doc.setTextColor(30, 30, 30);
+  doc.setFontSize(20); doc.setFont('helvetica','bold');
+  doc.setTextColor(20, 20, 30);
+
+  // Use black text on white for clean plain look
+  doc.setTextColor(0);
+  doc.setFontSize(20); doc.setFont('helvetica','bold');
+  doc.text(proj, MG, 30);
+
+  let meta = [];
+  if (get('jb-url'))   meta.push(get('jb-url'));
+  if (get('jb-type'))  meta.push(get('jb-type'));
+  if (get('jb-count')) meta.push(get('jb-count') + ' contributors');
+  if (meta.length) {
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(100);
+    doc.text(meta.join('  ·  '), MG, 39);
+  }
+  doc.setFontSize(8); doc.setTextColor(150);
+  doc.text('Generated: ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), MG, 46);
+
+  // Divider
+  doc.setDrawColor(220); doc.setLineWidth(0.4);
+  doc.line(MG, 50, W - MG, 50);
+
+  let y = 58;
 
   const sections = [
-    ['Project Name',              document.getElementById('jb-project').value,     [124,255,196]],
-    ['Discovery Channels',        document.getElementById('jb-discovery').value,    [255,206,71]],
-    ['Orientation Setup',         document.getElementById('jb-orient').value,       [107,159,255]],
-    ['First Contribution Pathway',document.getElementById('jb-first').value,        [77,217,224]],
-    ['Community & Retention',     document.getElementById('jb-community').value,    [208,107,255]],
-    ['Recognition System',        document.getElementById('jb-recognition').value,  [255,159,71]],
-    ['Growth Pathways',           document.getElementById('jb-growth').value,       [255,107,107]],
-    ['Additional Notes',          document.getElementById('jb-extra').value,        [224,107,159]],
+    ['DISCOVERY', get('jb-discovery')],
+    ['ORIENTATION', get('jb-orient')],
+    ['FIRST CONTRIBUTION', get('jb-first')],
+    ['COMMUNITY & RETENTION', get('jb-community')],
+    ['RECOGNITION SYSTEM', get('jb-recognition')],
+    ['GROWTH PATHWAYS', get('jb-growth')],
+    ['NEXT ACTIONS', get('jb-next')],
+    ['ADDITIONAL NOTES', get('jb-extra')],
   ];
-  sections.forEach(([l,v,c]) => { y = pdfSect(doc, y, l, v, c); });
 
-  if (y > PH - 55) { doc.addPage(); y = MG; }
-  doc.setFillColor(...DARK_BG);
-  doc.roundedRect(MG, y, PW - MG*2, 10, 2, 2, 'F');
-  doc.setTextColor(...BRAND_C);
-  doc.setFontSize(9); doc.setFont('helvetica','bold');
-  doc.text('STAGE OPTIONS SELECTED', MG + 5, y + 7);
-  y += 14;
+  sections.forEach(([label, value]) => {
+    if (!value) return;
+    if (y > H - 35) { doc.addPage(); y = MG + 5; }
+    doc.setTextColor(0); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
+    doc.text(label, MG, y); y += 6;
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(50);
+    const lines = doc.splitTextToSize(value, W - MG * 2);
+    lines.forEach(line => {
+      if (y > H - 20) { doc.addPage(); y = MG + 5; }
+      doc.text(line, MG, y); y += 5.5;
+    });
+    doc.setDrawColor(230); doc.line(MG, y + 2, W - MG, y + 2); y += 10;
+  });
+
+  // Stage selections
+  if (y > H - 50) { doc.addPage(); y = MG + 5; }
+  doc.setTextColor(0); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
+  doc.text('STAGE SELECTIONS', MG, y); y += 8;
 
   document.querySelectorAll('.journey-stage').forEach(stage => {
     const titleEl = stage.querySelector('.stage-title');
     const picked = [...stage.querySelectorAll('.stage-opt.picked')].map(o => o.textContent.trim());
-    if (picked.length && titleEl) {
-      if (y > PH - 28) { doc.addPage(); y = MG; }
-      doc.setTextColor(...BRAND_C);
-      doc.setFontSize(8.5); doc.setFont('helvetica','bold');
-      doc.text(titleEl.textContent.split('—')[0].trim(), MG, y); y += 6;
-      doc.setTextColor(...MT_TEXT);
-      doc.setFontSize(8); doc.setFont('helvetica','normal');
-      const line = doc.splitTextToSize('✓ ' + picked.join('  ·  '), PW - MG*2);
-      line.forEach(l => { doc.text(l, MG + 3, y); y += 5.5; });
-      y += 5;
-    }
+    if (!picked.length || !titleEl) return;
+    if (y > H - 25) { doc.addPage(); y = MG + 5; }
+    doc.setTextColor(80); doc.setFontSize(8); doc.setFont('helvetica','bold');
+    doc.text(titleEl.textContent.replace(/[🔎🧭🛠️🤝🏆🌱]/gu, '').trim().split('—')[0].trim(), MG, y); y += 5.5;
+    doc.setTextColor(100); doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    const line = doc.splitTextToSize(picked.join(', '), W - MG * 2 - 5);
+    line.forEach(l => { doc.text(l, MG + 4, y); y += 5; });
+    y += 4;
   });
 
-  pdfFooter(doc);
+  // Footer
+  const total = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= total; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(220); doc.line(MG, H - 12, W - MG, H - 12);
+    doc.setTextColor(160); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+    doc.text('No-Code Contribution Map · Contributor Journey Blueprint', MG, H - 6);
+    doc.text('Page ' + i + ' of ' + total, W - MG, H - 6, {align:'right'});
+  }
+
   doc.save('contributor-journey-' + proj.replace(/\s+/g,'-').toLowerCase() + '.pdf');
 }
 
@@ -2894,6 +3468,7 @@ const SHARE_MSGS = {
   journey:  { title:'Our Contributor Journey Plan',  text:'We just designed our contributor journey for open source — from discovery to recognition to growth. Built with the No-Code Contribution Map 🌱' },
   'c-assess':{ title:'My Contributor Self-Assessment',text:'I just completed a self-assessment on my open source contribution readiness. Open source is for everyone 💚' },
   'p-assess':{ title:'Our Project Inclusion Audit',  text:'We just audited our project for non-code contributor readiness and inclusion. Built with the No-Code Contribution Map 🔍' },
+  'roadmap':  { title:'My Open Source Contributor Roadmap', text:'I just built my personal open source contribution roadmap — 3 months planned, skills mapped, goals set. Built with the No-Code Contribution Map 🗺️' },
 };
 
 function openShareModal(context) {
@@ -2942,6 +3517,247 @@ function copyShareLink() {
 document.getElementById('share-modal').addEventListener('click', function(e) {
   if (e.target === this) closeShareModal();
 });
+
+// ── MY CONTRIBUTOR ROADMAP ─────────────────────────────
+const RM_FIELDS = ['rm-name','rm-role','rm-experience','rm-url','rm-skills','rm-tools','rm-confidence','rm-learn','rm-target-skills','rm-interests','rm-interest','rm-projects','rm-time','rm-pace','rm-when','rm-first','rm-m1-learn','rm-month1','rm-m2-learn','rm-month2','rm-m3-learn','rm-month3','rm-milestones','rm-impact','rm-goal-6m','rm-goal-12m','rm-recognition','rm-blockers'];
+
+function toggleChip(el, targetId) {
+  el.classList.toggle('selected');
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  const selected = [...el.closest('.rm-chip-group').querySelectorAll('.rm-chip.selected')].map(c => c.textContent.trim()).join(', ');
+  // Preserve any manually typed content after the chips line
+  const existing = target.value;
+  const firstNewline = existing.indexOf('\n');
+  const manual = firstNewline > -1 ? existing.substring(firstNewline) : '';
+  target.value = selected + manual;
+  updateRoadmapProgress();
+}
+
+function updateRoadmapProgress() {
+  const filled = RM_FIELDS.filter(id => {
+    const el = document.getElementById(id);
+    return el && el.value.trim().length > 1;
+  }).length;
+  const pct = Math.round((filled / RM_FIELDS.length) * 100);
+  const fill = document.getElementById('rm-fill');
+  const pctEl = document.getElementById('rm-pct');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+}
+
+function clearRoadmap() {
+  RM_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.querySelectorAll('.rm-chip.selected').forEach(c => c.classList.remove('selected'));
+  updateRoadmapProgress();
+  document.getElementById('roadmap-output').style.display = 'none';
+}
+
+function generateRoadmap() {
+  const name = document.getElementById('rm-name')?.value.trim();
+  if (!name) { alert('Please enter your name first — it will appear as the title of your roadmap.'); document.getElementById('rm-name').focus(); return; }
+
+  const get = id => document.getElementById(id)?.value.trim() || '';
+
+  document.getElementById('rm-output-name').textContent = name + "'s Contributor Journey Roadmap";
+  const metaParts = [get('rm-role'), get('rm-experience')].filter(Boolean);
+  document.getElementById('rm-output-meta').textContent = metaParts.join('  ·  ') || 'No-Code Contribution Map';
+
+  const sections = [
+    { color:'var(--accent1)', title:'💡 Current Skills & Experience', items:[
+      { label:'Skills & Expertise', value: get('rm-skills') },
+      { label:'Tools & Platforms', value: get('rm-tools') },
+      { label:'Area of Greatest Confidence', value: get('rm-confidence') },
+    ]},
+    { color:'var(--accent3)', title:'📈 Skills to Develop', items:[
+      { label:'Skills I Want to Learn', value: get('rm-learn') },
+      { label:'Skills Required for My Target Level', value: get('rm-target-skills') },
+    ]},
+    { color:'var(--accent4)', title:'🎯 Contribution Interests', items:[
+      { label:'Contribution Areas', value: get('rm-interests') },
+      { label:'Types of Projects That Interest Me', value: get('rm-interest') },
+      { label:'Specific Projects / Communities', value: get('rm-projects') },
+    ]},
+    { color:'var(--accent5)', title:'⏱️ Time & Pace', items:[
+      { label:'Hours Available Per Week', value: get('rm-time') },
+      { label:'Preferred Pace', value: get('rm-pace') },
+      { label:'When I Plan to Contribute', value: get('rm-when') },
+    ]},
+    { color:'var(--accent4)', title:'🗓️ 90-Day Contribution Plan', items:[
+      { label:'My First Contribution', value: get('rm-first') },
+      { label:'Month 1 — Learning Goal', value: get('rm-m1-learn') },
+      { label:'Month 1 — Contribution Goal', value: get('rm-month1') },
+      { label:'Month 2 — Learning Goal', value: get('rm-m2-learn') },
+      { label:'Month 2 — Contribution Goal', value: get('rm-month2') },
+      { label:'Month 3 — Learning Goal', value: get('rm-m3-learn') },
+      { label:'Month 3 — Contribution Goal', value: get('rm-month3') },
+      { label:'Milestones at Day 30 / 60 / 90', value: get('rm-milestones') },
+    ]},
+    { color:'var(--accent2)', title:'🌱 Long-Term Goals', items:[
+      { label:'Impact I Want to Make', value: get('rm-impact') },
+      { label:'Where I Want to Be in 6 Months', value: get('rm-goal-6m') },
+      { label:'Where I Want to Be in 12 Months', value: get('rm-goal-12m') },
+      { label:'How I Want to Be Recognised', value: get('rm-recognition') },
+      { label:'Blockers I Need to Overcome', value: get('rm-blockers') },
+    ]},
+  ];
+
+  const container = document.getElementById('roadmap-sections');
+  container.innerHTML = '';
+  sections.forEach(s => {
+    const validItems = s.items.filter(it => it.value);
+    if (!validItems.length) return;
+    const div = document.createElement('div');
+    div.className = 'rm-out-section';
+    div.style.borderColor = s.color;
+    div.innerHTML = `
+      <div class="rm-out-title" style="color:${s.color}">${s.title}</div>
+      ${validItems.map(it => `
+        <div class="rm-out-item">
+          <div class="rm-out-item-label">${it.label}</div>
+          <div class="rm-out-item-value">${it.value}</div>
+        </div>`).join('')}`;
+    container.appendChild(div);
+  });
+
+  const out = document.getElementById('roadmap-output');
+  out.style.display = 'block';
+  out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── ROADMAP PDF — plain, clean ─────────────────────────
+function downloadRoadmapPDF() {
+  const name = document.getElementById('rm-name')?.value.trim() || 'Contributor';
+  const get = id => document.getElementById(id)?.value.trim() || '';
+  const doc = makePDF();
+  const W = 210; const H = 297; const MG = 20; const CW = W - MG * 2;
+
+  // Page 1 — Cover (plain white)
+  doc.setTextColor(0);
+  doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.setTextColor(120);
+  doc.text('PERSONAL CONTRIBUTOR JOURNEY ROADMAP', MG, 20);
+
+  doc.setFontSize(26); doc.setFont('helvetica','bold');
+  doc.setTextColor(0);
+  const titleLines = doc.splitTextToSize(name + "'s Contributor Journey Roadmap", CW);
+  let cy = 34;
+  titleLines.forEach(l => { doc.text(l, MG, cy); cy += 12; });
+
+  const role = get('rm-role'); const exp = get('rm-experience');
+  if (role || exp) {
+    doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(80);
+    doc.text([role, exp].filter(Boolean).join('  ·  '), MG, cy + 2); cy += 10;
+  }
+  const url = get('rm-url');
+  if (url) { doc.setFontSize(9); doc.setTextColor(100); doc.text(url, MG, cy + 2); cy += 8; }
+
+  doc.setDrawColor(200); doc.setLineWidth(0.5);
+  doc.line(MG, cy + 6, W - MG, cy + 6);
+
+  doc.setFontSize(8); doc.setTextColor(140); doc.setFont('helvetica','normal');
+  doc.text('Generated: ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), MG, H - 18);
+  doc.text('No-Code Contribution Map · Open source is for everyone who shows up.', MG, H - 12);
+
+  // Content pages
+  const sections = [
+    { title:'CURRENT SKILLS & EXPERIENCE', items:[
+      ['Skills & Expertise', get('rm-skills')],
+      ['Tools & Platforms', get('rm-tools')],
+      ['Area of Greatest Confidence', get('rm-confidence')],
+    ]},
+    { title:'SKILLS TO DEVELOP', items:[
+      ['Skills I Want to Learn', get('rm-learn')],
+      ['Skills Required for My Target Level', get('rm-target-skills')],
+    ]},
+    { title:'CONTRIBUTION INTERESTS', items:[
+      ['Contribution Areas', get('rm-interests')],
+      ['Types of Projects', get('rm-interest')],
+      ['Specific Projects / Communities', get('rm-projects')],
+    ]},
+    { title:'TIME & PACE', items:[
+      ['Hours Available Per Week', get('rm-time')],
+      ['Preferred Pace', get('rm-pace')],
+      ['When I Plan to Contribute', get('rm-when')],
+    ]},
+    { title:'90-DAY CONTRIBUTION PLAN', items:[
+      ['My First Contribution', get('rm-first')],
+      ['Month 1 — Learning Goal', get('rm-m1-learn')],
+      ['Month 1 — Contribution Goal', get('rm-month1')],
+      ['Month 2 — Learning Goal', get('rm-m2-learn')],
+      ['Month 2 — Contribution Goal', get('rm-month2')],
+      ['Month 3 — Learning Goal', get('rm-m3-learn')],
+      ['Month 3 — Contribution Goal', get('rm-month3')],
+      ['Milestones at Day 30 / 60 / 90', get('rm-milestones')],
+    ]},
+    { title:'LONG-TERM GOALS', items:[
+      ['Impact I Want to Make', get('rm-impact')],
+      ['Where I Want to Be in 6 Months', get('rm-goal-6m')],
+      ['Where I Want to Be in 12 Months', get('rm-goal-12m')],
+      ['How I Want to Be Recognised', get('rm-recognition')],
+      ['Blockers I Need to Overcome', get('rm-blockers')],
+    ]},
+  ];
+
+  doc.addPage();
+  let y = MG + 4;
+
+  // Page header
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(160);
+  doc.text(name + "'s Contributor Journey Roadmap", MG, y); y += 10;
+  doc.setDrawColor(220); doc.line(MG, y, W - MG, y); y += 8;
+
+  sections.forEach(s => {
+    const validItems = s.items.filter(([,v]) => v);
+    if (!validItems.length) return;
+
+    if (y > H - 40) { doc.addPage(); y = MG + 4; }
+
+    doc.setTextColor(0); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(s.title, MG, y); y += 5;
+    doc.setDrawColor(0); doc.setLineWidth(0.3);
+    doc.line(MG, y, MG + doc.getTextWidth(s.title), y); y += 7;
+
+    validItems.forEach(([label, value]) => {
+      if (!value) return;
+      if (y > H - 25) { doc.addPage(); y = MG + 4; }
+      doc.setTextColor(100); doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+      doc.text(label, MG, y); y += 5.5;
+      doc.setTextColor(40); doc.setFontSize(9); doc.setFont('helvetica','normal');
+      const lines = doc.splitTextToSize(value, CW);
+      lines.forEach(line => {
+        if (y > H - 18) { doc.addPage(); y = MG + 4; }
+        doc.text(line, MG, y); y += 5.5;
+      });
+      y += 3;
+    });
+    y += 5;
+  });
+
+  // Footer on all content pages
+  const total = doc.internal.getNumberOfPages();
+  for (let i = 2; i <= total; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(210); doc.line(MG, H - 13, W - MG, H - 13);
+    doc.setTextColor(150); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+    doc.text(name + ' · Contributor Journey Roadmap', MG, H - 7);
+    doc.text('Page ' + (i - 1) + ' of ' + (total - 1), W - MG, H - 7, {align:'right'});
+  }
+
+  doc.save(name.replace(/\s+/g,'-').toLowerCase() + '-contributor-roadmap.pdf');
+}
+
+// Update updateProgress to handle new org fields
+function updateProgress() {
+  const fields = ['jb-project','jb-url','jb-type','jb-discovery','jb-orient','jb-first','jb-community','jb-recognition','jb-growth','jb-next'];
+  const existing = fields.filter(id => document.getElementById(id));
+  const filled = existing.filter(id => document.getElementById(id).value.trim().length > 2).length;
+  const pct = Math.round((filled / Math.max(existing.length, 1)) * 100);
+  const fill = document.getElementById('jb-fill');
+  const pctEl = document.getElementById('jb-pct');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+}
 </script>
 </body>
 </html>
