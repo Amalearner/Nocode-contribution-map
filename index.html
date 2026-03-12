@@ -1041,13 +1041,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
     </div>
   </div>
 
-  <p class="sec-desc">A welcoming contributor journey doesn't happen by accident. Work through each stage below — click the option chips that reflect your project's current or planned approach — then click <strong>Build Blueprint</strong> to generate your full detailed journey plan.</p>
-
-  <div style="margin-bottom:2rem; display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
-    <button class="btn btn-primary" onclick="buildBlueprint()" style="font-size:0.85rem;padding:0.75rem 2rem;">Build Blueprint →</button>
-    <button class="btn btn-outline" style="font-size:0.8rem;" onclick="buildBlueprint()">Regenerate Blueprint</button>
-    <span style="font-size:0.78rem;color:var(--muted);">Select options in each stage, fill in project details below, then generate.</span>
-  </div>
+  <p class="sec-desc">A welcoming contributor journey doesn't happen by accident. Work through each stage below — click the option chips that reflect your project's current or planned approach — then click <strong>Generate Blueprint</strong> to generate your full detailed journey plan.</p>
 
   <div class="stages-track" id="org-stages-track">
 
@@ -1208,77 +1202,8 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
 
     </div><!-- /stages-track -->
 
-  <!-- Project details (full width, below stages) -->
-  <div style="margin-top:2.5rem; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:2rem;">
-    <h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--accent4);margin-bottom:0.4rem;">Project Details</h3>
-    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Fill in these fields to make your blueprint more specific and actionable. The more detail you add, the richer your exported plan will be.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
-      <div class="field-group">
-        <label class="field-label">Project name *</label>
-        <input class="field-input" type="text" id="jb-project" placeholder="e.g. OpenDocs, AccessKit, MyLib…" oninput="updateProgress()">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Project URL / GitHub repo</label>
-        <input class="field-input" type="text" id="jb-url" placeholder="https://github.com/org/project" oninput="updateProgress()">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Project type</label>
-        <input class="field-input" type="text" id="jb-type" placeholder="e.g. Developer tool, library, community project…" oninput="updateProgress()">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Current contributor count</label>
-        <input class="field-input" type="text" id="jb-count" placeholder="e.g. 5 active contributors, just starting out…" oninput="updateProgress()">
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:0.25rem;">
-      <div class="field-group">
-        <label class="field-label">Your biggest discovery challenge</label>
-        <textarea class="field-input" rows="2" id="jb-discovery" placeholder="e.g. We're mostly known in developer circles but rarely reach designers or writers…" oninput="updateProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Current orientation: what a newcomer sees first</label>
-        <textarea class="field-input" rows="2" id="jb-orient" placeholder="e.g. Our README is technical. We have a CONTRIBUTING.md but it only describes code…" oninput="updateProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Your easiest non-code first contribution today</label>
-        <textarea class="field-input" rows="2" id="jb-first" placeholder="e.g. Currently there isn't one. We want to create doc-improvement issues labeled 'good first issue'…" oninput="updateProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Community channels & retention mechanisms</label>
-        <textarea class="field-input" rows="2" id="jb-community" placeholder="e.g. We have a Discord but no scheduled office hours. Planning monthly contributor calls…" oninput="updateProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">How non-code contributors are recognized today</label>
-        <textarea class="field-input" rows="2" id="jb-recognition" placeholder="e.g. We use All-Contributors but haven't been consistent. No spotlight posts yet…" oninput="updateProgress()"></textarea>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Named non-code roles & growth paths</label>
-        <textarea class="field-input" rows="2" id="jb-growth" placeholder="e.g. We want to create a Community Manager role and a Docs Lead position…" oninput="updateProgress()"></textarea>
-      </div>
-      <div class="field-group" style="grid-column:1/-1;">
-        <label class="field-label">Immediate next actions (what you'll do first)</label>
-        <textarea class="field-input" rows="3" id="jb-next" placeholder="e.g. 1. Update CONTRIBUTING.md to include docs and design tasks. 2. Add 'good first issue (non-code)' label. 3. Set up monthly community call…" oninput="updateProgress()"></textarea>
-      </div>
-      <div class="field-group" style="grid-column:1/-1;">
-        <label class="field-label">Additional notes</label>
-        <textarea class="field-input" rows="2" id="jb-extra" placeholder="Anything else you want captured in your blueprint…" oninput="updateProgress()"></textarea>
-      </div>
-    </div>
-
-    <div style="margin-top:1.5rem; background:var(--bg); border-radius:8px; padding:0.85rem 1rem; margin-bottom:1.5rem;">
-      <div style="font-size:0.7rem;color:var(--muted);margin-bottom:0.4rem;display:flex;justify-content:space-between;">
-        <span>Blueprint completion</span><span id="jb-pct">0%</span>
-      </div>
-      <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
-        <div id="jb-fill" style="height:100%;background:var(--accent4);border-radius:2px;transition:width 0.4s ease;width:0%;"></div>
-      </div>
-    </div>
-
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="buildBlueprint()" style="font-size:0.85rem;padding:0.75rem 2rem;">Build Blueprint →</button>
-      <button class="btn btn-outline" onclick="clearJourney()">Clear All</button>
-    </div>
-    <div class="saved-msg" id="jb-saved" style="margin-top:0.85rem;">✓ Blueprint built — <span style="text-decoration:underline;cursor:pointer;color:var(--accent1);" onclick="openShareModal('journey')">Share with your team →</span></div>
+  <div style="margin-top:2rem;">
+    <button class="btn btn-primary" onclick="buildBlueprint()" style="font-size:0.9rem;padding:0.85rem 2.5rem;">Generate Blueprint →</button>
   </div>
 
   <!-- ── BLUEPRINT OUTPUT ── -->
@@ -2355,6 +2280,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
   </div>
   <div class="sb-pills" id="sb-pills"></div>
   <div class="sb-actions">
+    <button class="btn btn-outline" onclick="clearAll()" style="color:var(--accent2);border-color:rgba(255,107,107,0.35);">✕ Clear All</button>
     <button class="btn btn-outline" onclick="openMapModal()">Preview Map</button>
     <button class="btn btn-primary" onclick="downloadMapPDF()">Download PDF</button>
   </div>
